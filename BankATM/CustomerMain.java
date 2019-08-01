@@ -45,7 +45,11 @@ import java.awt.*;
                  listModel.addElement("Checking Account: " + customer.getAcc().get(i).getAccountNumber());
              }else if(customer.getAcc().get(i).getType() == 2){
                  listModel.addElement("Saving Account: " + customer.getAcc().get(i).getAccountNumber());
-             }else{
+             }
+             else if(customer.getAcc().get(i).getType() == 3){
+                listModel.addElement("Security Account: " + customer.getAcc().get(i).getAccountNumber());
+             }
+                else{
                  listModel.addElement("Default Account: " + customer.getAcc().get(i).getAccountNumber());
              }
          }

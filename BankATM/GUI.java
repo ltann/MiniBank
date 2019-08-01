@@ -753,6 +753,20 @@ public class GUI {
                 new CustomerMain(c.getPerInfomation().getName(), c);
             }
         });
+        ca.security.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(SystemApp.checkBalance(c)) {
+                    SystemApp.addAccount(3, c);
+                    c.getAcc().get(c.getAccountNumber()-1).getC()[0].withdraw(3);
+                    SystemApp.fee += 3;
+                    ca.j.dispose();
+                    new CustomerMain(c.getPerInfomation().getName(), c);
+                }
+                else {
+                    JOptionPane.showMessageDialog(ca.j, "Your balance is less than $5000, Can't create security account!");
+                }
+            }
+        });
         ca.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ca.j.setVisible(false);
