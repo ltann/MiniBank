@@ -290,4 +290,20 @@ public class SystemApp {
         customers.get(currentCustomer).addLoan(loan);
         customers.get(currentCustomer).getAcc().get(0).getC()[currency].deposit(amount);
     }
+
+    public static boolean checkBalance(Customer c) {
+        double balance = 0;
+        for(int i = 0; i < c.getAcc().size(); i++) {
+            balance += c.getAcc().get(i).getC()[0].getBalance();
+            balance += c.getAcc().get(i).getC()[1].getBalance()/7;
+            balance += c.getAcc().get(i).getC()[2].getBalance()/0.9;
+        }
+        if(balance >= 5000) {
+            return true;
+        }
+        return false;
+    }
+
 }
+
+    
