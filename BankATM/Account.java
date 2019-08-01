@@ -1,7 +1,7 @@
 public class Account {
-    private int accountNumber;
-    private int type; // 0: Default, 1: Checking, 2:Saving
-    private Currency[] c = new Currency[3];
+    protected int accountNumber;
+    protected int type; // 0: Default, 1: Checking, 2:Saving
+    protected Currency[] c = new Currency[3];
 
 
     public Account(int type, int accountNumber) {
