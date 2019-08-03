@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SystemApp {
     public static ArrayList<ArrayList<String>> bankerAccount = new ArrayList<ArrayList<String>>();
@@ -303,15 +304,74 @@ public class SystemApp {
         }
         return false;
     }
+ ///////////////////////////////////////////////////////////////////////////////////
+ // STOCKS AND BONDS FUNCTIONS
     
     // for change interest rate button change bond interest rate
     public static void changeBondInterestrate(Bonds b, double newInterestRate) {
       b.changeInterest(newInterestRate);
     }
+    //purchase a new bond for a customer
     
+    
+    
+    public static void addNewBond(Customer c, Bonds b) {
+      Bonds addBond = b;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType() == 3) {
+          // TODO: (ADD bonds to SA) --> should update available balance
+          //                         --> add bonds to linkedList of Customer
+          // findSA.addBonds(b);
+        }
+      }
+    }
+    //refresh stock button
     public static void updateAllStocks() {
+      //function provided by the database
+    }
+    
+    
+    //Customer purchase a stock
+    public static void purchaseANewStock(Customer c, Stocks s, int numOfShare) {
+      Stocks addStock = s;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType()==3) {
+          //TODO: (Add stocks to SA) --> should update available balance
+          //                         --> should add Stock to linkedList
+          // findSA.addStocks(s, numOfShare)
+        }
+      }
+    }
+    
+    
+    //Customer sell a stock
+    public static void sellANewStock(Customer c, Stocks s, int numOfShare) {
+      Stocks sellStock = s;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType() == 3) {
+        //TODO: (Sell stocks to SA) --> should update available balance
+          //                         --> should update value of SA
+          //                         --> should remove Stock to linkedList
+          // findSA.sellStocks(s, numOfShare)
+        }
+      }
+    }
+    
+    
+    
+    //Create a new Stock from Manager end
+    public static void ManagerCreateNewStock(Banker b, Stocks s) {
+      //stock s should have a stock name, stock ticker, and stock price
+      
       
     }
+    
 }
 
     
