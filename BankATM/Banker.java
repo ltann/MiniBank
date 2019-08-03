@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Banker extends Person {
     public Boolean showAllCustomer;
     public Boolean getReport;
@@ -6,6 +8,7 @@ public class Banker extends Person {
         super(loginName, password, AccessRight.BANKER);
         this.showAllCustomer = false;
         this.getReport = false;
+        
     }
 
     public Banker() {
@@ -20,6 +23,26 @@ public class Banker extends Person {
     //         String info = c.getInfo();
     //     }
     // }
+  //adds 10 inital stocks when the program is first started
+    public void createInitialStocks() {
+      if(Welcome.database.dataFindAllStocks() == null) {
+        //Apple Stock
+        ArrayList<stockPriceHistory> ApplePriceHistoryList =  new ArrayList<stockPriceHistory> ();
+        stockPriceHistory ApplePrice =  new stockPriceHistory(100);
+        ApplePriceHistoryList.add(ApplePrice);
+        StocksDB AppleStock = new StocksDB("AAPL", ApplePriceHistoryList);
+        Welcome.database.dataAddStocks(AppleStock);
+        
+        //Microsoft Stock
+        ArrayList<stockPriceHistory> MicrosoftPriceHistoryList =  new ArrayList<stockPriceHistory> ();
+        stockPriceHistory MicroPrice =  new stockPriceHistory(100);
+        ApplePriceHistoryList.add(ApplePrice);
+        StocksDB AppleStock = new StocksDB("MSFT", ApplePriceHistoryList);
+        Welcome.database.dataAddStocks(AppleStock);
+        
+        
+      }    
+    }
 
     public Boolean getShowAllCustomer() {
         return showAllCustomer;
