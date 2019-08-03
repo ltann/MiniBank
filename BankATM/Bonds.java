@@ -25,7 +25,15 @@ public class Bonds {
       interest = newInterest;
     }
 
-    public String getTypeofBond() { //return whether a month or week bond
-      return typeOfBond;
+    public String getBondType() { //return whether a month or week bond
+      return bondType;
+    }
+
+    public String getBondID() {
+        return bondID;
+    }
+
+    public int getMaturity() {
+        return maturity;
     }
 }

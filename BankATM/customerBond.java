@@ -1,13 +1,7 @@
 public class customerBond extends Bonds {
-    private int maturity;
-    private
 
-    public customerBond(int value, double i, int length, String type) {
-        super(value, i, length, type);
-    }
-
-    public int getMaturity() {
-        return maturity;
+    public customerBond(String bondID, String bondType, int maturity, int value, double i) {
+        super(bondID, bondType, maturity, value, i);
     }
 
 }

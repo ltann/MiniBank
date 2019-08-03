@@ -61,7 +61,7 @@ public class SecurityAccount extends Account {
         ListIterator<customerStock> i = stocks.listIterator();
 
         while(i.hasNext()){
-            System.out.println(i.next());
+            System.out.println(i.next().getTicker());
         }
     }
     
