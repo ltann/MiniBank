@@ -5,72 +5,44 @@ import java.awt.*;
 public class BankerMain{
     JFrame j = new JFrame();
     GridBagConstraints c = new GridBagConstraints();
-    JLabel label = new JLabel("Main Menu");
-    Font font = new Font("Black",Font.CENTER_BASELINE,30);
+    JLabel header = new JLabel("Main Menu");
     JButton report = new JButton("Report");
     JButton exit = new JButton("Exit");
     JButton search = new JButton("Search Customer");
-    Dimension dimension = new Dimension(150,80);
     JButton customers = new JButton("Show all customers");
+    JButton stock = new JButton("Stocks");
+    JButton bond = new JButton("Bonds");
 
     public BankerMain(){
         GUI.BankerMainGUIAL(this);
-        j.setLayout(new GridBagLayout());
-        j.setTitle("ATM");
-        
-        label.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 0;
-        c.insets = new Insets(0,150,0,0);
-        j.add(label, c);
-        
-        report.setFont(new Font("Black",1,20));
-        report.setPreferredSize(dimension);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.insets = new Insets(0,0,0,0);
-        //c.insets = new Insets(0,0,0,100);
-        j.add(report, c);
-        customers.setPreferredSize(dimension);
-        customers.setFont(new Font("Black",1,20));
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 2;
-        //c.insets = new Insets(0,0,0,100);
-        j.add(customers, c);
+        header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
+        header.setBounds(360,25,300,50);
+        report.setBounds(0,150,250,80);
+        report.setFont(new Font("Black", Font.BOLD,20));
+        search.setBounds(0,300,250,80);
+        search.setFont(new Font("Black", Font.BOLD,20));
+        customers.setBounds(0,450,250,80);
+        customers.setFont(new Font("Black", Font.BOLD,20));
+        stock.setBounds(640,150,250,80);
+        stock.setFont(new Font("Black", Font.BOLD,20));
+        bond.setBounds(640,300,250,80);
+        bond.setFont(new Font("Black", Font.BOLD,20));
+        exit.setBounds(640,450,250,80);
+        exit.setFont(new Font("Black", Font.BOLD,20));
 
-        search.setPreferredSize(dimension);
-        search.setFont(new Font("Black",1,20));
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 1;
-        //;c.insets = new Insets(0,100,0,0)
-        j.add(search, c);
-
-
-        exit.setPreferredSize(dimension);
-        exit.setFont(new Font("Black",1,20));
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 3;
-        //;c.insets = new Insets(0,100,0,0)
-        j.add(exit, c);
+        j.add(header);
+        j.add(report);
+        j.add(search);
+        j.add(customers);
+        j.add(stock);
+        j.add(bond);
+        j.add(exit);
+        j.setLayout(null);
         j.setTitle("ATM");
         j.setSize(900,600);
         j.setVisible(true);
-
     }
-
+    public static void main(String[] args) {
+        new BankerMain();
+    }
 }

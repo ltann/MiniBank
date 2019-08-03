@@ -38,8 +38,14 @@ public class balanceGUI {
         if(a.getType() == 1) {
             type = new JLabel("Checking");
         }
-        else {
+        else if(a.getType() == 2){
             type = new JLabel("Saving");
+        }
+        else if(a.getType() == 3) {
+            type = new JLabel("Security");
+        }
+        else {
+            type = new JLabel("Default");
         }
         
         ret.setBounds(100,450,150,50);
