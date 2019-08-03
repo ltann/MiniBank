@@ -18,6 +18,9 @@ public class Bonds {
     public double getInterest() { //returns bond's interest rate
       return interest;
     }
+    public void changeInterest(double newInterest) {
+      interest = newInterest;
+    }
     public int getLength() {// return bond's total length
       return maturity;
     }

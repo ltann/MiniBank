@@ -303,7 +303,15 @@ public class SystemApp {
         }
         return false;
     }
-
+    
+    // for change interest rate button change bond interest rate
+    public static void changeBondInterestrate(Bonds b, double newInterestRate) {
+      b.changeInterest(newInterestRate);
+    }
+    
+    public static void updateAllStocks() {
+      
+    }
 }
 
     
