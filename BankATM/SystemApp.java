@@ -306,7 +306,6 @@ public class SystemApp {
         }
         return false;
     }
-<<<<<<< HEAD
 
     public static Object[][] getAllData() {
     	Object[][] data = {
@@ -384,7 +383,7 @@ public class SystemApp {
     public static void updateBond() {
     	
     }
-=======
+
  ///////////////////////////////////////////////////////////////////////////////////
  // STOCKS AND BONDS FUNCTIONS
     
@@ -393,7 +392,6 @@ public class SystemApp {
       b.changeInterest(newInterestRate);
     }
     //purchase a new bond for a customer
-    
     
     
     public static void addNewBond(Customer c, Bonds b) {
@@ -408,9 +406,12 @@ public class SystemApp {
         }
       }
     }
+    
+    
     //refresh stock button
     public static void updateAllStocks() {
       //function provided by the database
+      SystemApp.bankers.get(0).updateExisitngStocks();
     }
     
     
@@ -424,6 +425,7 @@ public class SystemApp {
           //TODO: (Add stocks to SA) --> should update available balance
           //                         --> should add Stock to linkedList
           // findSA.addStocks(s, numOfShare)
+          SystemApp.bankers.get(0).addProfits();
         }
       }
     }
@@ -440,6 +442,7 @@ public class SystemApp {
           //                         --> should update value of SA
           //                         --> should remove Stock to linkedList
           // findSA.sellStocks(s, numOfShare)
+          SystemApp.bankers.get(0).addProfits();
         }
       }
     }
@@ -447,14 +450,14 @@ public class SystemApp {
     
     
     //Create a new Stock from Manager end
-    public static void ManagerCreateNewStock(Banker b, Stocks s) {
+    public static void ManagerCreateNewStock(Banker b, String ticker, String CompanyName, int newPrice) {
       //stock s should have a stock name, stock ticker, and stock price
-      
+      b.createNewStock(ticker, CompanyName, newPrice);
       
     }
     
->>>>>>> b91fdadcf47c9f7ac2561087f7d93c54ad52c0e8
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public static Object[][] getAllData() {
 	Object[][] data = {
             new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110*20},
