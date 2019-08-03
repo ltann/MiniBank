@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -194,10 +195,10 @@ public class SystemApp {
                 info += "$ ";
                 break;
             case 1:
-                info += "楼 ";
+                info += "妤� ";
                 break;
             case 2:
-                info += "鈧� ";
+                info += "閳э拷 ";
                 break;
         }
         info += deposit;
@@ -208,10 +209,10 @@ public class SystemApp {
                 info += "$ ";
                 break;
             case 1:
-                info += "楼 ";
+                info += "妤� ";
                 break;
             case 2:
-                info += "鈧� ";
+                info += "閳э拷 ";
                 break;
         }
         info += a.getC()[currency].getBalance();
@@ -231,10 +232,10 @@ public class SystemApp {
             case "$":
                 info += "USD";
                 break;
-            case "楼":
+            case "妤�":
                 info += "RMB";
                 break;
-            case "鈧�":
+            case "閳э拷":
                 info += "EUR";
                 break;
             default:
@@ -305,6 +306,7 @@ public class SystemApp {
         }
         return false;
     }
+<<<<<<< HEAD
 
     public static Object[][] getAllData() {
     	Object[][] data = {
@@ -382,6 +384,153 @@ public class SystemApp {
     public static void updateBond() {
     	
     }
+=======
+ ///////////////////////////////////////////////////////////////////////////////////
+ // STOCKS AND BONDS FUNCTIONS
+    
+    // for change interest rate button change bond interest rate
+    public static void changeBondInterestrate(Bonds b, double newInterestRate) {
+      b.changeInterest(newInterestRate);
+    }
+    //purchase a new bond for a customer
+    
+    
+    
+    public static void addNewBond(Customer c, Bonds b) {
+      Bonds addBond = b;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType() == 3) {
+          // TODO: (ADD bonds to SA) --> should update available balance
+          //                         --> add bonds to linkedList of Customer
+          // findSA.addBonds(b);
+        }
+      }
+    }
+    //refresh stock button
+    public static void updateAllStocks() {
+      //function provided by the database
+    }
+    
+    
+    //Customer purchase a stock
+    public static void purchaseANewStock(Customer c, Stocks s, int numOfShare) {
+      Stocks addStock = s;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType()==3) {
+          //TODO: (Add stocks to SA) --> should update available balance
+          //                         --> should add Stock to linkedList
+          // findSA.addStocks(s, numOfShare)
+        }
+      }
+    }
+    
+    
+    //Customer sell a stock
+    public static void sellANewStock(Customer c, Stocks s, int numOfShare) {
+      Stocks sellStock = s;
+      Iterator iter = c.getAcc().iterator();
+      while(iter.hasNext()) {
+        SecurityAccount findSA = (SecurityAccount) iter.next();
+        if(findSA.getType() == 3) {
+        //TODO: (Sell stocks to SA) --> should update available balance
+          //                         --> should update value of SA
+          //                         --> should remove Stock to linkedList
+          // findSA.sellStocks(s, numOfShare)
+        }
+      }
+    }
+    
+    
+    
+    //Create a new Stock from Manager end
+    public static void ManagerCreateNewStock(Banker b, Stocks s) {
+      //stock s should have a stock name, stock ticker, and stock price
+      
+      
+    }
+    
+>>>>>>> b91fdadcf47c9f7ac2561087f7d93c54ad52c0e8
+
+public static Object[][] getAllData() {
+	Object[][] data = {
+            new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110*20},
+            new Object[]{"MICR", "MICROSOFT", 57.26, 48.6, 50, "-30%", 48.6*50}
+        };
+	return data;
+}
+
+public static DefaultCategoryDataset getAccountValueData() {
+	DefaultCategoryDataset first = new DefaultCategoryDataset();
+	first.addValue(1, "First", "2013");
+    first.addValue(3, "First", "2014");
+    first.addValue(2, "First", "2015");
+    first.addValue(6, "First", "2016");
+    first.addValue(5, "First", "2017");
+    first.addValue(12, "First", "2018");
+    return first;
+}
+
+public static ArrayList<DefaultCategoryDataset> getStockData() {
+	ArrayList<DefaultCategoryDataset> data = new ArrayList<DefaultCategoryDataset>();
+	DefaultCategoryDataset first = new DefaultCategoryDataset();
+	DefaultCategoryDataset second = new DefaultCategoryDataset();
+	first.addValue(1, "First", "2013");
+	first.addValue(3, "First", "2014");
+	first.addValue(2, "First", "2015");
+	first.addValue(6, "First", "2016");
+	first.addValue(5, "First", "2017");
+	first.addValue(12, "First", "2018");
+	second.addValue(14, "Second", "2013");
+	second.addValue(13, "Second", "2014");
+	second.addValue(12, "Second", "2015");
+	second.addValue(9, "Second", "2016");
+	second.addValue(5, "Second", "2017");
+	second.addValue(7, "Second", "2018");
+	data.add(first);
+	data.add(second);
+	return data;
+}
+
+public static String[] getStockNameList() {
+	String[] stockName = {"Apple", "Microsoft"};
+	return stockName;
+}
+
+public static Object[][] getUserBonds() {
+	Object[][] bonds = {
+        new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+        new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+    };
+	return bonds;
+}
+
+public static Object[][] getBondsData() {
+	Object[][] bonds = {
+            new String[]{"1 month", "100", "15%"},
+            new String[]{"3 month", "10000", "30%"}
+        };
+    	return bonds;
+}
+
+public static Object[][] getBankerStock() {
+	Object[][] stocks = {
+            new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+            new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+    };
+	return stocks;
+}
+
+public static void updateStock() {
+	
+}
+
+public static void updateBond() {
+	
+}
 }
 
     
