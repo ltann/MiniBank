@@ -5,10 +5,14 @@ public class Stocks {
     private double pricePerShare;
     private static final double feePerTrade = 5.95;
 
-    public Stocks(String ticker, String stockName, double pricePerShare, stockPriceHistory sph){
+    public Stocks(String ticker, String stockName, double pricePerShare){ // used for when called by customerStocks!
         this.ticker = ticker;
         this.stockName = stockName;
         this.pricePerShare = pricePerShare;
+    }
+
+    public Stocks(String ticker, String stockName, double pricePerShare, stockPriceHistory sph){
+        this(ticker, stockName, pricePerShare);
         this.sph = sph;
     }
 

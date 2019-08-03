@@ -30,7 +30,7 @@ public class SecurityAccount extends Account {
         ListIterator<customerBond> bondsListIterator = bonds.listIterator();
         while(bondsListIterator.hasNext()){
             customerBond bd = bondsListIterator.next();
-
+            value += bd.getAmount();
         }
 
     }
