@@ -8,6 +8,7 @@ public class Welcome extends JFrame{
     JButton jbBanker = new JButton( "Banker" );
     JButton jbCustomer = new JButton( "Customer" );
     JLabel jlWelcome=new JLabel("Welcome to CS591 ATM system");
+    private static DataAccess database = new DataAccess();
 
     public Welcome(){
         GUI.WelcomeGUIAL(this);
