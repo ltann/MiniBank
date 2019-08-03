@@ -1,8 +1,17 @@
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class GUI {
-    //private static int curPage = 0;
     public static void customerMainGUIAL(CustomerMainGUI c, Customer cus, Account a, String str) {
         c.balance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -42,6 +51,49 @@ public class GUI {
         c.exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new exit(c.j);
+            }
+        });
+    }
+
+    public static void SecurityMainGUIAL(SecurityMainGUI s, Customer cus, Account a) {
+        s.balance.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                s.j.setVisible(false);
+                new balanceGUI(a, cus.getPerInfomation().getName(), cus);
+            }
+        });
+        
+         s.property.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 s.j.setVisible(false);
+                 new CustomerPropertyGUI(0, cus, a);
+             }
+         });
+        
+         s.stocks.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 s.j.dispose();
+                 new CustomerStockGUI(0, cus, a);
+             }
+         });
+        s.bonds.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                  s.j.setVisible(false);
+                  new CustomerBondGUI(cus, a);
+              }
+          });
+        s.transfer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                s.j.setVisible(false);
+                new Transfer(cus.getPerInfomation().getName(), cus, a);
+            }
+        });
+        
+        
+        
+        s.exit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new exit(s.j);
             }
         });
     }
@@ -308,9 +360,17 @@ public class GUI {
     public static void balanceGUIAL(balanceGUI b, Account a, String str, Customer c) {
         b.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                b.j.setVisible(false);
+            	b.j.setVisible(false);
                 b.j.dispose();
-                new CustomerMainGUI(a, str, c);
+            	if (a.getType() == 3) {
+            		b.j.dispose();
+            		new SecurityMainGUI(c, a);
+            	}
+            	else {
+            		b.j.dispose();
+                    new CustomerMainGUI(a, str, c);
+            	}
+                
             }
         });
         b.exit.addActionListener(new ActionListener() {
@@ -325,7 +385,13 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 tf.j.setVisible(false);
                 tf.j.dispose();
-                new CustomerMainGUI(a, str, cus);
+                if(a.getType() == 3) {
+                	new SecurityMainGUI(cus,a);
+                }
+                else {
+                	new CustomerMainGUI(a, str, cus);
+                }
+               
             }
         });
         tf.confirm.addActionListener(new ActionListener() {
@@ -471,6 +537,7 @@ public class GUI {
             String name=ci.nameField.getText();
             String cell=ci.cellField.getText();
             String address=ci.addressField.getText();
+            boolean res = false;
             System.out.println("Name: "+name);
             System.out.println("Cell: "+cell);
             System.out.println("Address: "+address);
@@ -479,12 +546,16 @@ public class GUI {
             }
             else{
                 if(ci.checkBox.isSelected()){
-                    SystemApp.addUser(ci.username, ci.password, name, cell, address, 1,true);
+                    res = SystemApp.addUser(ci.username, ci.password, name, cell, address, 1,true);
                 }else{
-                    SystemApp.addUser(ci.username, ci.password, name, cell, address, 1,false);
+                    res = SystemApp.addUser(ci.username, ci.password, name, cell, address, 1,false);
                 }
-                
-                System.out.println("Success");
+                if(res) {
+                    JOptionPane.showMessageDialog(ci.j, "Succeed!");
+                }
+                else {
+                    JOptionPane.showMessageDialog(ci.j, "Failed!");
+                }
                 ci.j.dispose();
                 new Login(1);
             }
@@ -590,6 +661,22 @@ public class GUI {
             new search();
         }
     });
+    bm.stock.addActionListener(new ActionListener(){
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            bm.j.dispose();
+            new BankerStockGUI();
+        }
+    });
+    bm.bond.addActionListener(new ActionListener(){
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            bm.j.dispose();
+            new BankerBondGUI();
+        }
+    });
     bm.exit.addActionListener(new ActionListener(){
     
         @Override
@@ -599,7 +686,7 @@ public class GUI {
     });
    }
 
-   public static void searchGUIAL(search s) {
+    public static void searchGUIAL(search s) {
         s.search.addActionListener(new ActionListener() {
 
         @Override
@@ -682,7 +769,7 @@ public class GUI {
     });
    }
 
-   public static void CustomerMainAL(CustomerMain cmain, Customer c, String name){
+    public static void CustomerMainAL(CustomerMain cmain, Customer c, String name){
     cmain.apply.addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -695,8 +782,14 @@ public class GUI {
                 for(int i = 0; i < c.getAcc().size(); i++){
                     if(c.getAcc().get(i).getAccountNumber() == accountNum){
                         cmain.j.dispose();
-                        new CustomerMainGUI(c.getAcc().get(i),name,c);
-                        break;
+                        if(c.getAcc().get(i).getType() == 3) {
+                            new SecurityMainGUI(c,c.getAcc().get(i));
+                            break;
+                        }
+                        else {
+                            new CustomerMainGUI(c.getAcc().get(i),name,c);
+                            break;
+                        }
                     }
                 }
             }
@@ -776,13 +869,147 @@ public class GUI {
         });
     }
 
+    public static void CustomerStockGUIAL(CustomerStockGUI cs, Customer c, Account a) {
+    	cs.view.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			cs.j.dispose();
+    			new CustomerStockGUI(cs.stockName.getSelectedIndex(), c, a);
+    		}
+    	});
+    	cs.ret.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cs.j.dispose();
+                new SecurityMainGUI(c, a);
+            }
+        });
+    	cs.exit.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new exit(cs.j);
+            }
+        });
+    }
+    
+    public static void CustomerBondGUIAL(CustomerBondGUI cb, Customer c, Account a) {
+    	cb.ret.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cb.j.dispose();
+                new SecurityMainGUI(c, a);
+            }
+        });
+    	cb.exit.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new exit(cb.j);
+            }
+        });
+    }
+    
+    public static void CustomerPropertyGUIAL(CustomerPropertyGUI cp, Customer c, Account a) {
+    	cp.value.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			cp.j.dispose();
+    			new AccountValueGUI(c, a);
+    		}
+    	});
+    	cp.cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cp.j.setVisible(false);
+                cp.j.dispose();
+                new SecurityMainGUI(c, a);
+            }
+        });
+    	cp.stock.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	cp.j.dispose();
+            	new CustomerPropertyGUI(0, c, a);
+            }
+        });
+    	cp.bond.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	cp.j.dispose();
+            	new CustomerPropertyGUI(1, c, a);
+            }
+        });
+    	cp.sell.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	//---------------------------------------------------------
+            }
+        });
+    }
+    
+    public static void AccountValueGUIAL(AccountValueGUI avg, Customer c, Account a) {
+    	avg.ret.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	avg.j.setVisible(false);
+                avg.j.dispose();
+            	new CustomerPropertyGUI(0, c, a);
+            }
+        });
+        avg.exit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new exit(avg.j);
+            }
+        });
+    }
+
+    public static void BankerStockGUIAL(BankerStockGUI bs) {
+    	bs.cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                bs.j.dispose();
+                new BankerMain();
+            }
+        });
+    	bs.apply.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SystemApp.updateStock();
+            }
+        });
+    }
+    
+    public static void BankerBondGUIAL(BankerBondGUI bb) {
+    	bb.cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                bb.j.dispose();
+                new BankerMain();
+            }
+        });
+    	bb.apply.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SystemApp.updateBond();
+            }
+        });
+    }
+
     public static void main(String[] args) {
         SystemApp.setDefaultBanker();
-        // String str = "Eric";
-        // Customer c = new Customer();
-        // SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1);
-        // SystemApp.addAccount(1, c);
-        // new CustomerMainGUI(c.getAcc().get(0), str, c);
-        new Welcome();
+         String str = "Eric";
+         Customer c = new Customer(str, "123456", str, "1111111111", "abc", true);
+         SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1, true);
+         SystemApp.addAccount(3, c);
+         //new CustomerMainGUI(c.getAcc().get(0), str, c);
+        // new Welcome();
+//        String[] nameList = {"First", "Second"};
+//        ArrayList<DefaultCategoryDataset> data = new ArrayList<DefaultCategoryDataset>();
+//        DefaultCategoryDataset first = new DefaultCategoryDataset();
+//        DefaultCategoryDataset second = new DefaultCategoryDataset();
+//        first.addValue(1, "First", "2013");
+//        first.addValue(3, "First", "2014");
+//        first.addValue(2, "First", "2015");
+//        first.addValue(6, "First", "2016");
+//        first.addValue(5, "First", "2017");
+//        first.addValue(12, "First", "2018");
+//        second.addValue(14, "Second", "2013");
+//        second.addValue(13, "Second", "2014");
+//        second.addValue(12, "Second", "2015");
+//        second.addValue(9, "Second", "2016");
+//        second.addValue(5, "Second", "2017");
+//        second.addValue(7, "Second", "2018");
+//        data.add(first);
+//        data.add(second);
+//    	new CustomerStockGUI(data, nameList, 0);
+        
+       // new SecurityMainGUI(c, c.getAcc().get(0));
+         new Welcome();
     }
 }

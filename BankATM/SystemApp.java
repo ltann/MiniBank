@@ -2,6 +2,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jfree.data.category.DefaultCategoryDataset;
+
 public class SystemApp {
     public static ArrayList<ArrayList<String>> bankerAccount = new ArrayList<ArrayList<String>>();
     public static ArrayList<ArrayList<String>> customerAccount = new ArrayList<ArrayList<String>>();
@@ -63,7 +65,7 @@ public class SystemApp {
                 newUser.add(username);
                 newUser.add(password);
                 customerAccount.add(newUser);
-                customers.add(new Customer(username, password, name, cell, address,collateral));
+                customers.add(new Customer(username, password, name, cell, address, collateral));
                 return true;
             }
             for(int i = 0; i < customerAccount.size(); i++) {
@@ -75,7 +77,7 @@ public class SystemApp {
                     newUser.add(username);
                     newUser.add(password);
                     customerAccount.add(newUser);
-                    customers.add(new Customer(username, password, name, cell, address,collateral));
+                    customers.add(new Customer(username, password, name, cell, address, collateral));
                     return true;
                 }
             }
@@ -193,10 +195,10 @@ public class SystemApp {
                 info += "$ ";
                 break;
             case 1:
-                info += "¥ ";
+                info += "妤� ";
                 break;
             case 2:
-                info += "€ ";
+                info += "閳э拷 ";
                 break;
         }
         info += deposit;
@@ -207,10 +209,10 @@ public class SystemApp {
                 info += "$ ";
                 break;
             case 1:
-                info += "¥ ";
+                info += "妤� ";
                 break;
             case 2:
-                info += "€ ";
+                info += "閳э拷 ";
                 break;
         }
         info += a.getC()[currency].getBalance();
@@ -230,10 +232,10 @@ public class SystemApp {
             case "$":
                 info += "USD";
                 break;
-            case "¥":
+            case "妤�":
                 info += "RMB";
                 break;
-            case "€":
+            case "閳э拷":
                 info += "EUR";
                 break;
             default:
@@ -304,6 +306,85 @@ public class SystemApp {
         }
         return false;
     }
+<<<<<<< HEAD
+
+    public static Object[][] getAllData() {
+    	Object[][] data = {
+                new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110*20},
+                new Object[]{"MICR", "MICROSOFT", 57.26, 48.6, 50, "-30%", 48.6*50}
+            };
+    	return data;
+    }
+    
+    public static DefaultCategoryDataset getAccountValueData() {
+    	DefaultCategoryDataset first = new DefaultCategoryDataset();
+		first.addValue(1, "First", "2013");
+	    first.addValue(3, "First", "2014");
+	    first.addValue(2, "First", "2015");
+	    first.addValue(6, "First", "2016");
+	    first.addValue(5, "First", "2017");
+	    first.addValue(12, "First", "2018");
+	    return first;
+    }
+    
+    public static ArrayList<DefaultCategoryDataset> getStockData() {
+    	ArrayList<DefaultCategoryDataset> data = new ArrayList<DefaultCategoryDataset>();
+		DefaultCategoryDataset first = new DefaultCategoryDataset();
+		DefaultCategoryDataset second = new DefaultCategoryDataset();
+		first.addValue(1, "First", "2013");
+		first.addValue(3, "First", "2014");
+		first.addValue(2, "First", "2015");
+		first.addValue(6, "First", "2016");
+		first.addValue(5, "First", "2017");
+		first.addValue(12, "First", "2018");
+		second.addValue(14, "Second", "2013");
+		second.addValue(13, "Second", "2014");
+		second.addValue(12, "Second", "2015");
+		second.addValue(9, "Second", "2016");
+		second.addValue(5, "Second", "2017");
+		second.addValue(7, "Second", "2018");
+		data.add(first);
+		data.add(second);
+		return data;
+    }
+    
+    public static String[] getStockNameList() {
+    	String[] stockName = {"Apple", "Microsoft"};
+    	return stockName;
+    }
+    
+    public static Object[][] getUserBonds() {
+    	Object[][] bonds = {
+            new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+            new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+        };
+    	return bonds;
+    }
+    
+    public static Object[][] getBondsData() {
+    	Object[][] bonds = {
+                new String[]{"1 month", "100", "15%"},
+                new String[]{"3 month", "10000", "30%"}
+            };
+        	return bonds;
+    }
+    
+    public static Object[][] getBankerStock() {
+    	Object[][] stocks = {
+                new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+                new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+        };
+    	return stocks;
+    }
+    
+    public static void updateStock() {
+    	
+    }
+    
+    public static void updateBond() {
+    	
+    }
+=======
  ///////////////////////////////////////////////////////////////////////////////////
  // STOCKS AND BONDS FUNCTIONS
     
@@ -372,6 +453,84 @@ public class SystemApp {
       
     }
     
+>>>>>>> b91fdadcf47c9f7ac2561087f7d93c54ad52c0e8
+
+public static Object[][] getAllData() {
+	Object[][] data = {
+            new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110*20},
+            new Object[]{"MICR", "MICROSOFT", 57.26, 48.6, 50, "-30%", 48.6*50}
+        };
+	return data;
+}
+
+public static DefaultCategoryDataset getAccountValueData() {
+	DefaultCategoryDataset first = new DefaultCategoryDataset();
+	first.addValue(1, "First", "2013");
+    first.addValue(3, "First", "2014");
+    first.addValue(2, "First", "2015");
+    first.addValue(6, "First", "2016");
+    first.addValue(5, "First", "2017");
+    first.addValue(12, "First", "2018");
+    return first;
+}
+
+public static ArrayList<DefaultCategoryDataset> getStockData() {
+	ArrayList<DefaultCategoryDataset> data = new ArrayList<DefaultCategoryDataset>();
+	DefaultCategoryDataset first = new DefaultCategoryDataset();
+	DefaultCategoryDataset second = new DefaultCategoryDataset();
+	first.addValue(1, "First", "2013");
+	first.addValue(3, "First", "2014");
+	first.addValue(2, "First", "2015");
+	first.addValue(6, "First", "2016");
+	first.addValue(5, "First", "2017");
+	first.addValue(12, "First", "2018");
+	second.addValue(14, "Second", "2013");
+	second.addValue(13, "Second", "2014");
+	second.addValue(12, "Second", "2015");
+	second.addValue(9, "Second", "2016");
+	second.addValue(5, "Second", "2017");
+	second.addValue(7, "Second", "2018");
+	data.add(first);
+	data.add(second);
+	return data;
+}
+
+public static String[] getStockNameList() {
+	String[] stockName = {"Apple", "Microsoft"};
+	return stockName;
+}
+
+public static Object[][] getUserBonds() {
+	Object[][] bonds = {
+        new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+        new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+    };
+	return bonds;
+}
+
+public static Object[][] getBondsData() {
+	Object[][] bonds = {
+            new String[]{"1 month", "100", "15%"},
+            new String[]{"3 month", "10000", "30%"}
+        };
+    	return bonds;
+}
+
+public static Object[][] getBankerStock() {
+	Object[][] stocks = {
+            new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+            new String[]{"3 month", "10000", "2019-8-3", "2019-11-3",  "30%"}
+    };
+	return stocks;
+}
+
+public static void updateStock() {
+	
+}
+
+public static void updateBond() {
+	
+}
 }
 
     

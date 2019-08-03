@@ -2,27 +2,43 @@ import java.util.*;
 
 public class SecurityAccount extends Account {
     private Currency usd; //USD
-    private LinkedList<Stocks> stocks;
-    private HashMap<, Bonds> bonds;
+    private LinkedList<customerStock> stocks;
+    private LinkedList<customerBond> bonds;
     private double availableFunds ;
     private double valueOfSA;
-    private double valueofSA;
 
     public SecurityAccount(int type, int accountNumber, int funds){
         super(type, accountNumber);
         this.usd = this.getC()[0];
         this.stocks = new LinkedList<>();
-        this.bonds = new HashMap<>();
+        this.bonds = new LinkedList<>();
         availableFunds = funds;
         valueOfSA = funds;
-        this.valueofSA = usd.getBalance();
     }
     public double getAvailableFunds() {
       return availableFunds;
     }
-    public double getSaValuve() {
+
+    public void updateValueOfSA(){
+        double value = usd.getBalance();
+        ListIterator<customerStock> stockListIterator = stocks.listIterator();
+        while(stockListIterator.hasNext()){
+            customerStock st = stockListIterator.next();
+            value += st.getPriceBoughtAt() * st.getNumShares();
+        }
+
+        ListIterator<customerBond> bondsListIterator = bonds.listIterator();
+        while(bondsListIterator.hasNext()){
+            customerBond bd = bondsListIterator.next();
+
+        }
+
+    }
+
+    public double getValueOfSA() {
       return valueOfSA;
     }
+
     public void purchaseStock(String ticker, String StockName, double priceOfShare, double numOfShares) {
       //change available Balance
       double Sharevalue = priceOfShare*numOfShares;
@@ -42,11 +58,10 @@ public class SecurityAccount extends Account {
     }
 
     private void containsStocks(){
-        ListIterator<Stocks> i = stocks.listIterator();
-        stocks.add(new Stocks("Apple", "a", 5.0));
-        stocks.add(new Stocks("asdf", "a", 5.0));
+        ListIterator<customerStock> i = stocks.listIterator();
+
         while(i.hasNext()){
-            i.next();
+            System.out.println(i.next());
         }
     }
     
@@ -60,10 +75,10 @@ public class SecurityAccount extends Account {
 //    }
 //
 
-    public Stocks getStocks(){//get stocks
-
+//    public Stocks getStocks(){//get stocks
+//
 //        return stock;
-    }
+//    }
 
     public Currency getUsd() {
         return usd;
@@ -80,6 +95,9 @@ public class SecurityAccount extends Account {
 
     public static void main(String[] args){
         SecurityAccount i = new SecurityAccount(3, 33, 3);
+        i.stocks.add(new customerStock("Apple", "a", 5.0,3));
+        i.stocks.add(new customerStock("asdf", "a", 5.0,2));
         i.containsStocks();
+
     }
 }
