@@ -2,20 +2,30 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class SecurityAccount extends Account {
+<<<<<<< HEAD
     private Currency usd; //USD
     private HashMap<Date,Stocks> stocks;
     private HashMap<Date, Bonds> bonds;
     private double availableFunds ;
     private double valueOfSA;
+=======
+    private Currency usd; //in USD, this is the available balance
+    private double valueofSA;
+
+>>>>>>> caaf710948d095f9b1420b1b7298a6ef57cf8a4f
 
 
     public SecurityAccount(int type, int accountNumber, int funds){
         super(type, accountNumber);
         this.usd = this.getC()[0];
+<<<<<<< HEAD
         this.stocks = new HashMap<>();
         this.bonds = new HashMap<>();
         availableFunds = funds;
         valueOfSA = funds;
+=======
+        this.valueofSA = usd.getBalance();
+>>>>>>> caaf710948d095f9b1420b1b7298a6ef57cf8a4f
     }
     public double getAvailableFunds() {
       return availableFunds;
