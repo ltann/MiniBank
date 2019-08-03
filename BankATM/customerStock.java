@@ -1,14 +1,9 @@
-import java.util.List;
-
-public class customerStock {
-    private String ticker;
-    private String stockName;
+public class customerStock extends Stocks{
     private double priceBoughtAt;
     private int numShares;
 
     public customerStock(String ticker, String stockName, double pricePerShare, int numShares){
-        this.ticker = ticker;
-        this.stockName = stockName;
+        super()
         this.priceBoughtAt = pricePerShare;
         this.numShares = numShares;
     }

@@ -1,9 +1,9 @@
 public class stockPriceHistory {
-    private int refresh;
+    private int day;
     private double price;
     
     public stockPriceHistory(double initPrice) {
-      refresh = 0;
+      day = 0;
       price = initPrice;
     }
     

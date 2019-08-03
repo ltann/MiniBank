@@ -1,8 +1,13 @@
-public class customerBond {
-    private int amount;
-    private double interest;
-    private int maturity; //how long the bond is until receive interest.
-    private String typeOfBond; //week or Month
+public class customerBond extends Bonds {
+    private int maturity;
     private
+
+    public customerBond(int value, double i, int length, String type) {
+        super(value, i, length, type);
+    }
+
+    public int getMaturity() {
+        return maturity;
+    }
 
 }
