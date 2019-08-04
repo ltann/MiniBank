@@ -1,3 +1,4 @@
+import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.*;
 
 public class SecurityAccount extends Account {
@@ -6,23 +7,14 @@ public class SecurityAccount extends Account {
     private double availableFunds;
     private double valueOfSA;
     private LinkedList<String> Transactions;
-    private double profitMade;
+    private double profitMade; //from both bonds and stocks
 
     public SecurityAccount(int type, int accountNumber, int funds) {
         super(type, accountNumber);
-        super.c = this.getC();
         this.stocks = new LinkedList<customerStock>();
         this.bonds = new LinkedList<customerBond>();
         availableFunds = funds;
         valueOfSA = funds;
-    }
-
-    public double getAvailableFunds() {
-        return availableFunds;
-    }
-
-    public double getValueOfSA() {
-        return valueOfSA;
     }
 
     public boolean purchaseStock(Stocks stock, int numOfShares) {
@@ -33,7 +25,6 @@ public class SecurityAccount extends Account {
             purchasable = false;
         } else {
             availableFunds = availableFunds - shareValue;
-            valueOfSA = availableFunds;
             stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares));
             //UPDATE DAILY? TRANSACTIONS
             Transactions.add("Purchased " + numOfShares + " of " + stock.getStockName() + " Share(s) at " + stock.getPricePerShare());
@@ -61,11 +52,41 @@ public class SecurityAccount extends Account {
         return sellable;
     }
 
-//    public void addBonds(Bonds b){
-//        bonds.put(b);
-//    }
-//    public Bonds getBonds() {
-//    }
+    public boolean purchaseBond(Bonds b){
+        boolean purchasable = true;
+        if(b.getAmount() > availableFunds){
+            purchasable = false;
+            System.out.println("You can't buy this bond at price " + b.getAmount() + ". You only have " + availableFunds + " USD left in security acount");
+        }
+        else{
+            availableFunds -= b.getAmount();
+            valueOfSA += b.getAmount();
+            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),b.getAmount(),b.getInterest()));
+            profitMade -= b.getAmount();
+        }
+        return purchasable;
+    }
+
+    public boolean sellBond(customerBond b){//fixx
+        boolean sellable = true;
+        if(b.isMatured()){
+            availableFunds += b.getAmount() + b.getInterest();
+            valueOfSA += b.getInterest();
+            profitMade += b.getAmount() + b.getInterest();
+        }else{
+            availableFunds += b.getAmount();
+            profitMade += b.getAmount();
+        }
+        return sellable;
+    }
+
+    public double getAvailableFunds() {
+        return availableFunds;
+    }
+
+    public double getValueOfSA() {
+        return valueOfSA;
+    }
 
     public LinkedList<customerStock> getStocks(){//get all Stocks
         return this.stocks;
@@ -73,10 +94,6 @@ public class SecurityAccount extends Account {
 
     public LinkedList<customerBond> getBonds() {
         return bonds;
-    }
-
-    public double getBalance() {
-        return super.c[0].getBalance();
     }
 
     public LinkedList<String> getTransactions() {

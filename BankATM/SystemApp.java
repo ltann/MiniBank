@@ -387,16 +387,29 @@ public class SystemApp {
 
     //Customer Side Functions:
 
-    //purchase a new bond for a customer
-    public static void purchaseBond(Customer c, Bonds b) {
-        Iterator iter = c.getAcc().iterator();
-        while (iter.hasNext()) {
-            SecurityAccount findSA = (SecurityAccount) iter.next();
-            if (findSA.getType() == 3) {
-                // TODO: (ADD bonds to SA) --> should update available balance
-                //                         --> add bonds to linkedList of Customer
-            }
+    //Customer purchase a bond
+    public static boolean purchaseBond(Customer c, Bonds b) {
+        boolean purchasable = true;
+        SecurityAccount sa = c.getSecurityAccount();
+        SystemApp.bankers.get(0).addProfits();
+        purchasable = sa.purchaseBond(b);
+        if(purchasable){
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
         }
+        return purchasable;
+    }
+
+    //Customer sells a bond
+
+    public static boolean sellBond(Customer c, customerBond b){
+        boolean sellable = true;
+        SecurityAccount sa = c.getSecurityAccount();
+        SystemApp.bankers.get(0).addProfits();
+        sellable = sa.sellBond(b);
+        if(sellable){
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        }
+        return sellable;
     }
 
     //Customer purchase a stock
@@ -405,7 +418,9 @@ public class SystemApp {
         SecurityAccount sa = c.getSecurityAccount();
         SystemApp.bankers.get(0).addProfits();
         purchasable = sa.purchaseStock(s,numOfShare);
-        GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        if(purchasable){
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        }
         return purchasable;
     }
 
@@ -416,8 +431,20 @@ public class SystemApp {
         SecurityAccount sa = c.getSecurityAccount();
         SystemApp.bankers.get(0).addProfits();
         sellable = sa.sellStock(s, GUI.database.dataFindStocks(s.getTicker()) ,numOfShare); //second parameter needs to be set as the currentPriceStock
-        GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        if(sellable){
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        }
         return sellable;
+    }
+
+    //Customer's available funds in SA
+    public static double getAvailableFunds(Customer c){
+        return c.getSecurityAccount().getAvailableFunds();
+    }
+
+    //Customer's SA value
+    public static double getSAValue(Customer c){
+        return c.getSecurityAccount().getValueOfSA();
     }
 
     //Customer's transactions in SA
@@ -428,6 +455,11 @@ public class SystemApp {
     //Customer's profit made from SA.
     public static double getProfitMadeInSecurity(Customer c){
         return c.getSecurityAccount().getProfitMade();
+    }
+
+    //Customer's unrealized profits/Loss from SA
+    public static double getUnrealized(Stocks s, customerStock cst){
+        return cst.getUnrealizedProfitOrLoss(s);
     }
 
     //Manager side functions:

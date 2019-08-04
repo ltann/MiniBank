@@ -1,13 +1,11 @@
 public class customerStock extends Stocks{
     private double priceBoughtAt;
     private int numShares;
-    private double unrealizedProfitOrLoss; //positive if a gain, negative if a loss but 0 if neither.
 
     public customerStock(String ticker, String stockName, double pricePerShare, int numShares){
         super(ticker, stockName, pricePerShare);
         this.priceBoughtAt = pricePerShare;
         this.numShares = numShares;
-        this.unrealizedProfitOrLoss = 0;
     }
 
     public int getNumShares() {
