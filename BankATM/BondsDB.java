@@ -1,5 +1,3 @@
-package bank;
-
 public class BondsDB {
 	private String bondID;
 	private int amount;
