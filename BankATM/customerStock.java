@@ -5,9 +5,9 @@ public class customerStock extends Stocks{
     private double priceBoughtAt;
     private int numShares;
 
-    public customerStock(String ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory){
+    public customerStock(String ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA){
         super(ticker, stockName, pPS, stockPriceHistory);
-        this.priceBoughtAt = pPS;
+        this.priceBoughtAt = pBA;
         this.numShares = numShares;
     }
 
