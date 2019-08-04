@@ -380,8 +380,8 @@ public class SystemApp {
     	
     }
     
-    public static void updateBond() {
-    	
+    public static void updateBond(String bondID, double newInt) {
+    	SystemApp.bankers.get(0).setNewInterestRate(bondID, newInt);
     }
 
  ///////////////////////////////////////////////////////////////////////////////////
@@ -453,7 +453,6 @@ public class SystemApp {
     public static void ManagerCreateNewStock(Banker b, String ticker, String CompanyName, int newPrice) {
       //stock s should have a stock name, stock ticker, and stock price
       b.createNewStock(ticker, CompanyName, newPrice);
-      
     }
     
 

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import bank.BondsDB;
 
 public class Banker extends Person {
     public Boolean showAllCustomer;
@@ -140,6 +141,44 @@ public class Banker extends Person {
     //add profits from Stocks and Bonds purchase 
     public void addProfits() {
       SandBprofits += 5.95;
+    }
+    
+    //Initialize Bonds
+    public void initBonds() {
+      //1 week Bond
+      String bondID = "a"; // Think more about bondID placeholder for now
+      int amount = 10000;
+      double interest = 0.01;
+      int maturity = 1;
+      String bondType = "week";
+      BondsDB newBond = BondsDB(bondID, amount, interest, maturity, bondType);
+      GUI.database.dataAddBonds(newBond);
+      
+    //1 month Bond
+      bondID = "b"; // Think more about bondID placeholder for now
+      amount = 10000;
+      interest = 0.05;
+      maturity = 1;
+      bondType = "month";
+      newBond = BondsDB(bondID, amount, interest, maturity, bondType);
+      GUI.database.dataAddBonds(newBond);
+      
+      //3 month Bond
+      bondID = "c"; // Think more about bondID placeholder for now
+      amount = 10000;
+      interest = 0.1;
+      maturity = 3;
+      bondType = "month";
+      newBond = BondsDB(bondID, amount, interest, maturity, bondType);
+      GUI.database.dataAddBonds(newBond);
+    }
+    
+    //Set new Bond Interest Rate
+    public void setNewInterestRate(String bondID, double newInterestRate) {
+     BondsDB updateBond = GUI.database.dataFindBonds(String bondID);
+     updateBond.setInterest(newInterestRate);
+     GUI.database.dataUpdateBonds(bondID, updateBond); 
+      
     }
 
     public Boolean getShowAllCustomer() {
