@@ -1,15 +1,12 @@
 public class Loan {
     private double interest;
     private Currency currency;
+    private String type;
+    private int boughtAt;
 
-    public Loan(){
-        this.interest = 0.01;
-        this.currency = new Currency("USD",'$');
-    }
-
-    public Loan(double interest, int index){
+    public Loan(double interest, int currencyType){
         this.interest = interest;
-        switch (index){
+        switch (currencyType){
             case 0:
                 this.currency = new Currency("USD",'$');
             case 1:
@@ -17,7 +14,6 @@ public class Loan {
             case 2:
                 this.currency = new Currency("EUR", '€');
         }
-
     }
 
     public double getInterest() {

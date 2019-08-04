@@ -4,22 +4,16 @@ import java.util.ListIterator;
 public class Customer extends Person {
     private ArrayList<Account> acc;
     private ArrayList<Loan> ln;
-    private int accountNumber;
-    private int loanNumber;
     private PersonInfo perInfomation;
     private boolean collateral;
     public Customer(){
         super("-------","-------",AccessRight.CUSTOMER);
-        this.accountNumber=0;
-        this.loanNumber=0;
         acc=new ArrayList<Account>();
         ln=new ArrayList<Loan>();
         this.collateral = false;
     }
     public Customer(String username, String password, String name, String cell, String address, boolean collateral){
         super(username,password,AccessRight.CUSTOMER);
-        this.accountNumber=0;
-        this.loanNumber=0;
         perInfomation=new PersonInfo(name,cell,address);
         acc=new ArrayList<Account>();
         ln=new ArrayList<Loan>();
@@ -30,14 +24,12 @@ public class Customer extends Person {
         //type is type => security=3 saving=2 checking=1 default=0
         //number is account number
         acc.add(new Account(type,number));
-        accountNumber++;
     }
 
     public boolean delAccount(int number) {
         for(int i = 0; i < acc.size(); i++) {
             if(acc.get(i).getAccountNumber() == number) {
                 acc.remove(i);
-                accountNumber--;
                 return true;
             }
         }
@@ -45,17 +37,19 @@ public class Customer extends Person {
     }
 
     public void addLoan(Loan loan){
-        //x the amount money
         ln.add(loan);
-        loanNumber++;
+    }
+
+    public void removeLoan(Loan loan){
+        ln.remove(loan);
     }
 
     public int getAccountNumber() {
-        return accountNumber;
+        return acc.size();
     }
 
     public int getLoanNumber() {
-        return loanNumber;
+        return ln.size();
     }
 
     public ArrayList<Account> getAcc() {

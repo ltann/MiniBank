@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -279,7 +280,7 @@ public class SystemApp {
     }
 
     public static void loan(int numMonth, double amount, int currency) {
-        double interest = 0;
+        double interest;
         if (numMonth < 5) {
             interest = 0.02;
         } else if (numMonth < 12) {
@@ -291,6 +292,11 @@ public class SystemApp {
         loan.getCurrency().deposit(amount);
         customers.get(currentCustomer).addLoan(loan);
         customers.get(currentCustomer).getAcc().get(0).getC()[currency].deposit(amount);
+    }
+
+    public static boolean payLoan(Loan loan){
+        boolean payable = true;
+        payable =
     }
 
     public static boolean checkBalance(Customer c) {
@@ -449,7 +455,7 @@ public class SystemApp {
     }
 
     //Customer's transactions in SA
-    public static LinkedList<String> getSecurityTransactions(Customer c){
+    public static ArrayList<String> getSecurityTransactions(Customer c){
         return c.getSecurityAccount().getTransactions();
     }
 
