@@ -82,4 +82,8 @@ public class SecurityAccount extends Account {
     public LinkedList<String> getTransactions() {
         return Transactions;
     }
+
+    public double getProfitMade() {
+        return profitMade;
+    }
 }

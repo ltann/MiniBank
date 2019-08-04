@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -387,48 +388,46 @@ public class SystemApp {
     //Customer Side Functions:
 
     //purchase a new bond for a customer
-    public static void addNewBond(Customer c, Bonds b) {
+    public static void purchaseBond(Customer c, Bonds b) {
         Iterator iter = c.getAcc().iterator();
         while (iter.hasNext()) {
             SecurityAccount findSA = (SecurityAccount) iter.next();
             if (findSA.getType() == 3) {
                 // TODO: (ADD bonds to SA) --> should update available balance
                 //                         --> add bonds to linkedList of Customer
-                // findSA.addBonds(b);
             }
         }
     }
 
     //Customer purchase a stock
-    public static void purchaseANewStock(Customer c, Stocks s, int numOfShare) {
-        Stocks addStock = s;
-        Iterator iter = c.getAcc().iterator();
-        while (iter.hasNext()) {
-            SecurityAccount findSA = (SecurityAccount) iter.next();
-            if (findSA.getType() == 3) {
-                //TODO: (Add stocks to SA) --> should update available balance
-                //                         --> should add Stock to linkedList
-                // findSA.addStocks(s, numOfShare)
-                SystemApp.bankers.get(0).addProfits();
-            }
-        }
+    public static boolean purchaseStock(Customer c, Stocks s, int numOfShare) {
+        boolean purchasable = true;
+        SecurityAccount sa = c.getSecurityAccount();
+        SystemApp.bankers.get(0).addProfits();
+        purchasable = sa.purchaseStock(s,numOfShare);
+        GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        return purchasable;
     }
 
 
     //Customer sell a stock
-    public static void sellANewStock(Customer c, Stocks s, int numOfShare) {
-        Stocks sellStock = s;
-        Iterator iter = c.getAcc().iterator();
-        while (iter.hasNext()) {
-            SecurityAccount findSA = (SecurityAccount) iter.next();
-            if (findSA.getType() == 3) {
-                //TODO: (Sell stocks to SA) --> should update available balance
-                //                         --> should update value of SA
-                //                         --> should remove Stock to linkedList
-                // findSA.sellStocks(s, numOfShare)
-                SystemApp.bankers.get(0).addProfits();
-            }
-        }
+    public static boolean sellStock(Customer c, customerStock s, int numOfShare) {
+        boolean sellable = true;
+        SecurityAccount sa = c.getSecurityAccount();
+        SystemApp.bankers.get(0).addProfits();
+        sellable = sa.sellStock(s, GUI.database.dataFindStocks(s.getTicker()) ,numOfShare); //second parameter needs to be set as the currentPriceStock
+        GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        return sellable;
+    }
+
+    //Customer's transactions in SA
+    public static LinkedList<String> getSecurityTransactions(Customer c){
+        return c.getSecurityAccount().getTransactions();
+    }
+
+    //Customer's profit made from SA.
+    public static double getProfitMadeInSecurity(Customer c){
+        return c.getSecurityAccount().getProfitMade();
     }
 
     //Manager side functions:

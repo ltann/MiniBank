@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Customer extends Person {
     private ArrayList<Account> acc;
@@ -92,4 +93,16 @@ public class Customer extends Person {
         answer+="\n";
         return answer;
     }*/
+
+    public SecurityAccount getSecurityAccount(){
+        ListIterator<Account> i = acc.listIterator();
+        while(i.hasNext()){
+            Account acc = i.next();
+            if(acc.getType() == 3){
+                return (SecurityAccount) acc;
+            }
+        }
+        System.out.println("There is no Security Account");
+        return null;
+    }
 }
