@@ -1,32 +1,39 @@
 public class Bonds {
+    private String bondID;
+    private String bondType;
+    private int maturity;
     private int amount;
     private double interest;
-    private int maturity; //how long the bond is until receive interest.
-    private String typeOfBond; //week or Month 
 
-    public Bonds(int value, double i, int length, String type, int id) {
-      amount = value;
-      interest = i;
-      maturity = length;
-      typeOfBond = type; 
+    public Bonds(String bondID, String bondType, int maturity, int value, double i) {
+        this.bondType = bondType;
+        this.bondID = bondID;
+        this.maturity = maturity;
+        this.amount = value;
+        this.interest = i;
+
     }
     public int getAmount() { //return bond's value
       return amount;
     }
+
     public double getInterest() { //returns bond's interest rate
       return interest;
     }
+
     public void changeInterest(double newInterest) {
       interest = newInterest;
     }
-    public int getLength() {// return bond's total length
-      return maturity;
+
+    public String getBondType() { //return whether a month or week bond
+      return bondType;
     }
-    public String getTypeofBond() { //return whether a month or week bond
-      return typeOfBond;
+
+    public String getBondID() {
+        return bondID;
     }
-    public double getMaturityValue(){// returns bond's value at maturity
-      double x = interest + 1;
-      return amount*x ;
+
+    public int getMaturity() {
+        return maturity;
     }
 }

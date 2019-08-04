@@ -1,103 +1,107 @@
+import javax.lang.model.util.SimpleAnnotationValueVisitor6;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class SecurityAccount extends Account {
-    private Currency usd; //USD
-    private LinkedList<customerStock> stocks;
-    private LinkedList<customerBond> bonds;
-    private double availableFunds ;
+    private ArrayList<customerStock> stocks;
+    private ArrayList<customerBond> bonds;
+    private double availableFunds;
     private double valueOfSA;
+    private ArrayList<String> Transactions;
+    private double profitMade; //from both bonds and stocks
 
-    public SecurityAccount(int type, int accountNumber, int funds){
+    public SecurityAccount(int type, int accountNumber, int funds) {
         super(type, accountNumber);
-        this.usd = this.getC()[0];
-        this.stocks = new LinkedList<>();
-        this.bonds = new LinkedList<>();
+        this.stocks = new ArrayList<>();
+        this.bonds = new ArrayList<>();
         availableFunds = funds;
         valueOfSA = funds;
     }
-    public double getAvailableFunds() {
-      return availableFunds;
+
+    public boolean purchaseStock(Stocks stock, int numOfShares) {
+        boolean purchasable = true;
+        double shareValue = stock.getPricePerShare() * numOfShares;
+        if (shareValue > availableFunds) {
+            System.out.println("You're available funds are: " + availableFunds + " you cannot purchase this stock share value at: " + shareValue);
+            purchasable = false;
+        } else {
+            availableFunds = availableFunds - shareValue;
+            stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares));
+            //UPDATE DAILY? TRANSACTIONS
+            Transactions.add("Purchased " + numOfShares + " of " + stock.getStockName() + " Share(s) at " + stock.getPricePerShare());
+            profitMade -= shareValue;
+        }
+        return purchasable;
     }
 
-    public void updateValueOfSA(){
-        double value = usd.getBalance();
-        ListIterator<customerStock> stockListIterator = stocks.listIterator();
-        while(stockListIterator.hasNext()){
-            customerStock st = stockListIterator.next();
-            value += st.getPriceBoughtAt() * st.getNumShares();
+    public boolean sellStock(customerStock customerStock, double currentStockPrice, int numOfShares) {
+        //change available Balance and valueOfSA
+        boolean sellable = true;
+        if(customerStock.getNumShares() < numOfShares){
+            sellable = false;
+            System.out.println("You only have " + customerStock.getNumShares() + " shares, so you can't sell " + numOfShares + " of those...");
         }
-
-        ListIterator<customerBond> bondsListIterator = bonds.listIterator();
-        while(bondsListIterator.hasNext()){
-            customerBond bd = bondsListIterator.next();
-
+        else{
+            double shareValue = currentStockPrice * numOfShares;
+            double profits = shareValue - (customerStock.getNumShares() * customerStock.getPriceBoughtAt());
+            availableFunds += shareValue;
+            valueOfSA += profits;
+            stocks.remove(customerStock);
+            Transactions.add("Sold " + numOfShares + " of " + customerStock.getStockName() + " Share(s) at " + currentStockPrice);
+            profitMade += shareValue;
         }
+        return sellable;
+    }
 
+    public boolean purchaseBond(Bonds b){
+        boolean purchasable = true;
+        if(b.getAmount() > availableFunds){
+            purchasable = false;
+            System.out.println("You can't buy this bond at price " + b.getAmount() + ". You only have " + availableFunds + " USD left in security acount");
+        }
+        else{
+            availableFunds -= b.getAmount();
+            valueOfSA += b.getAmount();
+            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),b.getAmount(),b.getInterest()));
+            profitMade -= b.getAmount();
+        }
+        return purchasable;
+    }
+
+    public boolean sellBond(customerBond b){//fixx
+        boolean sellable = true;
+        if(b.isMatured()){
+            availableFunds += b.getAmount() + b.getInterest();
+            valueOfSA += b.getInterest();
+            profitMade += b.getAmount() + b.getInterest();
+        }else{
+            availableFunds += b.getAmount();
+            profitMade += b.getAmount();
+        }
+        return sellable;
+    }
+
+    public double getAvailableFunds() {
+        return availableFunds;
     }
 
     public double getValueOfSA() {
-      return valueOfSA;
+        return valueOfSA;
     }
 
-    public void purchaseStock(String ticker, String StockName, double priceOfShare, double numOfShares) {
-      //change available Balance
-      double Sharevalue = priceOfShare*numOfShares;
-      double canPurchase = availableFunds -  Sharevalue;
-      if(canPurchase < 0) { //not enough funds --> should print error
-        
-      }else {
-        availableFunds  = availableFunds -  Sharevalue;
-      //Change hash of Stock
-//       Stocks stock = stocks.get(ticker);
-      }
-    }
-    public void sellStock(String ticker, String StockName, double priceOfShare, double numOfShares) {
-      //change available Balance and valueOfSA
-      double Sharevalue = priceOfShare*numOfShares;
-      availableFunds  = availableFunds -  Sharevalue;
+    public ArrayList<customerStock> getStocks(){//get all Stocks
+        return this.stocks;
     }
 
-    private void containsStocks(){
-        ListIterator<customerStock> i = stocks.listIterator();
-
-        while(i.hasNext()){
-            System.out.println(i.next());
-        }
-    }
-    
-
-//    public void addBonds(Bonds b){
-//        bonds.put(b);
-//    }
-//
-//    public Bonds getBonds() {
-//
-//    }
-//
-
-//    public Stocks getStocks(){//get stocks
-//
-//        return stock;
-//    }
-
-    public Currency getUsd() {
-        return usd;
+    public ArrayList<customerBond> getBonds() {
+        return bonds;
     }
 
-    public double getBalance(){
-        return this.usd.getBalance();
+    public ArrayList<String> getTransactions() {
+        return Transactions;
     }
 
-    public String portfolio(){
-        StringBuilder str = new StringBuilder();
-        return str.toString();
-    }
-
-    public static void main(String[] args){
-        SecurityAccount i = new SecurityAccount(3, 33, 3);
-        i.stocks.add(new customerStock("Apple", "a", 5.0,3));
-        i.stocks.add(new customerStock("asdf", "a", 5.0,2));
-        i.containsStocks();
-
+    public double getProfitMade() {
+        return profitMade;
     }
 }

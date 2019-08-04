@@ -1,31 +1,35 @@
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-public class customerStock {
-    private String ticker;
-    private String stockName;
+public class customerStock extends Stocks{
     private double priceBoughtAt;
     private int numShares;
 
-    public customerStock(String ticker, String stockName, double pricePerShare, int numShares){
-        this.ticker = ticker;
-        this.stockName = stockName;
-        this.priceBoughtAt = pricePerShare;
+    public customerStock(String ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA){
+        super(ticker, stockName, pPS, stockPriceHistory);
+        this.priceBoughtAt = pBA;
         this.numShares = numShares;
+    }
+
+    public int getNumShares() {
+        return numShares;
     }
 
     public double getPriceBoughtAt() {
         return priceBoughtAt;
     }
 
-    public String getStockName() {
-        return stockName;
-    }
-
-    public String getTicker() {
-        return ticker;
-    }
-
-    public int getNumShares() {
-        return numShares;
+    public double getUnrealizedProfitOrLoss(Stocks stocks) {
+        double unrealized = stocks.getPricePerShare() - this.getPriceBoughtAt();
+        if(unrealized < 0){
+            System.out.println("There will be a loss in profit of " + unrealized + " USD.");
+        }
+        else if(unrealized > 0){
+            System.out.println("There will be a gain in profit of " + unrealized + " USD.");
+        }
+        else{
+            System.out.println("There will be no loss or profit from selling at this price");
+        }
+        return unrealized;
     }
 }
