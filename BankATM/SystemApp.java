@@ -420,7 +420,7 @@ public class SystemApp {
         SystemApp.bankers.get(0).addProfits();
         purchasable = sa.purchaseStock(s,numOfShare);
         if(purchasable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), new SecurityAccountDB );
         }
         return purchasable;
     }

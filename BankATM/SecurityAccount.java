@@ -1,18 +1,19 @@
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class SecurityAccount extends Account {
-    private LinkedList<customerStock> stocks;
-    private LinkedList<customerBond> bonds;
+    private ArrayList<customerStock> stocks;
+    private ArrayList<customerBond> bonds;
     private double availableFunds;
     private double valueOfSA;
-    private LinkedList<String> Transactions;
+    private ArrayList<String> Transactions;
     private double profitMade; //from both bonds and stocks
 
     public SecurityAccount(int type, int accountNumber, int funds) {
         super(type, accountNumber);
-        this.stocks = new LinkedList<customerStock>();
-        this.bonds = new LinkedList<customerBond>();
+        this.stocks = new ArrayList<>();
+        this.bonds = new ArrayList<>();
         availableFunds = funds;
         valueOfSA = funds;
     }
@@ -88,15 +89,15 @@ public class SecurityAccount extends Account {
         return valueOfSA;
     }
 
-    public LinkedList<customerStock> getStocks(){//get all Stocks
+    public ArrayList<customerStock> getStocks(){//get all Stocks
         return this.stocks;
     }
 
-    public LinkedList<customerBond> getBonds() {
+    public ArrayList<customerBond> getBonds() {
         return bonds;
     }
 
-    public LinkedList<String> getTransactions() {
+    public ArrayList<String> getTransactions() {
         return Transactions;
     }
 
