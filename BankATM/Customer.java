@@ -26,7 +26,7 @@ public class Customer extends Person {
     }
     
     public void addAccount(int type,int number){
-        //type is type => saving=2 checking=1 default=0
+        //type is type => security=3 saving=2 checking=1 default=0
         //number is account number
         acc.add(new Account(type,number));
         accountNumber++;
