@@ -2,6 +2,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -465,14 +466,25 @@ public class SystemApp {
     //Manager side functions:
 
     // for change interest rate button change bond interest rate
-    public static void changeBondInterestrate(Bonds b, double newInterestRate) {
+    public static void changeBondInterestRate(Bonds b, double newInterestRate) {
         b.changeInterest(newInterestRate);
     }
 
-    //refresh stock button
-    public static void updateAllStocks() {
+    //refresh stock value, update bonds maturity, increase day, update Loan
+    public static void update() {
         //function provided by the database
-        SystemApp.bankers.get(0).updateExisitngStocks();
+        Banker banker = SystemApp.bankers.get(0);
+        banker.updateExisitngStocks();
+
+        Iterator<Customer> i = customers.listIterator();//UPDATING EACH CUSTOMER'S BONDS BY A DAY.
+        while(i.hasNext()){
+            Customer c = i.next();
+            LinkedList<customerBond> customersBonds = c.getSecurityAccount().getBonds();
+            ListIterator<customerBond> j = customersBonds.listIterator();
+            while(j.hasNext()){
+                j.next().updateDaysMatured();
+            }
+        }
     }
 
 
