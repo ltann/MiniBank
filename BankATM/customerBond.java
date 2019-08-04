@@ -1,8 +1,9 @@
 public class customerBond extends Bonds {
-    private int daysMatured = 0;
+    private int daysMatured;
 
-    public customerBond(String bondID, String bondType, int maturity, int value, double i) {
+    public customerBond(String bondID, String bondType, int maturity, int value, double i, int daysMatured) {
         super(bondID, bondType, maturity, value, i);
+        this.daysMatured = daysMatured;
     }
 
     public void updateDaysMatured(){
