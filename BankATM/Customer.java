@@ -72,6 +72,8 @@ public class Customer extends Person {
         this.collateral = collateral;
     }
     
+    
+    
     /*public String getInfo(){
         String answer;
         answer+=perInfomation.getName();
@@ -88,7 +90,16 @@ public class Customer extends Person {
         return answer;
     }*/
 
-    public SecurityAccount getSecurityAccount(){
+    public void setAcc(ArrayList<Account> acc) {
+		this.acc = acc;
+	}
+	public void setLn(ArrayList<Loan> ln) {
+		this.ln = ln;
+	}
+	public void setPerInfomation(PersonInfo perInfomation) {
+		this.perInfomation = perInfomation;
+	}
+	public SecurityAccount getSecurityAccount(){
         ListIterator<Account> i = acc.listIterator();
         while(i.hasNext()){
             Account acc = i.next();
@@ -99,4 +110,5 @@ public class Customer extends Person {
         System.out.println("There is no Security Account");
         return null;
     }
+    
 }
