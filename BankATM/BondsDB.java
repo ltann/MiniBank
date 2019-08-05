@@ -5,9 +5,8 @@ public class BondsDB {
 	private int maturity;
 	private String bondType;
 	
-	public BondsDB(String bondID, int amount, double interest, int maturity, String bondType) {
+	public BondsDB(String bondID, double interest, int maturity, String bondType) {
 		this.bondID = bondID;
-		this.amount = amount;
 		this.interest = interest;
 		this.maturity = maturity;
 		this.bondType = bondType;

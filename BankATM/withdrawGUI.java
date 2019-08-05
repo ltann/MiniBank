@@ -14,11 +14,11 @@ public class withdrawGUI {
     JButton d_100 = new JButton("$100");
     JButton d_200 = new JButton("$200");
     JButton d_500 = new JButton("$500");
-    String[] currencyList = { "$", "¥", "€" };
+    String[] currencyList = { "$", "楼", "鈧�" };
     JComboBox currencyType = new JComboBox(currencyList);
 
-    public withdrawGUI(Account a, Customer c, String str) {
-        GUI.withdrawGUIAL(this, a, c, str);
+    public withdrawGUI(Account a, Customer c) {
+        GUI.withdrawGUIAL(this, a, c);
         header.setFont(new Font("Black", Font.CENTER_BASELINE,20));
         header.setBounds(100,75,700,50);
         title.setFont(new Font("Black", Font.CENTER_BASELINE,20));

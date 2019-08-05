@@ -1,7 +1,7 @@
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
-import bank.BondsDB;
 
 public class Banker extends Person {
     public Boolean showAllCustomer;
@@ -34,74 +34,74 @@ public class Banker extends Person {
     public void createInitialStocks() { // we need to add company name to the database
       if(SystemApp.database.dataFindAllStocks() == null) {
         //Apple Stock 1
-        ArrayList<stockPriceHistory> ApplePriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory ApplePrice =  new stockPriceHistory(204.50, 0);
+        ArrayList<Double> ApplePriceHistoryList =  new ArrayList<Double>();
+        Double ApplePrice = 204.50;
         ApplePriceHistoryList.add(ApplePrice);
         StocksDB AppleStock = new StocksDB("AAPL", "Apple", ApplePriceHistoryList);
-        GUI.database.dataAddStocks(AppleStock);
+        SystemApp.database.dataAddStocks(AppleStock);
         
         //Microsoft Stock 2
-        ArrayList<stockPriceHistory> MicroPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory MicroPrice =  new stockPriceHistory(136.95, 0);
+        ArrayList<Double> MicroPriceHistoryList =  new ArrayList<Double> ();
+        Double MicroPrice = 136.95;
         MicroPriceHistoryList.add(MicroPrice);
         StocksDB MicroStock = new StocksDB("MSFT", "MicroSoft", MicroPriceHistoryList);
-        GUI.database.dataAddStocks(MicroStock);
+        SystemApp.database.dataAddStocks(MicroStock);
         
         //Tesla Stock 3
-        ArrayList<stockPriceHistory> TeslaPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory TeslaPrice =  new stockPriceHistory(235.69, 0);
+        ArrayList<Double> TeslaPriceHistoryList =  new ArrayList<Double> ();
+        Double TeslaPrice = 235.69;
         TeslaPriceHistoryList.add(TeslaPrice);
         StocksDB TeslaStock = new StocksDB("TSLA","Tesla", TeslaPriceHistoryList);
-        GUI.database.dataAddStocks(TeslaStock);
+        SystemApp.database.dataAddStocks(TeslaStock);
         
         //General Electric 4
-        ArrayList<stockPriceHistory> GEPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory GEPrice =  new stockPriceHistory(9.99, 0);
+        ArrayList<Double> GEPriceHistoryList =  new ArrayList<Double> ();
+        Double GEPrice = 9.99;
         GEPriceHistoryList.add(GEPrice);
         StocksDB GEStock = new StocksDB("GE","GE", GEPriceHistoryList);
-        GUI.database.dataAddStocks(GEStock);
+        SystemApp.database.dataAddStocks(GEStock);
         
        //Bank Of America 5
-        ArrayList<stockPriceHistory> BACPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory BACPrice =  new stockPriceHistory(29.43, 0);
+        ArrayList<Double> BACPriceHistoryList =  new ArrayList<Double> ();
+        Double BACPrice = 29.43;
         BACPriceHistoryList.add(BACPrice);
         StocksDB BACStock = new StocksDB("BAC","Bank of America", BACPriceHistoryList);
-        GUI.database.dataAddStocks(BACStock);
+        SystemApp.database.dataAddStocks(BACStock);
         
         //Disney 6
-        ArrayList<stockPriceHistory> DISPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory DISPrice =  new stockPriceHistory(141.82, 0);
+        ArrayList<Double> DISPriceHistoryList =  new ArrayList<Double> ();
+        Double DISPrice = 141.82;
         DISPriceHistoryList.add(DISPrice);
         StocksDB DISStock = new StocksDB("DIS","Disney", DISPriceHistoryList);
-        GUI.database.dataAddStocks(DISStock);
+        SystemApp.database.dataAddStocks(DISStock);
         
       //Amazon 7
-        ArrayList<stockPriceHistory> AMZNPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory AMZNPrice =  new stockPriceHistory(1824.29, 0);
+        ArrayList<Double> AMZNPriceHistoryList =  new ArrayList<Double> ();
+        Double AMZNPrice = 1824.29;
         DISPriceHistoryList.add(AMZNPrice);
-        StocksDB DISStock = new StocksDB("AMZN", "Amazon", AMZNPriceHistoryList);
-        GUI.database.dataAddStocks(AMZNStock);
+        StocksDB AMZNStock = new StocksDB("AMZN", "Amazon", AMZNPriceHistoryList);
+        SystemApp.database.dataAddStocks(AMZNStock);
         
       //Netflix 8
-        ArrayList<stockPriceHistory> NFLXPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory NFLXPrice =  new stockPriceHistory(319.03, 0);
+        ArrayList<Double> NFLXPriceHistoryList =  new ArrayList<Double> ();
+        Double NFLXPrice = 319.03;
         NFLXPriceHistoryList.add(NFLXPrice);
         StocksDB NFLXStock = new StocksDB("NFLX", "Netflix", NFLXPriceHistoryList);
-        GUI.database.dataAddStocks(NFLXStock);
+        SystemApp.database.dataAddStocks(NFLXStock);
         
       //Uber 9
-        ArrayList<stockPriceHistory> UBERPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory UBERPrice =  new stockPriceHistory(141.82, 0);
+        ArrayList<Double> UBERPriceHistoryList =  new ArrayList<Double> ();
+        Double UBERPrice = 141.82;
         UBERPriceHistoryList.add(UBERPrice);
         StocksDB UBERStock = new StocksDB("UBER", "UBER", UBERPriceHistoryList);
-        GUI.database.dataAddStocks(UBERStock);
+        SystemApp.database.dataAddStocks(UBERStock);
         
       //Alibaba 10
-        ArrayList<stockPriceHistory> BABAPriceHistoryList =  new ArrayList<stockPriceHistory> ();
-        stockPriceHistory BABAPrice =  new stockPriceHistory(141.82, 0);
+        ArrayList<Double> BABAPriceHistoryList =  new ArrayList<Double> ();
+        Double BABAPrice = 141.82;
         BABAPriceHistoryList.add(BABAPrice);
         StocksDB BABAStock = new StocksDB("BABA", "Alibaba", BABAPriceHistoryList);
-        GUI.database.dataAddStocks(BABAStock);
+        SystemApp.database.dataAddStocks(BABAStock);
       }    
     }
     
@@ -114,28 +114,32 @@ public class Banker extends Person {
     //Updates all existing stocks 
     //Untested needs to be checked
     public void updateExisitngStocks() {
-      List<StocksDB> dbStocks =  GUI.database.dataFindAllStocks();
-      Iterator<E> iter = new dbStocks.iterator();
+      List<StocksDB> dbStocks =  SystemApp.database.dataFindAllStocks();
+      Iterator iter = dbStocks.iterator();
+      Random r = new Random();
       while(iter.hasNext()) {
-        Random r = new Random();
         StocksDB s = (StocksDB) iter.next();
-        ArrayList <stockPriceHistory> stockPrices = s.priceHistory.getPriceHistory();
-        double price = stockPrices.get(0).getPrice();
+        ArrayList<Double> stockPrices = s.getPriceHistory();
+        double price = stockPrices.get(stockPrices.size()-1);
         double lower_range =  price/2; 
         double upper_range =  price*2;
         double newPrice = getRandomIntegerBetweenRange(lower_range, upper_range);
-        int i = stockPrices.get(0).getDay();
-        stockPriceHistory priceChangeAdd = new stockPriceHistory(newPrice, i+1);
-        stockPrices.add(priceChangeAdd);
+        int i = stockPrices.size();
+        //Double priceChangeAdd = new Double(newPrice, i+1);
+        
+        stockPrices.add(newPrice);
+        s.setPriceHistory(stockPrices);
       }
-      GUI.database.dataUpdateAllStocks(dbStocks);
+      SystemApp.database.dataUpdateAllStocks(dbStocks);
     }
    
     
     //TODO: add new Stock
     public void createNewStock(String ticker, String CompanyName, double newPrice ) {
-      StockDB updateStock = new StocksDB(ticker, CompanyName, newPrice);
-      dataAddStocks(updateStock);
+      ArrayList<Double> newPriceHistory = new ArrayList<Double>();
+      newPriceHistory.add(newPrice);
+      StocksDB updateStock = new StocksDB(ticker, CompanyName, newPriceHistory);
+      SystemApp.database.dataAddStocks(updateStock);
     }
     
     //add profits from Stocks and Bonds purchase 
@@ -147,38 +151,36 @@ public class Banker extends Person {
     public void initBonds() {
       //1 week Bond
       String bondID = "a"; // Think more about bondID placeholder for now
-      int amount = 10000;
       double interest = 0.01;
       int maturity = 1;
       String bondType = "week";
-      BondsDB newBond = BondsDB(bondID, amount, interest, maturity, bondType);
-      GUI.database.dataAddBonds(newBond);
+      BondsDB newBond = new BondsDB(bondID, interest, maturity, bondType);
+      SystemApp.database.dataAddBonds(newBond);
       
     //1 month Bond
       bondID = "b"; // Think more about bondID placeholder for now
-      amount = 10000;
       interest = 0.05;
       maturity = 1;
       bondType = "month";
-      newBond = BondsDB(bondID, amount, interest, maturity, bondType);
-      GUI.database.dataAddBonds(newBond);
+      newBond = new BondsDB(bondID, interest, maturity, bondType);
+      SystemApp.database.dataAddBonds(newBond);
       
       //3 month Bond
       bondID = "c"; // Think more about bondID placeholder for now
-      amount = 10000;
       interest = 0.1;
       maturity = 3;
       bondType = "month";
-      newBond = BondsDB(bondID, amount, interest, maturity, bondType);
-      GUI.database.dataAddBonds(newBond);
+      newBond = new BondsDB(bondID, interest, maturity, bondType);
+      SystemApp.database.dataAddBonds(newBond);
     }
     
     //Set new Bond Interest Rate
-    public void setNewInterestRate(String bondID, double newInterestRate) {
-     BondsDB updateBond = GUI.database.dataFindBonds(String bondID);
+    public static boolean setNewInterestRate(String bondID, double newInterestRate) {
+     BondsDB updateBond = SystemApp.database.dataFindBonds(bondID);
+     System.out.println(newInterestRate);
      updateBond.setInterest(newInterestRate);
-     GUI.database.dataUpdateBonds(bondID, updateBond); 
-      
+     SystemApp.database.dataUpdateBonds(bondID, updateBond); 
+     return true;
     }
 
     public Boolean getShowAllCustomer() {

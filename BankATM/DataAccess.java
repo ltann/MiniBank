@@ -338,6 +338,7 @@ public class DataAccess {
 		        		(ArrayList<Integer>)doc.get("stockNumShares"),
 		        		(ArrayList<Map<String, String>>)doc.get("bondInfo"),
 		        		(ArrayList<Map<String, Integer>>)doc.get("bondValue"),
+		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
 		        		(ArrayList<Double>)doc.get("bondInterest"),
 		        		(double)doc.get("avaliableFunds"),
 		        		(double)doc.get("valueOfSA"),
@@ -366,6 +367,7 @@ public class DataAccess {
 				    .append("stockNumShares", newSecurityAccount.getStockNumShares())
 				    .append("bondInfo", newSecurityAccount.getBondInfo())
 				    .append("bondValue", newSecurityAccount.getBondValue())
+				    .append("bondDouble", newSecurityAccount.getBondAmount())
 				    .append("bondInterest", newSecurityAccount.getBondInterest())
 				    .append("avaliableFunds", newSecurityAccount.getAvaliableFunds())
 				    .append("valueOfSA", newSecurityAccount.getValueOfSA())
@@ -424,7 +426,7 @@ public class DataAccess {
 	// 1) add stock information 
 	public static boolean dataAddStocks(StocksDB stock) {
 		MongoCollection<Document> stocksInfo = db.getCollection("stocksInfo");
-		if(dataFindBonds(stock.getTicker()) == null){
+		if(dataFindStocks(stock.getTicker()) == null){
 			stocksInfo.insertOne(new Document("ticker", stock.getTicker())
 				.append("companyName", stock.getCompanyName())
 				.append("priceHistory", stock.getPriceHistory())
@@ -571,7 +573,6 @@ public class DataAccess {
 		        Document doc = cursor.next();
 		        bond = new BondsDB(
 		        		(String)doc.get("bondID"),
-		        		(int)doc.get("amount"),
 		        		(double)doc.get("interest"),
 		        		(int)doc.get("maturity"),
 		        		(String)doc.get("bondType")

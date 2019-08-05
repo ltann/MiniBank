@@ -12,6 +12,7 @@ public class BankerMain{
     JButton customers = new JButton("Show all customers");
     JButton stock = new JButton("Stocks");
     JButton bond = new JButton("Bonds");
+    JButton refresh = new JButton("Refresh");
 
     public BankerMain(){
         GUI.BankerMainGUIAL(this);
@@ -29,6 +30,8 @@ public class BankerMain{
         bond.setFont(new Font("Black", Font.BOLD,20));
         exit.setBounds(640,450,250,80);
         exit.setFont(new Font("Black", Font.BOLD,20));
+        refresh.setBounds(725,25,150,50);
+        refresh.setFont(new Font("Black", Font.BOLD,20));
 
         j.add(header);
         j.add(report);
@@ -37,6 +40,7 @@ public class BankerMain{
         j.add(stock);
         j.add(bond);
         j.add(exit);
+        j.add(refresh);
         j.setLayout(null);
         j.setTitle("ATM");
         j.setSize(900,600);

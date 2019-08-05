@@ -8,10 +8,10 @@ public class depositGUI {
     JTextField amount = new JTextField();
     JButton confirm = new JButton("Confirm");
     JButton cancel = new JButton("Cancel");
-    String[] currencyList = { "$", "¥", "€" };
+    String[] currencyList = { "$", "楼", "鈧�" };
     JComboBox currencyType = new JComboBox(currencyList);
-    public depositGUI(Account a, Customer c, String str) {
-        GUI.depositGUIAL(this, a, c, str);
+    public depositGUI(Account a, Customer c) {
+        GUI.depositGUIAL(this, a, c);
         currencyType.setFont(new Font("Black", Font.CENTER_BASELINE,20));
         header.setFont(new Font("Black", Font.CENTER_BASELINE,25));
         header.setBounds(250,100,400,50);

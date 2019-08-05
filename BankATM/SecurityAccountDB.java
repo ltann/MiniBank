@@ -13,6 +13,18 @@ public class SecurityAccountDB {
 //	private LinkedList<customerBond> bond;
 	private ArrayList<Map<String, String>> bondInfo;
 	private ArrayList<Map<String, Integer>> bondValue;
+	private ArrayList<Map<String, Double>> bondAmount;
+	public ArrayList<Map<String, Double>> getBondAmount() {
+		return bondAmount;
+	}
+
+
+
+
+	public void setBondAmount(ArrayList<Map<String, Double>> bondAmount) {
+		this.bondAmount = bondAmount;
+	}
+
 	private ArrayList<Double> bondInterest;
 	
 	private double avaliableFunds;
@@ -45,7 +57,7 @@ public class SecurityAccountDB {
 	public SecurityAccountDB(String userName, String accountNumber, ArrayList<Map<String, String>> stockInfo,
 			ArrayList<Map<String, Double>> stockPrice, ArrayList<ArrayList<Double>> stockPriceHistory,
 			ArrayList<Integer> stockNumShares, ArrayList<Map<String, String>> bondInfo,
-			ArrayList<Map<String, Integer>> bondValue, ArrayList<Double> bondInterest, double avaliableFunds,
+			ArrayList<Map<String, Integer>> bondValue, ArrayList<Map<String, Double>> bondAmount, ArrayList<Double> bondInterest, double avaliableFunds,
 			double valueOfSA, ArrayList<String> transactions, double profitMade) {
 		this.userName = userName;
 		this.accountNumber = accountNumber;
@@ -55,6 +67,7 @@ public class SecurityAccountDB {
 		this.stockNumShares = stockNumShares;
 		this.bondInfo = bondInfo;
 		this.bondValue = bondValue;
+		this.bondAmount = bondAmount;
 		this.bondInterest = bondInterest;
 		this.avaliableFunds = avaliableFunds;
 		this.valueOfSA = valueOfSA;
@@ -127,7 +140,7 @@ public class SecurityAccountDB {
 				bond.add(new customerBond(bondInfo.get(i).get("bondID"),
 						bondInfo.get(i).get("bondType"),
 						bondValue.get(i).get("maturity"), 
-						bondValue.get(i).get("amount"), 
+						bondAmount.get(i).get("amount"), 
 						bondInterest.get(i),
 						bondValue.get(i).get("daysMatured"))
 						);
@@ -139,17 +152,21 @@ public class SecurityAccountDB {
 	public void setBond(ArrayList<customerBond> bond) {
 		bondInfo = new ArrayList<Map<String, String>>();
 		bondValue = new ArrayList<Map<String, Integer>>();
+		bondAmount = new ArrayList<Map<String, Double>>();
 		bondInterest = new ArrayList<Double>();
 		for(customerBond b : bond) {
 			Map<String, String> bInfo = new HashMap<String, String>();
 			bInfo.put("bondID", b.getBondID());
 			bInfo.put("bondType", b.getBondType());
+			bInfo.put("maturity", String.valueOf(b.getMaturity()));
 			bondInfo.add(bInfo);
 			Map<String, Integer> bValue = new HashMap<String, Integer>();
-			bValue.put("maturity", b.getMaturity());
-			bValue.put("amount", b.getAmount());
+			Map<String, Double> bDouble = new HashMap<String, Double>();
+			bValue.put("customerBondID", b.getCustomerBondID());
+			bDouble.put("amount", b.getAmount());
 			bValue.put("daysMatured", b.getDaysMatured());
 			bondValue.add(bValue);
+			bondAmount.add(bDouble);
 			bondInterest.add(b.getInterest());
 		}
 	}

@@ -6,34 +6,37 @@ public class BankerStockGUI {
     JLabel header = new JLabel("Stocks");
     JTable stock;
     JScrollPane scroll;
-    JButton apply = new JButton("Update");
+    //JButton apply = new JButton("Update");
     JButton cancel = new JButton("Cancel");
+    JButton createStock = new JButton("Create Stock");
     String[] columnTitle = {"TICKER", "NAME", "PRICE"};
 
     public BankerStockGUI() {
     	GUI.BankerStockGUIAL(this);
-        header.setFont(new Font("Black", Font.CENTER_BASELINE, 25));
-        header.setBounds(400,50,200,35);
-        apply.setBounds(200,450,100,50);
-        cancel.setBounds(550,450,100,50);
+        header.setFont(new Font("Black", Font.CENTER_BASELINE, 35));
+        header.setBounds(400,25,200,50);
+        createStock.setFont(new Font("Black", Font.CENTER_BASELINE, 25));
+        createStock.setBounds(150,450,250,50);
+        cancel.setFont(new Font("Black", Font.CENTER_BASELINE, 25));
+        cancel.setBounds(550,450,150,50);
+        //createStock.setFont(new Font("Black", Font.CENTER_BASELINE, 25));
+        //createStock.setBounds(600,25,200,50);
         stock = new JTable(SystemApp.getBankerStock(), columnTitle);
         scroll = new JScrollPane(stock);
         scroll.setBounds(100,100,700,300);
 
         j.add(header);
-        j.add(apply);
+        //j.add(apply);
         j.add(cancel);
         j.add(scroll);
+        j.add(createStock);
         j.setSize(900,600);
         j.setLayout(null);
         j.setTitle("Trading System");
         j.setVisible(true);
     }
     public static void main(String[] args) {
-        Object[][] data = {
-            new Object[]{"APPR", "APPLE", 100.25, "15%"},
-            new Object[]{"MICR", "MICROSOFT", 57.26, "-30%"}
-        };
+        
         new BankerStockGUI();
     }
 }

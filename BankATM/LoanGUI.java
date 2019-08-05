@@ -6,147 +6,71 @@ public class LoanGUI {
     GridBagConstraints c = new GridBagConstraints();
     Font font = new Font("Black",Font.CENTER_BASELINE,30);
     Dimension dimension = new Dimension(100,80);
-    JLabel label0 = new JLabel("Welcome, " + "name");
-    JLabel label1 = new JLabel("Loan");
-    JLabel label2 = new JLabel("1.   0.7% / month    > 12 month");
-    JLabel label3 = new JLabel("2.   1% / month    6 - 12 month");
-    JLabel label4 = new JLabel("3.   2% / month    1 - 5 month");
-    JLabel label5 = new JLabel("Amount");
+    JLabel welcome = new JLabel("Welcome, " + "name");
+    JLabel header = new JLabel("Loan");
+    JLabel l1 = new JLabel("1.   0.7% / month    > 12 month");
+    JLabel l2 = new JLabel("2.   1% / month    6 - 12 month");
+    JLabel l3 = new JLabel("3.   2% / month    1 - 5 month");
+    JLabel amountTitle = new JLabel("Amount:");
     String[] currencyList = { "$", "¥", "€" };
     String[] timeList = {"1 mon","2 mon","3 mon","4 mon","5 mon","6 mon","7 mon","8 mon","9 mon","10 mon","11 mon","12 mon"};
     JComboBox currencyCB = new JComboBox(currencyList);
     JComboBox timeCB = new JComboBox(timeList);
-    JTextField tf1 = new JTextField();
+    JTextField amount = new JTextField();
+    JButton history = new JButton("History");
     JButton confirm = new JButton("Confirm");
     JButton cancel = new JButton("Cancel");
-    public LoanGUI(String name, Customer customer, Account a, String str, int accountNumber){
-        GUI.LoanGUIAL(this, a, customer, str, accountNumber);
-        j.setLayout(new GridBagLayout());
+    public LoanGUI(Customer customer, Account a){
+        GUI.LoanGUIAL(this, a, customer);
+        j.setLayout(null);
         
-        label0.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label0, c);
-
-        
-        label1.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 0;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label1, c);
-
-        
-        label2.setFont(new Font("Black",Font.CENTER_BASELINE,20));
-        c.weightx = 0.1;
-        c.weighty = 0.1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label2, c);
-
-        
-        label3.setFont(new Font("Black",Font.CENTER_BASELINE,20));
-        c.weightx = 0.1;
-        c.weighty = 0.1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 2;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label3, c);
-
-        
-        label4.setFont(new Font("Black",Font.CENTER_BASELINE,20));
-        c.weightx = 0.1;
-        c.weighty = 0.1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 3;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label4, c);
-
-       
-        label5.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridx = 0;
-        c.gridy = 4;
-        c.insets = new Insets(0,100,0,0);
-        j.add(label5, c);
-
-        
-        tf1.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridx = 1;
-        c.gridy = 4;
-        c.insets = new Insets(0,-100,0,0);
-        j.add(tf1, c);
-
-
-        
-        
+        welcome.setFont(font);
+        welcome.setBounds(50, 50, 250, 50);
+        header.setFont(font);
+        header.setBounds(375, 50, 100, 50);
+        l1.setFont(new Font("Black",Font.CENTER_BASELINE,20));
+        l1.setBounds(150, 150, 300, 50);
+        l2.setFont(new Font("Black",Font.CENTER_BASELINE,20));
+        l2.setBounds(150, 210, 300, 50);
+        l3.setFont(new Font("Black",Font.CENTER_BASELINE,20));
+        l3.setBounds(150, 270, 300, 50);
+        amountTitle.setFont(font);
+        amountTitle.setBounds(100, 375, 150, 50);
+        amount.setFont(font);        
+        amount.setBounds(275,375,300,50);
         currencyCB.setFont(font);
+        currencyCB.setBounds(600,375,200,50);
         currencyCB.setSelectedIndex(0);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridx = 2;
-        c.gridy = 4;
-        c.insets = new Insets(0,50,0,50);
-        j.add(currencyCB, c);
-
         timeCB.setFont(font);
         timeCB.setSelectedIndex(0);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridx = 3;
-        c.gridy = 4;
-        c.insets = new Insets(0,0,0,0);
-        j.add(timeCB, c);
-
-
-        confirm.setPreferredSize(dimension);
-        confirm.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridx = 0;
-        c.gridy = 5;
-        c.insets = new Insets(0,100,0,50);
-        j.add(confirm, c);
-
-
+        history.setBounds(650, 50, 150, 50);
+        history.setFont(new Font("Black",Font.CENTER_BASELINE,20));
+        confirm.setBounds(200, 475, 150, 50);
+        confirm.setFont(new Font("Black",Font.CENTER_BASELINE,20));
+        cancel.setBounds(550, 475, 150, 50);
+        cancel.setFont(new Font("Black",Font.CENTER_BASELINE,20));
         
-        cancel.setPreferredSize(dimension);
-        cancel.setFont(font);
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 5;
-        c.insets = new Insets(0,0,0,0);
-        j.add(cancel, c);
+        j.add(welcome);
+        j.add(header);
+        j.add(l1);
+        j.add(l2);
+        j.add(l3);
+        j.add(amountTitle);
+        j.add(amount);
+        j.add(currencyCB);
+        j.add(timeCB);
+        j.add(history);
+        j.add(confirm);
+        j.add(cancel);
         j.setTitle("ATM");
         j.setSize(900,600);
         j.setVisible(true);
+    }
+    public static void main(String[] args) {
+    	String str = "Eric";
+        Customer c = new Customer(str, "123456", str, "1111111111", "abc", true);
+        SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1, true);
+        SystemApp.addAccount(3, c);
+    	new LoanGUI(c, c.getAcc().get(0));
     }
 }

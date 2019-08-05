@@ -12,39 +12,39 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class GUI {
-    public static void customerMainGUIAL(CustomerMainGUI c, Customer cus, Account a, String str) {
+    public static void customerMainGUIAL(CustomerMainGUI c, Customer cus, Account a) {
         c.balance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new balanceGUI(a, str, cus);
+                new balanceGUI(a, cus);
             }
         });
         
         c.withdraw.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new withdrawGUI(a, cus, str);
+                new withdrawGUI(a, cus);
             }
         });
         
         c.deposit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new depositGUI(a, cus, str);
+                new depositGUI(a, cus);
             }
         });
         
         c.transfer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new Transfer(str, cus, a);
+                new Transfer(cus, a);
             }
         });
         
         c.loan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new LoanGUI(str, cus, a, str, a.getAccountNumber());
+                new LoanGUI(cus, a);
             }
         });
         
@@ -59,7 +59,7 @@ public class GUI {
         s.balance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 s.j.setVisible(false);
-                new balanceGUI(a, cus.getPerInfomation().getName(), cus);
+                new balanceGUI(a, cus);
             }
         });
         
@@ -85,7 +85,7 @@ public class GUI {
         s.transfer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 s.j.setVisible(false);
-                new Transfer(cus.getPerInfomation().getName(), cus, a);
+                new Transfer(cus, a);
             }
         });
         
@@ -98,7 +98,7 @@ public class GUI {
         });
     }
 
-    public static void depositGUIAL(depositGUI d, Account a, Customer c, String str) {
+    public static void depositGUIAL(depositGUI d, Account a, Customer c) {
         d.amount.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 d.amount.setText("");
@@ -126,12 +126,12 @@ public class GUI {
         d.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 d.j.dispose();
-                new CustomerMainGUI(a, str, c);
+                new CustomerMainGUI(a, c);
             }
         });
     }
 
-    public static void withdrawGUIAL(withdrawGUI wd, Account a, Customer c, String str) {
+    public static void withdrawGUIAL(withdrawGUI wd, Account a, Customer c) {
         wd.amount.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wd.amount.setText("");
@@ -199,7 +199,7 @@ public class GUI {
         wd.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 wd.j.dispose();
-                new CustomerMainGUI(a, str, c);
+                new CustomerMainGUI(a, c);
             }
         });
         wd.d_20.addActionListener(new ActionListener() {
@@ -357,7 +357,7 @@ public class GUI {
         });
     }
 
-    public static void balanceGUIAL(balanceGUI b, Account a, String str, Customer c) {
+    public static void balanceGUIAL(balanceGUI b, Account a, Customer c) {
         b.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	b.j.setVisible(false);
@@ -368,7 +368,7 @@ public class GUI {
             	}
             	else {
             		b.j.dispose();
-                    new CustomerMainGUI(a, str, c);
+                    new CustomerMainGUI(a, c);
             	}
                 
             }
@@ -380,7 +380,7 @@ public class GUI {
         });
     }
 
-    public static void TransferGUIAL(Transfer tf, String str, Customer cus, Account a){
+    public static void TransferGUIAL(Transfer tf, Customer cus, Account a){
         tf.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tf.j.setVisible(false);
@@ -389,7 +389,7 @@ public class GUI {
                 	new SecurityMainGUI(cus,a);
                 }
                 else {
-                	new CustomerMainGUI(a, str, cus);
+                	new CustomerMainGUI(a, cus);
                 }
                
             }
@@ -429,7 +429,12 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 si.j.setVisible(false);
                 si.j.dispose();
-                new CustomerMainGUI(a, name, c);
+                if(a.getType() == 3) {
+                	new SecurityMainGUI(c, a);
+                }
+                else {
+                    new CustomerMainGUI(a, c);
+                }
             }
         });
         si.exit.addActionListener(new ActionListener() {
@@ -440,23 +445,23 @@ public class GUI {
         });
     }
     
-    public static void LoanGUIAL(LoanGUI l, Account a, Customer cus, String str, int accountNumber) {
+    public static void LoanGUIAL(LoanGUI l, Account a, Customer cus) {
         l.confirm.addActionListener(new ActionListener(){
         
             @Override
             public void actionPerformed(ActionEvent e) {
                 //l.tf1.setText("Please type amount! (0-50000)");
                 //System.out.println(l.tf1.getText());
-                double money = Double.parseDouble(l.tf1.getText());
-                if (l.tf1.getText() == "" || money < 0 || money > 50000) {
-                    l.tf1.setText("Please type amount! (0-50000)");
+                double money = Double.parseDouble(l.amount.getText());
+                if (l.amount.getText() == "" || money < 0 || money > 50000) {
+                    l.amount.setText("Please type amount! (0-50000)");
                 } else if(!cus.isCollateral()){
-                    l.tf1.setText("Can't loan because you don't have collateral");
+                    l.amount.setText("Can't loan because you don't have collateral");
                 }  else {
-                    SystemApp.loan(l.timeCB.getSelectedIndex(), Double.parseDouble(l.tf1.getText()), l.currencyCB.getSelectedIndex()); 
+                    SystemApp.loan(l.timeCB.getSelectedIndex(), Double.parseDouble(l.amount.getText()), l.currencyCB.getSelectedIndex()); 
                     l.j.setVisible(false);
                     l.j.dispose();
-                    new SucceedInfoGUI(true, a, SystemApp.loanReport(Double.parseDouble(l.tf1.getText()), l.currencyList[l.currencyCB.getSelectedIndex()], l.timeList[l.timeCB.getSelectedIndex()]), cus);
+                    new SucceedInfoGUI(true, a, SystemApp.loanReport(Double.parseDouble(l.amount.getText()), l.currencyList[l.currencyCB.getSelectedIndex()], l.timeList[l.timeCB.getSelectedIndex()]), cus);
                     
                 }
             }
@@ -467,12 +472,38 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 l.j.dispose();
-                new CustomerMainGUI(a, str, cus);
+                new CustomerMainGUI(a, cus);
             }
         });
         
+        l.history.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		l.j.dispose();
+        		new LoanHistoryGUI(cus, a);
+        	}
+        });
     }
 
+    public static void LoanHistoryGUIAL(LoanHistoryGUI lh, Customer c, Account a) {
+    	lh.pay.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		int confirm = JOptionPane.showConfirmDialog(lh.j, "Are you sure to payback your loan?");
+        		if (confirm == JOptionPane.YES_OPTION) {
+        			//SystemApp.paybackLoan();
+                    lh.j.dispose();
+                    new LoanHistoryGUI(c, a);
+                }
+        	}
+        });
+    	
+    	lh.ret.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		lh.j.dispose();
+        		new LoanGUI(c, a);
+        	}
+        });
+    }
+    
     public static void WelcomeGUIAL(Welcome w) {
         w.jbBanker.addActionListener(new ActionListener(){
         
@@ -684,6 +715,14 @@ public class GUI {
             new exit(bm.j);
         }
     });
+    bm.refresh.addActionListener(new ActionListener(){
+    
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            SystemApp.update();
+            JOptionPane.showMessageDialog(bm.j, "Succeed!");
+        }
+    });
    }
 
     public static void searchGUIAL(search s) {
@@ -741,33 +780,33 @@ public class GUI {
    }
 
     public static void BankerCustomerGUIAL(BankerCustomerGUI bc) {
-    bc.ret.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            bc.j.setVisible(false);
-            bc.j.dispose();
-            new BankerMain();
-        }
-    });
-    bc.exit.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            new exit(bc.j);
-        }
-    });
+	    bc.ret.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            bc.j.setVisible(false);
+	            bc.j.dispose();
+	            new BankerMain();
+	        }
+	    });
+	    bc.exit.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            new exit(bc.j);
+	        }
+	    });
    }
 
     public static void ReportGUIAL(ReportGUI r) {
-    r.ret.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            r.j.dispose();
-            new BankerMain();
-        }
-    });
-    r.exit.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            new exit(r.j);
-        }
-    });
-   }
+	    r.ret.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            r.j.dispose();
+	            new BankerMain();
+	        }
+	    });
+	    r.exit.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            new exit(r.j);
+	        }
+	    });
+	   }
 
     public static void CustomerMainAL(CustomerMain cmain, Customer c, String name){
     cmain.apply.addActionListener(new ActionListener(){
@@ -787,7 +826,7 @@ public class GUI {
                             break;
                         }
                         else {
-                            new CustomerMainGUI(c.getAcc().get(i),name,c);
+                            new CustomerMainGUI(c.getAcc().get(i),c);
                             break;
                         }
                     }
@@ -960,14 +999,38 @@ public class GUI {
                 new BankerMain();
             }
         });
-    	bs.apply.addActionListener(new ActionListener() {
+//    	bs.apply.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                SystemApp.updateStock();
+//            }
+//        });
+    	bs.createStock.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SystemApp.updateStock();
+            	bs.j.dispose();
+                new CreateStockGUI();
+            }
+        });
+    }
+    
+    public static void CreateStockGUIAL(CreateStockGUI cs) {
+    	cs.cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cs.j.dispose();
+                new BankerStockGUI();
+            }
+        });
+    	cs.apply.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SystemApp.ManagerCreateNewStock(SystemApp.bankers.get(0), cs.ticker.getText(), cs.name.getText(), Double.parseDouble(cs.price.getText()));
+                JOptionPane.showMessageDialog(cs.j, "Succeed!");
+                cs.j.dispose();
+                new BankerStockGUI();
             }
         });
     }
     
     public static void BankerBondGUIAL(BankerBondGUI bb) {
+    	
     	bb.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 bb.j.dispose();
@@ -976,17 +1039,39 @@ public class GUI {
         });
     	bb.apply.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SystemApp.updateBond();
+                SystemApp.updateBond((String)bb.bondPeriod.getSelectedItem(), Double.parseDouble(bb.newPrice.getText()));
+            }
+        });
+    	bb.search.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+        		String str = String.valueOf(bb.bondPeriod.getSelectedItem().toString().charAt(0));
+            	bb.curPrice.setText(String.valueOf(SystemApp.SearchBondInterest(str)));
+            }
+        });
+    	bb.apply.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+        		String str = String.valueOf(bb.bondPeriod.getSelectedItem().toString().charAt(0));
+            	double interest = Double.parseDouble(bb.newPrice.getText());
+            	//System.out.println(String.valueOf(bb.bondPeriod.getSelectedItem().toString().charAt(0)));
+            	if(SystemApp.updateBond(str, interest)) {
+            		JOptionPane.showMessageDialog(bb.j, "Succeed!");
+            		bb.j.dispose();
+            		new BankerMain();
+            	}
+            	else {
+            		JOptionPane.showMessageDialog(bb.j, "Failed!");
+            	}
             }
         });
     }
 
     public static void main(String[] args) {
-        SystemApp.setDefaultBanker();
-         String str = "Eric";
-         Customer c = new Customer(str, "123456", str, "1111111111", "abc", true);
-         SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1, true);
-         SystemApp.addAccount(3, c);
+    	SystemApp.setDefaultBanker();
+    	SystemApp.init();
+//         String str = "Eric";
+//         Customer c = new Customer(str, "123456", str, "1111111111", "abc", true);
+//         SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1, true);
+//         SystemApp.addAccount(3, c);
          //new CustomerMainGUI(c.getAcc().get(0), str, c);
         // new Welcome();
 //        String[] nameList = {"First", "Second"};

@@ -51,17 +51,17 @@ public class SecurityAccount extends Account {
         return sellable;
     }
 
-    public boolean purchaseBond(Bonds b){
+    public boolean purchaseBond(Bonds b, double amount){
         boolean purchasable = true;
-        if(b.getAmount() > availableFunds){
+        if(amount > availableFunds){
             purchasable = false;
-            System.out.println("You can't buy this bond at price " + b.getAmount() + ". You only have " + availableFunds + " USD left in security acount");
+            System.out.println("You can't buy this bond at price " + amount + ". You only have " + availableFunds + " USD left in security acount");
         }
         else{
-            availableFunds -= b.getAmount();
-            valueOfSA += b.getAmount();
-            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),b.getAmount(),b.getInterest(),0));
-            profitMade -= b.getAmount();
+            availableFunds -= amount;
+            //valueOfSA += amount;
+            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),amount,b.getInterest(),0));
+            //profitMade -= amount;
         }
         return purchasable;
     }
@@ -71,10 +71,10 @@ public class SecurityAccount extends Account {
         if(b.isMatured()){
             availableFunds += b.getAmount() + b.getInterest();
             valueOfSA += b.getInterest();
-            profitMade += b.getAmount() + b.getInterest();
+            profitMade += b.getInterest();
         }else{
             availableFunds += b.getAmount();
-            profitMade += b.getAmount();
+            //profitMade += b.getAmount();
         }
         return sellable;
     }

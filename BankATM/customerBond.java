@@ -1,9 +1,32 @@
 public class customerBond extends Bonds {
     private int daysMatured;
+    private int customerBondID;
+    private double amount;
 
-    public customerBond(String bondID, String bondType, int maturity, int value, double i, int daysMatured) {
-        super(bondID, bondType, maturity, value, i);
+    public int getCustomerBondID() {
+		return customerBondID;
+	}
+
+	public void setCustomerBondID(int customerBondID) {
+		this.customerBondID = customerBondID;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public void setDaysMatured(int daysMatured) {
+		this.daysMatured = daysMatured;
+	}
+
+	public customerBond(String bondID, String bondType, int maturity, double value, double i, int daysMatured) {
+        super(bondID, bondType, maturity, i);
         this.daysMatured = daysMatured;
+        this.amount = value;
     }
 
     public void updateDaysMatured(){

@@ -7,15 +7,17 @@ public class BankerBondGUI {
     JLabel period = new JLabel("Period");
     JLabel interest = new JLabel("Interest Rate");
     JLabel newRate = new JLabel("New Rate: ");
-    JComboBox bondPeriod = new JComboBox();
+    JComboBox bondPeriod;
     JTextField curPrice = new JTextField();
     JTextField newPrice = new JTextField();
     JButton search = new JButton();
     JButton apply = new JButton("Update");
     JButton cancel = new JButton("Cancel");
+    String[] bondList;
 
     public BankerBondGUI() {
     	GUI.BankerBondGUIAL(this);
+    	bondPeriod = new JComboBox(SystemApp.getBondTypeList());
         header.setFont(new Font("Black", Font.CENTER_BASELINE, 30));
         header.setBounds(400,50,200,50);
         period.setFont(new Font("Black", Font.CENTER_BASELINE, 25));

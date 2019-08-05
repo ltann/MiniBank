@@ -57,6 +57,7 @@ public class SystemApp {
         bankerAccount.add(newUser);
         customerAccount.add(newUser);
         customers.add(new Customer("admin", "admin", "asdf", "qwe", "asdf", true));
+        bankers.add(new Banker("admin", "admin"));
     }
 
     public static boolean addUser(String username, String password, String name, String cell, String address, int type, boolean collateral) {
@@ -323,22 +324,27 @@ public class SystemApp {
       b.changeInterest(newInterestRate);
     }
 
-    public static void updateBond(String bondID, double newInt) {
-        SystemApp.bankers.get(0).setNewInterestRate(bondID, newInt);
-
+    public static boolean updateBond(String bondID, double newInt) {
+        if(SystemApp.bankers.get(0).setNewInterestRate(bondID, newInt)) {
+        	return true;
+        }
+        return false;
+        
     }
-
+    
+    
+    
     ///////////////////////////////////////////////////////////////////////////////////
     // STOCKS AND BONDS FUNCTIONS
 
     //Customer Side Functions:
 
     //Customer purchase a bond
-    public static boolean purchaseBond(Customer c, Bonds b) {
+    public static boolean purchaseBond(Customer c, Bonds b, double amount) {
         boolean purchasable = true;
         SecurityAccount sa = c.getSecurityAccount();
         SystemApp.bankers.get(0).addProfits();
-        purchasable = sa.purchaseBond(b);
+        purchasable = sa.purchaseBond(b, amount);
         if(purchasable){
             //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
         }
@@ -434,12 +440,21 @@ public class SystemApp {
 
 
     //Create a new Stock from Manager end
-    public static void ManagerCreateNewStock(Banker b, String ticker, String CompanyName, int newPrice) {
+    public static void ManagerCreateNewStock(Banker b, String ticker, String CompanyName, double newPrice) {
         //stock s should have a stock name, stock ticker, and stock price
         b.createNewStock(ticker, CompanyName, newPrice);
     }
 
-
+    public static void init() {
+    	if(database.dataFindAllBonds() == null) {
+    		bankers.get(0).initBonds();
+    		System.out.println("Init Bonds!");
+    	}
+    	if(database.dataFindAllStocks() == null) {
+    		bankers.get(0).createInitialStocks();
+    		System.out.println("Init Stocks!");
+    	}
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static Object[][] getUserStock(Customer c) {
@@ -547,7 +562,22 @@ public class SystemApp {
         return bonds;
     }
     
+    public static String[] getBondTypeList() {
+        List<BondsDB> bond = database.dataFindAllBonds();
+        String[] bondType = new String[bond.size()];
+        for (int i = 0; i < bond.size(); i++) {
+        	bondType[i] = bond.get(i).getBondID() + ". " + bond.get(i).getMaturity() + " " + bond.get(i).getBondType();
+        }
+        
+        return bondType;
+    }
 
+    public static double SearchBondInterest(String ID) {
+        BondsDB bond = database.dataFindBonds(ID);
+        double interest = bond.getInterest();
+        return interest;
+    }
+    
     public static Object[][] getBankerStock() {
     	List<StocksDB> s = database.dataFindAllStocks();
     	Object[][] stocks = new Object[s.size()][3];
@@ -563,13 +593,13 @@ public class SystemApp {
         return stocks;
     }
 
-    public static void updateStock() {
-
-    }
-
-    public static void updateBond() {
-
-    }
+//    public static void updateStock() {
+//
+//    }
+//
+//    public static void updateBond() {
+//
+//    }
 
 }
 
