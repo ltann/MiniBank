@@ -12,6 +12,22 @@ public class Currency {
     public Currency() {
         this("USD", '$');
     }
+    
+    public Currency(String name, double balance) {
+		this.name = name;
+		switch(name) {
+			case "USD":
+				this.symbol = '$';
+				break;
+			case "RMB":
+				this.symbol = '¥';
+				break;
+			case "EUR":
+				this.symbol = '€';
+				break;	
+		}
+		this.balance = balance;
+	}
 
     public String getName() {
         return name;
