@@ -17,6 +17,20 @@ public class Loan {
                 this.currency = new Currency("EUR", '€');
         }
     }
+    
+    public Loan(double interest, int index){
+        this.interest = interest;
+        switch (index){
+            case 0:
+                this.currency = new Currency("USD",'$');
+            case 1:
+                this.currency = new Currency("RMB", '¥');
+            case 2:
+                this.currency = new Currency("EUR", '€');
+        }
+
+    }
+
 
     public double getInterest() {
         return interest;
