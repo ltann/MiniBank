@@ -27,6 +27,12 @@ public class Account {
         this(0, -1);
     }
 
+    public Account(int accountNumber, int type, Currency[] c) {
+		this.accountNumber = accountNumber;
+		this.type = type;
+		this.c = c;
+	}
+    
     public int getType() {
         return type;
     }
