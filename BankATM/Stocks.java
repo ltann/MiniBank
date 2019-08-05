@@ -33,4 +33,10 @@ public class Stocks {
     public ArrayList<Double> getSph() {
         return sph;
     }
+
+	public void setPricePerShare(double pricePerShare) {
+		this.pricePerShare = pricePerShare;
+	}
+    
+    
 }
