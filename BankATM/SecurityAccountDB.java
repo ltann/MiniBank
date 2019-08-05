@@ -17,9 +17,13 @@ public class SecurityAccountDB {
 	
 	private double avaliableFunds;
 	private double valueOfSA;
+	
+	private ArrayList<String> transactions;
+	private double profitMade;
 
 	public SecurityAccountDB(String userName, String accountNumber, ArrayList<customerStock> stock,
-			ArrayList<customerBond> bond, double avaliableFunds, double valueOfSA) {
+			ArrayList<customerBond> bond, double avaliableFunds, double valueOfSA, 
+			ArrayList<String> transactions, double profitMade) {
 		this.userName = userName;
 		this.accountNumber = accountNumber;
 		
@@ -31,7 +35,35 @@ public class SecurityAccountDB {
 			
 		this.avaliableFunds = avaliableFunds;
 		this.valueOfSA = valueOfSA;
+		this.transactions = transactions;
+		this.profitMade = profitMade;
 	}
+
+	
+	
+	
+	public SecurityAccountDB(String userName, String accountNumber, ArrayList<Map<String, String>> stockInfo,
+			ArrayList<Map<String, Double>> stockPrice, ArrayList<ArrayList<Double>> stockPriceHistory,
+			ArrayList<Integer> stockNumShares, ArrayList<Map<String, String>> bondInfo,
+			ArrayList<Map<String, Integer>> bondValue, ArrayList<Double> bondInterest, double avaliableFunds,
+			double valueOfSA, ArrayList<String> transactions, double profitMade) {
+		this.userName = userName;
+		this.accountNumber = accountNumber;
+		this.stockInfo = stockInfo;
+		this.stockPrice = stockPrice;
+		this.stockPriceHistory = stockPriceHistory;
+		this.stockNumShares = stockNumShares;
+		this.bondInfo = bondInfo;
+		this.bondValue = bondValue;
+		this.bondInterest = bondInterest;
+		this.avaliableFunds = avaliableFunds;
+		this.valueOfSA = valueOfSA;
+		this.transactions = transactions;
+		this.profitMade = profitMade;
+	}
+
+
+
 
 	public String getUserName() {
 		return userName;
@@ -138,4 +170,76 @@ public class SecurityAccountDB {
 		this.valueOfSA = valueOfSA;
 	}
 
+	public ArrayList<String> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(ArrayList<String> transactions) {
+		this.transactions = transactions;
+	}
+
+	public double getProfitMade() {
+		return profitMade;
+	}
+
+	public void setProfitMade(double profitMade) {
+		this.profitMade = profitMade;
+	}
+
+	public ArrayList<Map<String, String>> getStockInfo() {
+		return stockInfo;
+	}
+
+	public void setStockInfo(ArrayList<Map<String, String>> stockInfo) {
+		this.stockInfo = stockInfo;
+	}
+
+	public ArrayList<Map<String, Double>> getStockPrice() {
+		return stockPrice;
+	}
+
+	public void setStockPrice(ArrayList<Map<String, Double>> stockPrice) {
+		this.stockPrice = stockPrice;
+	}
+
+	public ArrayList<ArrayList<Double>> getStockPriceHistory() {
+		return stockPriceHistory;
+	}
+
+	public void setStockPriceHistory(ArrayList<ArrayList<Double>> stockPriceHistory) {
+		this.stockPriceHistory = stockPriceHistory;
+	}
+
+	public ArrayList<Integer> getStockNumShares() {
+		return stockNumShares;
+	}
+
+	public void setStockNumShares(ArrayList<Integer> stockNumShares) {
+		this.stockNumShares = stockNumShares;
+	}
+
+	public ArrayList<Map<String, String>> getBondInfo() {
+		return bondInfo;
+	}
+
+	public void setBondInfo(ArrayList<Map<String, String>> bondInfo) {
+		this.bondInfo = bondInfo;
+	}
+
+	public ArrayList<Map<String, Integer>> getBondValue() {
+		return bondValue;
+	}
+
+	public void setBondValue(ArrayList<Map<String, Integer>> bondValue) {
+		this.bondValue = bondValue;
+	}
+
+	public ArrayList<Double> getBondInterest() {
+		return bondInterest;
+	}
+
+	public void setBondInterest(ArrayList<Double> bondInterest) {
+		this.bondInterest = bondInterest;
+	}
+	
 }
