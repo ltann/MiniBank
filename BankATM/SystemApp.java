@@ -296,7 +296,7 @@ public class SystemApp {
 
     public static boolean payLoan(Loan loan){
         boolean payable = true;
-        payable =
+        return payable;
     }
 
     public static boolean checkBalance(Customer c) {
