@@ -8,7 +8,7 @@ public class BankerStockGUI {
     JScrollPane scroll;
     JButton apply = new JButton("Update");
     JButton cancel = new JButton("Cancel");
-    String[] columnTitle = {"TICKER", "NAME", "PRICE", "PERCENTAGE"};
+    String[] columnTitle = {"TICKER", "NAME", "PRICE"};
 
     public BankerStockGUI() {
     	GUI.BankerStockGUIAL(this);

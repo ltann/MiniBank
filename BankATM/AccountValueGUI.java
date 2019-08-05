@@ -17,7 +17,7 @@ public class AccountValueGUI {
     DefaultCategoryDataset data;
     
     public AccountValueGUI(Customer c, Account a) {
-    	this.data = SystemApp.getAccountValueData();
+    	this.data = SystemApp.getAccountValueData(c);
     	GUI.AccountValueGUIAL(this, c, a);
     	valueGraph = ChartFactory.createLineChart(
                 "",

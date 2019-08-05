@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="BankATM"/>
 	<classpathentry kind="lib" path="lib/jfreechart.jar"/>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="JDBC/mongo-java-driver-3.4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

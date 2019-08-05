@@ -28,10 +28,10 @@ public class CustomerPropertyGUI {
         value.setBounds(650,25,200,50);
         
         if(index == 0) { //Stock
-        	t = new JTable(SystemApp.getAllData(), stockTitle);
+        	t = new JTable(SystemApp.getUserStock(c), stockTitle);
         }
         else {
-        	t = new JTable(SystemApp.getUserBonds(), bondTitle);
+        	t = new JTable(SystemApp.getUserBonds(c), bondTitle);
         }
         scroll = new JScrollPane(t);
         scroll.setBounds(200,100,650,300);

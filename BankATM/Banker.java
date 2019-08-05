@@ -32,7 +32,7 @@ public class Banker extends Person {
     
   //adds 10 inital stocks when the program is first started
     public void createInitialStocks() { // we need to add company name to the database
-      if(Welcome.database.dataFindAllStocks() == null) {
+      if(SystemApp.database.dataFindAllStocks() == null) {
         //Apple Stock 1
         ArrayList<stockPriceHistory> ApplePriceHistoryList =  new ArrayList<stockPriceHistory> ();
         stockPriceHistory ApplePrice =  new stockPriceHistory(204.50, 0);

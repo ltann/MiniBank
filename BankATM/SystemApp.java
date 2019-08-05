@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -17,6 +18,7 @@ public class SystemApp {
     public static int currentBanker;
     public static String report = "";
     public static double fee = 0;
+    public static DataAccess database = new DataAccess();
 
     public static boolean checkUser(String Username, String Password, int type) {
         if (type == 0) {
@@ -319,7 +321,7 @@ public class SystemApp {
     // for change interest rate button change bond interest rate
     public static void changeBondInterestrate(Bonds b, double newInterestRate) {
       b.changeInterest(newInterestRate);
-
+    }
 
     public static void updateBond(String bondID, double newInt) {
         SystemApp.bankers.get(0).setNewInterestRate(bondID, newInt);
@@ -338,7 +340,7 @@ public class SystemApp {
         SystemApp.bankers.get(0).addProfits();
         purchasable = sa.purchaseBond(b);
         if(purchasable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
         }
         return purchasable;
     }
@@ -351,7 +353,7 @@ public class SystemApp {
         SystemApp.bankers.get(0).addProfits();
         sellable = sa.sellBond(b);
         if(sellable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
         }
         return sellable;
     }
@@ -363,7 +365,7 @@ public class SystemApp {
         SystemApp.bankers.get(0).addProfits();
         purchasable = sa.purchaseStock(s,numOfShare);
         if(purchasable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB_SecurityAccountDB );
+            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB_SecurityAccountDB );
         }
         return purchasable;
     }
@@ -374,9 +376,9 @@ public class SystemApp {
         boolean sellable = true;
         SecurityAccount sa = c.getSecurityAccount();
         SystemApp.bankers.get(0).addProfits();
-        sellable = sa.sellStock(s, GUI.database.dataFindStocks(s.getTicker()) ,numOfShare); //second parameter needs to be set as the currentPriceStock
+        //sellable = sa.sellStock(s, database.dataFindStocks(s.getTicker()) ,numOfShare); //second parameter needs to be set as the currentPriceStock
         if(sellable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
         }
         return sellable;
     }
@@ -440,72 +442,124 @@ public class SystemApp {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static Object[][] getAllData() {
-        Object[][] data = {
-                new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110 * 20},
-                new Object[]{"MICR", "MICROSOFT", 57.26, 48.6, 50, "-30%", 48.6 * 50}
-        };
+    public static Object[][] getUserStock(Customer c) {
+    	SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+    	Object[][] data = new Object[sa.getStock().size()][7];
+    	for(int i = 0; i < sa.getStock().size(); i++) {
+    		data[i][0] = sa.getStock().get(i).getTicker();
+    		data[i][1] = sa.getStock().get(i).getStockName();
+    		data[i][2] = sa.getStock().get(i).getPriceBoughtAt();
+    		data[i][3] = sa.getStock().get(i).getPricePerShare();
+    		data[i][4] = sa.getStock().get(i).getNumShares();
+    		data[i][5] = String.valueOf((sa.getStock().get(i).getPricePerShare() - sa.getStock().get(i).getPriceBoughtAt()) / sa.getStock().get(i).getPriceBoughtAt() * 100) + "%";
+    		data[i][6] = String.valueOf(sa.getStock().get(i).getPricePerShare() * sa.getStock().get(i).getNumShares());
+    	}
+    	
+//        Object[][] data = {
+//                new Object[]{"APPR", "APPLE", 100.25, 110, 20, "15%", 110 * 20},
+//                new Object[]{"MICR", "MICROSOFT", 57.26, 48.6, 50, "-30%", 48.6 * 50}
+//        };
         return data;
     }
+    
+    public static Object[][] getUserBonds(Customer c) {
+    	SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+        Object[][] bonds = new Object[sa.getBond().size()][6];
+        for(int i = 0; i < sa.getBond().size(); i++) {
+    		bonds[i][0] = sa.getBond().get(i).getBondID();
+    		bonds[i][1] = sa.getBond().get(i).getBondType();
+    		bonds[i][2] = sa.getBond().get(i).getMaturity();
+    		bonds[i][3] = sa.getBond().get(i).getAmount();
+    		bonds[i][4] = sa.getBond().get(i).getInterest();
+    		bonds[i][5] = sa.getBond().get(i).getDaysMatured();
+    	}
+        return bonds;
+    }
 
-    public static DefaultCategoryDataset getAccountValueData() {
+    public static DefaultCategoryDataset getAccountValueData(Customer c) {
+//    	SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
         DefaultCategoryDataset first = new DefaultCategoryDataset();
-        first.addValue(1, "First", "2013");
-        first.addValue(3, "First", "2014");
-        first.addValue(2, "First", "2015");
-        first.addValue(6, "First", "2016");
-        first.addValue(5, "First", "2017");
-        first.addValue(12, "First", "2018");
+//        for(int i = 0; i < sa.getValueOfSA())
+//        first.addValue(1, "First", "2013");
+//        first.addValue(3, "First", "2014");
+//        first.addValue(2, "First", "2015");
+//        first.addValue(6, "First", "2016");
+//        first.addValue(5, "First", "2017");
+//        first.addValue(12, "First", "2018");
         return first;
     }
 
     public static ArrayList<DefaultCategoryDataset> getStockData() {
         ArrayList<DefaultCategoryDataset> data = new ArrayList<DefaultCategoryDataset>();
-        DefaultCategoryDataset first = new DefaultCategoryDataset();
-        DefaultCategoryDataset second = new DefaultCategoryDataset();
-        first.addValue(1, "First", "2013");
-        first.addValue(3, "First", "2014");
-        first.addValue(2, "First", "2015");
-        first.addValue(6, "First", "2016");
-        first.addValue(5, "First", "2017");
-        first.addValue(12, "First", "2018");
-        second.addValue(14, "Second", "2013");
-        second.addValue(13, "Second", "2014");
-        second.addValue(12, "Second", "2015");
-        second.addValue(9, "Second", "2016");
-        second.addValue(5, "Second", "2017");
-        second.addValue(7, "Second", "2018");
-        data.add(first);
-        data.add(second);
+        List<StocksDB> stock = database.dataFindAllStocks();
+        for(int i = 0; i < stock.size(); i++) {
+        	DefaultCategoryDataset s = new DefaultCategoryDataset();
+        	for(int j = 0; j < stock.get(i).getPriceHistory().size(); j++) {
+            	s.addValue(stock.get(i).getPriceHistory().get(j), stock.get(i).getCompanyName(), String.valueOf(j));
+        	}
+        	data.add(s);
+        }
+        
+        //        DefaultCategoryDataset first = new DefaultCategoryDataset();
+//        DefaultCategoryDataset second = new DefaultCategoryDataset();
+//        first.addValue(1, "First", "2013");
+//        first.addValue(3, "First", "2014");
+//        first.addValue(2, "First", "2015");
+//        first.addValue(6, "First", "2016");
+//        first.addValue(5, "First", "2017");
+//        first.addValue(12, "First", "2018");
+//        second.addValue(14, "Second", "2013");
+//        second.addValue(13, "Second", "2014");
+//        second.addValue(12, "Second", "2015");
+//        second.addValue(9, "Second", "2016");
+//        second.addValue(5, "Second", "2017");
+//        second.addValue(7, "Second", "2018");
+//        data.add(first);
+//        data.add(second);
         return data;
     }
 
     public static String[] getStockNameList() {
-        String[] stockName = {"Apple", "Microsoft"};
+        List<StocksDB> stock = database.dataFindAllStocks();
+        String[] stockName = new String[stock.size()];
+        for (int i = 0; i < stock.size(); i++) {
+        	stockName[i] = stock.get(i).getCompanyName();
+        }
+        
         return stockName;
     }
 
-    public static Object[][] getUserBonds() {
-        Object[][] bonds = {
-                new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
-                new String[]{"3 month", "10000", "2019-8-3", "2019-11-3", "30%"}
-        };
-        return bonds;
-    }
 
     public static Object[][] getBondsData() {
-        Object[][] bonds = {
-                new String[]{"1 month", "100", "15%"},
-                new String[]{"3 month", "10000", "30%"}
-        };
+    	List<BondsDB> b = database.dataFindAllBonds();
+    	Object[][] bonds = new Object[b.size()][5];
+    	for(int i = 0; i < b.size(); i++) {
+    		bonds[i][0] = b.get(i).getBondID();
+    		bonds[i][1] = b.get(i).getAmount();
+    		bonds[i][2] = b.get(i).getInterest();
+    		bonds[i][3] = b.get(i).getMaturity();
+    		bonds[i][4] = b.get(i).getBondType();
+    	}
+//        Object[][] bonds = {
+//                new String[]{"1 month", "100", "15%"},
+//                new String[]{"3 month", "10000", "30%"}
+//        };
         return bonds;
     }
+    
 
     public static Object[][] getBankerStock() {
-        Object[][] stocks = {
-                new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
-                new String[]{"3 month", "10000", "2019-8-3", "2019-11-3", "30%"}
-        };
+    	List<StocksDB> s = database.dataFindAllStocks();
+    	Object[][] stocks = new Object[s.size()][3];
+    	for(int i = 0; i < s.size(); i++) {
+    		stocks[i][0] = s.get(i).getTicker();
+    		stocks[i][1] = s.get(i).getCompanyName();
+    		stocks[i][2] = s.get(i).getPriceHistory().get(s.get(i).getPriceHistory().size()-1);
+    	}
+//        Object[][] stocks = {
+//                new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
+//                new String[]{"3 month", "10000", "2019-8-3", "2019-11-3", "30%"}
+//        };
         return stocks;
     }
 
