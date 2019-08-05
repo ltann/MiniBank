@@ -1,5 +1,3 @@
-import javax.lang.model.util.SimpleAnnotationValueVisitor6;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class SecurityAccount extends Account {
@@ -26,7 +24,7 @@ public class SecurityAccount extends Account {
             purchasable = false;
         } else {
             availableFunds = availableFunds - shareValue;
-            stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares));
+            stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares, stock.getSph(), stock.getPricePerShare()));
             //UPDATE DAILY? TRANSACTIONS
             Transactions.add("Purchased " + numOfShares + " of " + stock.getStockName() + " Share(s) at " + stock.getPricePerShare());
             profitMade -= shareValue;
@@ -62,7 +60,7 @@ public class SecurityAccount extends Account {
         else{
             availableFunds -= b.getAmount();
             valueOfSA += b.getAmount();
-            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),b.getAmount(),b.getInterest()));
+            bonds.add(new customerBond(b.getBondID(),b.getBondType(),b.getMaturity(),b.getAmount(),b.getInterest(),0));
             profitMade -= b.getAmount();
         }
         return purchasable;

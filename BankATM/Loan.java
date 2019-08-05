@@ -4,8 +4,10 @@ public class Loan {
     private String type;
     private int boughtAt;
 
-    public Loan(double interest, int currencyType){
+    public Loan(double interest, int currencyType, String type, int priceBoughtAt){
         this.interest = interest;
+        this.type = type;
+        this.boughtAt = priceBoughtAt;
         switch (currencyType){
             case 0:
                 this.currency = new Currency("USD",'$');
@@ -20,15 +22,15 @@ public class Loan {
         return interest;
     }
 
-    public void setInterest(double interest) {
-        this.interest = interest;
-    }
-
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public String getLoanType() {
+        return type;
+    }
+
+    public int getBoughtAt() {
+        return boughtAt;
     }
 }

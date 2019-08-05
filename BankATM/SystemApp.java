@@ -426,7 +426,7 @@ public class SystemApp {
         SystemApp.bankers.get(0).addProfits();
         purchasable = sa.purchaseStock(s,numOfShare);
         if(purchasable){
-            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), new SecurityAccountDB );
+            GUI.database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB_SecurityAccountDB );
         }
         return purchasable;
     }
@@ -485,7 +485,7 @@ public class SystemApp {
         Iterator<Customer> i = customers.listIterator();//UPDATING EACH CUSTOMER'S BONDS BY A DAY.
         while(i.hasNext()){
             Customer c = i.next();
-            LinkedList<customerBond> customersBonds = c.getSecurityAccount().getBonds();
+            ArrayList<customerBond> customersBonds = c.getSecurityAccount().getBonds();
             ListIterator<customerBond> j = customersBonds.listIterator();
             while(j.hasNext()){
                 j.next().updateDaysMatured();
