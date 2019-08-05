@@ -8,9 +8,9 @@ public class CustomerBasicDB {
 	private String psw;
 	private boolean colletral;
 	
-	
-	public CustomerBasicDB(String userName, int accountNumber, int loanNumber, String name, String addr, String cell,
-			String psw, boolean colletral) {
+	//username, password, name, cell, address, collateral
+	public CustomerBasicDB(String userName, String psw, String name, String cell,
+			String addr, boolean colletral) {
 		this.userName = userName;
 		this.name = name;
 		this.addr = addr;
