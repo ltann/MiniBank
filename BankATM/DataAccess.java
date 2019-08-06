@@ -30,8 +30,6 @@ public class DataAccess {
 	private static MongoClientURI uri;
 	private static MongoClient client;
 	private static MongoDatabase db;
-//	private static CodecProvider pojoCodecProvider;
-//	private static CodecRegistry pojoCodecRegistry;
 	 
 	public DataAccess() {
 		// Initialize connection with database
@@ -39,17 +37,6 @@ public class DataAccess {
         client = new MongoClient(uri);
         db = client.getDatabase(uri.getDatabase());
 
-   
-//     pojoCodecProvider = PojoCodecProvider.builder().register(CustomerDB.class, Customer.class, 
-//    		 Account.class, Loan.class, PersonInfo.class, Currency.class).build();
-//     pojoCodecRegistry = fromRegistries(CodecRegistries.fromCodecs(new StringCodec(), 
-//    		 new BsonArrayCodec(), new BsonBooleanCodec()
-//    		 ), fromProviders(pojoCodecProvider));
-//     MongoClient mongoClient = new MongoClient(new MongoClientURI(uriString));
-//     MongoDatabase database = mongoClient.getDatabase("mydb");
-//     
-//     MongoCollection<DiagnoseDocument> collection = database.getCollection("soar", DiagnoseDocument.class).withCodecRegistry(pojoCodecRegistry);
-//     collection.insertOne(diagnoseDocument);
 	}
 	
 	/*-----------------------userInfo Collection/SystemApp.customers(part of it), SystemApp.customerAccount-----------------------
@@ -303,10 +290,12 @@ public class DataAccess {
 		if(dataFindSecurityAccount(sAccount.getUserName()) == null){
 			securityAccountInfo.insertOne(new Document("userName", sAccount.getUserName())
 				.append("accountNumber", sAccount.getAccountNumber())
+			    .append("customerStockID", sAccount.getCustomerStockID())
 			    .append("stockInfo", sAccount.getStockInfo())
 			    .append("stockPrice", sAccount.getStockPrice())
 			    .append("stockPriceHistory", sAccount.getStockPriceHistory())
 			    .append("stockNumShares", sAccount.getStockNumShares())
+			    .append("customerBondID", sAccount.getCustomerBondID())
 			    .append("bondInfo", sAccount.getBondInfo())
 			    .append("bondValue", sAccount.getBondValue())
 			    .append("bondInterest", sAccount.getBondInterest())
@@ -332,10 +321,12 @@ public class DataAccess {
 		        sAccount = new SecurityAccountDB(
 		        		(String)doc.get("userName"),
 		        		(String)doc.get("accountNumber"),
+		        		(ArrayList<Integer>)doc.get("customerStockID"),
 		        		(ArrayList<Map<String, String>>)doc.get("stockInfo"),
 		        		(ArrayList<Map<String, Double>>)doc.get("stockPrice"),
 		        		(ArrayList<ArrayList<Double>>)doc.get("stockPriceHistory"),
 		        		(ArrayList<Integer>)doc.get("stockNumShares"),
+		        		(ArrayList<Integer>)doc.get("customerBondID"),
 		        		(ArrayList<Map<String, String>>)doc.get("bondInfo"),
 		        		(ArrayList<Map<String, Integer>>)doc.get("bondValue"),
 		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
@@ -361,10 +352,12 @@ public class DataAccess {
 			Document updateQuery = new Document("userName", userName);
 			Document updateSecurityAccount = new Document("userName", userName)
 					.append("accountNumber", newSecurityAccount.getAccountNumber())
+				    .append("customerStockID", newSecurityAccount.getCustomerStockID())
 				    .append("stockInfo", newSecurityAccount.getStockInfo())
 				    .append("stockPrice", newSecurityAccount.getStockPrice())
 				    .append("stockPriceHistory", newSecurityAccount.getStockPriceHistory())
 				    .append("stockNumShares", newSecurityAccount.getStockNumShares())
+				    .append("customerBondID", newSecurityAccount.getCustomerBondID())
 				    .append("bondInfo", newSecurityAccount.getBondInfo())
 				    .append("bondValue", newSecurityAccount.getBondValue())
 				    .append("bondDouble", newSecurityAccount.getBondAmount())
@@ -489,7 +482,7 @@ public class DataAccess {
 							//ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA
 							customerStock newStock = new customerStock(s.getTicker(),
 									s.getStockName(), s.getPriceBoughtAt(), s.getNumShares(),
-									s.getSph());
+									s.getSph(), s.getCustomerStockID());
 							newStock.setPricePerShare(pricePerShare);
 							// update the whole stock info of the security account
 							stockSA.remove(s);
