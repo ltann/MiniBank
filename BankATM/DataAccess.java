@@ -63,6 +63,9 @@ public class DataAccess {
 			    .append("cell", customerDB.getCell())
 			    .append("addr", customerDB.getAddr())
 			    .append("collateral", customerDB.isColletral())
+			    .append("loanNum", customerDB.getLoanNum())
+			    .append("stockNum", customerDB.getStockNum())
+			    .append("bondNum", customerDB.getBondNum())
 			);
 			return true;
 		}
@@ -83,7 +86,10 @@ public class DataAccess {
 		        		(String)doc.get("name"), 
 		        		(String)doc.get("cell"), 
 		        		(String)doc.get("addr"), 
-		        		(boolean)doc.get("collateral")
+		        		(boolean)doc.get("collateral"), 
+		        		(int)doc.get("loanNum"), 
+		        		(int)doc.get("stockNum"), 
+		        		(int)doc.get("bondNum")
 		        		);
 		    }
 		} finally {
@@ -103,6 +109,9 @@ public class DataAccess {
 					.append("cell", customerDB.getCell())
 					.append("addr", customerDB.getAddr())
 					.append("collateral", customerDB.isColletral())
+					.append("loanNum", customerDB.getLoanNum())
+					.append("stockNum", customerDB.getStockNum())
+					.append("bondNum", customerDB.getBondNum())
 					;
 			customerBasicInfo.updateOne(updateQuery, new Document("$set",updateCustomerBasic));
 			return true;
@@ -143,7 +152,6 @@ public class DataAccess {
 	 * 			  4) delete specific account
 	 * 			  5) find specific customer's accounts
 	 * 			  6) find all accounts
-	 * 			  7) find the number of all accounts
 	*/
 	
 	// 1) add account
@@ -245,13 +253,6 @@ public class DataAccess {
 //			if(allAccount.isEmpty())
 //				return null;
 			return allAccount;
-		}
-		
-		// 7) find the number of all accounts
-		public static int dataFindAccountSize() {
-			if(dataFindAllAccount() != null)
-				return dataFindAllAccount().size();
-			return 0;
 		}
 	
 		/*-----------------------LoanInfo Collection-----------------------
