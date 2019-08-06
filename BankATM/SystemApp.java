@@ -50,6 +50,14 @@ public class SystemApp {
         return false;
     }
 
+    public static Banker getCurrentBanker() {
+        return bankers.get(currentBanker);
+    }
+
+    public static Customer getCurrentCustomer() {
+        return customers.get(currentCustomer);
+    }
+
     public static void setDefaultBanker() {
         ArrayList<String> newUser = new ArrayList<String>();
         newUser.add("admin");
@@ -283,6 +291,7 @@ public class SystemApp {
     }
 
     public static void loan(int numMonth, double amount, int currency) {
+        Customer c = customers.get(currentCustomer);
         double interest;
         if (numMonth < 5) {
             interest = 0.02;
@@ -293,12 +302,16 @@ public class SystemApp {
         }
         Loan loan = new Loan(interest, currency);
         loan.getCurrency().deposit(amount);
-        customers.get(currentCustomer).addLoan(loan);
-        customers.get(currentCustomer).getAcc().get(0).getC()[currency].deposit(amount);
+        c.addLoan(loan);
+        c.getAcc().get(0).getC()[currency].deposit(amount);
     }
 
     public static boolean payLoan(Loan loan){
         boolean payable = true;
+        Customer c = customers.get(currentCustomer);
+        if(c.hasEnoughMoney(loan.getCurrency().getBalance())){
+            bankers.get(currentBanker).
+        }
         return payable;
     }
 

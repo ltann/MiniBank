@@ -99,6 +99,7 @@ public class Customer extends Person {
 	public void setPerInfomation(PersonInfo perInfomation) {
 		this.perInfomation = perInfomation;
 	}
+
 	public SecurityAccount getSecurityAccount(){
         ListIterator<Account> i = acc.listIterator();
         while(i.hasNext()){
@@ -110,5 +111,25 @@ public class Customer extends Person {
         System.out.println("There is no Security Account");
         return null;
     }
-    
+
+    public boolean hasEnoughMoney(double requiredFunds){
+        boolean payable = true;
+        if(getTotalBalance() < requiredFunds){
+            payable = false;
+        }
+        return payable;
+    }
+
+    public double getTotalBalance(){//total balance across all account and currency
+        ListIterator<Account> i = acc.listIterator();
+        double totalFunds = 0.0;
+        while(i.hasNext()){
+            for(Currency currency: i.next().c){
+                totalFunds += currency.getBalance();
+            }
+        }
+        return totalFunds;
+    }
+
+
 }
