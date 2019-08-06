@@ -23,10 +23,11 @@ public class customerBond extends Bonds {
 		this.daysMatured = daysMatured;
 	}
 
-	public customerBond(String bondID, String bondType, int maturity, double value, double i, int daysMatured) {
+	public customerBond(String bondID, String bondType, int maturity, double value, double i, int daysMatured, int customerBondID) {
         super(bondID, bondType, maturity, i);
         this.daysMatured = daysMatured;
         this.amount = value;
+        this.customerBondID = customerBondID;
     }
 
     public void updateDaysMatured(){
@@ -53,4 +54,5 @@ public class customerBond extends Bonds {
     public int getDaysMatured() {
         return daysMatured;
     }
+    
 }
