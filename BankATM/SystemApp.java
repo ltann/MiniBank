@@ -118,6 +118,14 @@ public class SystemApp {
     	
     }
 
+    public static Banker getCurrentBanker() {
+        return bankers.get(currentBanker);
+    }
+
+    public static Customer getCurrentCustomer() {
+        return customers.get(currentCustomer);
+    }
+
     public static void setDefaultBanker() {
 //        ArrayList<String> newUser = new ArrayList<String>();
 //        newUser.add("admin");
@@ -456,6 +464,22 @@ public class SystemApp {
         return info;
     }
     
+    public static void loan(int numMonth, double amount, int currency) {
+        Customer c = customers.get(currentCustomer);
+        double interest;
+        if (numMonth < 5) {
+            interest = 0.02;
+        } else if (numMonth < 12) {
+            interest = 0.01;
+        } else {
+            interest = 0.007;
+        }
+        Loan loan = new Loan(interest, currency);
+        loan.getCurrency().deposit(amount);
+        c.addLoan(loan);
+        c.getAcc().get(0).getC()[currency].deposit(amount);
+    }
+    
 //    public static void loan(int numMonth, double amount, int currency) {
 //        double interest;
 //        if (numMonth < 5) {
@@ -473,6 +497,43 @@ public class SystemApp {
 
     public static boolean payLoan(Loan loan){
         boolean payable = true;
+        Customer c = customers.get(currentCustomer);
+        char currencyType;
+        if(loan.getCurrencyType() == 1){
+            currencyType = '$';
+        }
+        else if(loan.getCurrencyType() == 2){
+            currencyType = '¥';
+        }
+        else{
+            currencyType = '€';
+        }
+
+        payable = c.hasEnoughMoney(loan.getCurrency().getBalance(), loan.getCurrencyType());
+        if(!payable){
+            System.out.println("You do not have enough money in this currency of type " + currencyType);
+        }
+        else{
+            ListIterator<Account> i = c.getAcc().listIterator();
+            while(i.hasNext()){
+                for(Currency currency: i.next().getC()){
+                    if(currencyType == currency.getSymbol()){
+                        if(currency.getBalance() >= loan.getCurrency().getBalance()){
+                            currency.withdraw(loan.getCurrency().getBalance());
+                            loan.getCurrency().withdraw(loan.getCurrency().getBalance());
+                        }
+                        else{
+                            currency.withdraw(currency.getBalance());
+                            loan.getCurrency().withdraw(currency.getBalance());
+                        }
+                    }
+                }
+                if(loan.getCurrency().getBalance() == 0){
+                    c.removeLoan(loan);
+                    break;
+                }
+            }
+        }
         return payable;
     }
 

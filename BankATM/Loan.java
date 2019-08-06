@@ -1,13 +1,17 @@
 public class Loan {
     private double interest;
     private Currency currency;
+    private int currencyType;
     private String type;
     private int boughtAt;
+    private int dayBought;
 
-    public Loan(double interest, int currencyType, String type, int priceBoughtAt){
+    public Loan(double interest, int currencyType, String type, int priceBoughtAt, int dayBought){
         this.interest = interest;
         this.type = type;
         this.boughtAt = priceBoughtAt;
+        this.dayBought = dayBought;
+        this.currencyType = currencyType;
         switch (currencyType){
             case 0:
                 this.currency = new Currency("USD",'$');
@@ -20,6 +24,7 @@ public class Loan {
     
     public Loan(double interest, int index){
         this.interest = interest;
+        this.currencyType = index;
         switch (index){
             case 0:
                 this.currency = new Currency("USD",'$');
@@ -46,5 +51,13 @@ public class Loan {
 
     public int getBoughtAt() {
         return boughtAt;
+    }
+
+    public int getDayBought() {
+        return dayBought;
+    }
+
+    public int getCurrencyType() {
+        return currencyType;
     }
 }
