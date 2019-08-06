@@ -4,11 +4,13 @@ import java.util.ArrayList;
 public class customerStock extends Stocks{
     private double priceBoughtAt;
     private int numShares;
+    private int customerStockID;
 
-    public customerStock(String ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory){
+    public customerStock(String ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, int customerStockID){
         super(ticker, stockName, pPS, stockPriceHistory);
         this.priceBoughtAt = pPS;
         this.numShares = numShares;
+        this.customerStockID = customerStockID;
     }
 
     public int getNumShares() {
@@ -18,8 +20,16 @@ public class customerStock extends Stocks{
     public double getPriceBoughtAt() {
         return priceBoughtAt;
     }
+    
+    public int getCustomerStockID() {
+		return customerStockID;
+	}
 
-    public double getUnrealizedProfitOrLoss(Stocks stocks) {
+	public void setCustomerStockID(int customerStockID) {
+		this.customerStockID = customerStockID;
+	}
+
+	public double getUnrealizedProfitOrLoss(Stocks stocks) {
         double unrealized = stocks.getPricePerShare() - this.getPriceBoughtAt();
         if(unrealized < 0){
             System.out.println("There will be a loss in profit of " + unrealized + " USD.");
