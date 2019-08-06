@@ -118,13 +118,13 @@ public class SystemApp {
     	
     }
 
-    public static Banker getCurrentBanker() {
-        return bankers.get(currentBanker);
-    }
-
-    public static Customer getCurrentCustomer() {
-        return customers.get(currentCustomer);
-    }
+//    public static Banker getCurrentBanker() {
+//        return bankers.get(0);
+//    }
+//
+//    public static Customer getCurrentCustomer() {
+//        return customers.get(currentCustomer);
+//    }
 
     public static void setDefaultBanker() {
 //        ArrayList<String> newUser = new ArrayList<String>();
@@ -464,23 +464,8 @@ public class SystemApp {
         return info;
     }
     
-    public static void loan(int numMonth, double amount, int currency) {
-        Customer c = customers.get(currentCustomer);
-        double interest;
-        if (numMonth < 5) {
-            interest = 0.02;
-        } else if (numMonth < 12) {
-            interest = 0.01;
-        } else {
-            interest = 0.007;
-        }
-        Loan loan = new Loan(interest, currency);
-        loan.getCurrency().deposit(amount);
-        c.addLoan(loan);
-        c.getAcc().get(0).getC()[currency].deposit(amount);
-    }
-    
 //    public static void loan(int numMonth, double amount, int currency) {
+//        Customer c = customers.get(currentCustomer);
 //        double interest;
 //        if (numMonth < 5) {
 //            interest = 0.02;
@@ -491,51 +476,52 @@ public class SystemApp {
 //        }
 //        Loan loan = new Loan(interest, currency);
 //        loan.getCurrency().deposit(amount);
-//        customers.get(currentCustomer).addLoan(loan);
-//        customers.get(currentCustomer).getAcc().get(0).getC()[currency].deposit(amount);
+//        c.addLoan(loan);
+//        c.getAcc().get(0).getC()[currency].deposit(amount);
 //    }
-
-    public static boolean payLoan(Loan loan){
-        boolean payable = true;
-        Customer c = customers.get(currentCustomer);
-        char currencyType;
-        if(loan.getCurrencyType() == 1){
-            currencyType = '$';
-        }
-        else if(loan.getCurrencyType() == 2){
-            currencyType = '¥';
-        }
-        else{
-            currencyType = '€';
-        }
-
-        payable = c.hasEnoughMoney(loan.getCurrency().getBalance(), loan.getCurrencyType());
-        if(!payable){
-            System.out.println("You do not have enough money in this currency of type " + currencyType);
-        }
-        else{
-            ListIterator<Account> i = c.getAcc().listIterator();
-            while(i.hasNext()){
-                for(Currency currency: i.next().getC()){
-                    if(currencyType == currency.getSymbol()){
-                        if(currency.getBalance() >= loan.getCurrency().getBalance()){
-                            currency.withdraw(loan.getCurrency().getBalance());
-                            loan.getCurrency().withdraw(loan.getCurrency().getBalance());
-                        }
-                        else{
-                            currency.withdraw(currency.getBalance());
-                            loan.getCurrency().withdraw(currency.getBalance());
-                        }
-                    }
-                }
-                if(loan.getCurrency().getBalance() == 0){
-                    c.removeLoan(loan);
-                    break;
-                }
-            }
-        }
-        return payable;
-    }
+//    
+//
+//    public static boolean payLoan(Loan loan){
+//        boolean payable = true;
+//        Customer c = customers.get(currentCustomer);
+//        char currencyType;
+//        if(loan.getCurrencyType() == 1){
+//            currencyType = '$';
+//        }
+//        else if(loan.getCurrencyType() == 2){
+//            currencyType = '¥';
+//        }
+//        else{
+//            currencyType = '€';
+//        }
+//
+//        payable = c.hasEnoughMoney(loan.getCurrency().getBalance(), loan.getCurrencyType());
+//        if(!payable){
+//            System.out.println("You do not have enough money in this currency of type " + currencyType);
+//        }
+//        else{
+//            ListIterator<Account> i = c.getAcc().listIterator();
+//            while(i.hasNext()){
+//                for(Currency currency: i.next().getC()){
+//                    if(currencyType == currency.getSymbol()){
+//                        if(currency.getBalance() >= loan.getCurrency().getBalance()){
+//                            currency.withdraw(loan.getCurrency().getBalance());
+//                            loan.getCurrency().withdraw(loan.getCurrency().getBalance());
+//                        }
+//                        else{
+//                            currency.withdraw(currency.getBalance());
+//                            loan.getCurrency().withdraw(currency.getBalance());
+//                        }
+//                    }
+//                }
+//                if(loan.getCurrency().getBalance() == 0){
+//                    c.removeLoan(loan);
+//                    break;
+//                }
+//            }
+//        }
+//        return payable;
+//    }
 
     public static boolean checkBalance(Customer c) {
         double balance = 0;
@@ -577,40 +563,65 @@ public class SystemApp {
     //Customer purchase a bond
     public static boolean purchaseBond(Customer c, Bonds b, double amount) {
         boolean purchasable = true;
-        SecurityAccount sa = c.getSecurityAccount();
-        SystemApp.bankers.get(0).addProfits();
-        purchasable = sa.purchaseBond(b, amount);
+        SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+        //SecurityAccount sa = c.getSecurityAccount();
+        //SystemApp.bankers.get(0).addProfits();
+        //purchasable = sa.purchaseBond(b, amount);
+        if(amount > sa.getAvaliableFunds()){
+            purchasable = false;
+            //System.out.println("You can't buy this bond at price " + amount + ". You only have "  + " USD left in security acount");
+        }
         if(purchasable){
-            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        	double availFunds = sa.getAvaliableFunds() - amount;
+        	sa.setAvaliableFunds(availFunds);
+            database.dataUpdateSecurityAccount(c.getLoginName(), sa);
         }
         return purchasable;
     }
 
     //Customer sells a bond
 
-    public static boolean sellBond(Customer c, customerBond b){
+    public static boolean sellBond(Customer c, int index){
         boolean sellable = true;
-        SecurityAccount sa = c.getSecurityAccount();
-        SystemApp.bankers.get(0).addProfits();
-        sellable = sa.sellBond(b);
-        if(sellable){
-            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB newSecurityAccount);
+        SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+        ArrayList<customerBond> bond = sa.getBond();
+        customerBond b = bond.get(index);
+        if(b.isMatured()){
+            sa.setAvaliableFunds(sa.getAvaliableFunds() + b.getAmount() + b.getInterest());
+            sa.setValueOfSA(sa.getValueOfSA() + b.getInterest());
+            sa.setProfitMade(sa.getProfitMade() + b.getInterest());
+        }else{
+        	sa.setAvaliableFunds(sa.getAvaliableFunds() + b.getAmount());
+        	sa.setProfitMade(sa.getProfitMade());
         }
+        bond.remove(index);
+        sa.setBond(bond);
+        database.dataUpdateSecurityAccount(c.getLoginName(), sa);
         return sellable;
     }
 
     //Customer purchase a stock
-    public static boolean purchaseStock(Customer c, Stocks s, int numOfShare) {
+    public static boolean purchaseStock(Customer c, int index, int numOfShare) {
         boolean purchasable = true;
-        SecurityAccount sa = c.getSecurityAccount();
-        SystemApp.bankers.get(0).addProfits();
-        purchasable = sa.purchaseStock(s,numOfShare);
+        SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+        ArrayList<customerStock> cs = sa.getStock();
+        List<StocksDB> s = database.dataFindAllStocks();
+        StocksDB stock = s.get(index);
+        double shareValue = stock.getPriceHistory().get(stock.getPriceHistory().size()-1) * numOfShare;
+        if (shareValue > sa.getAvaliableFunds()) {
+            //System.out.println("You're available funds are: " + availableFunds + " you cannot purchase this stock share value at: " + shareValue);
+            purchasable = false;
+        } else {
+            sa.setAvaliableFunds(sa.getAvaliableFunds()- shareValue);
+            cs.add(new customerStock(stock.getTicker(), stock.getCompanyName(), stock.getPriceHistory().get(stock.getPriceHistory().size()-1), numOfShare, stock.getPriceHistory()));
+            sa.setStock(cs);
+        }
+
         if(purchasable){
-            //database.dataUpdateSecurityAccount(c.getLoginName(), SecurityAccountDB_SecurityAccountDB );
+           database.dataUpdateSecurityAccount(c.getLoginName(), sa);
         }
         return purchasable;
     }
-
 
     //Customer sell a stock
     public static boolean sellStock(Customer c, customerStock s, int numOfShare) {
@@ -822,13 +833,7 @@ public class SystemApp {
         return stocks;
     }
 
-//    public static void updateStock() {
-//
-//    }
-//
-//    public static void updateBond() {
-//
-//    }
+
 
 }
 

@@ -489,7 +489,7 @@ public class DataAccess {
 							//ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA
 							customerStock newStock = new customerStock(s.getTicker(),
 									s.getStockName(), s.getPriceBoughtAt(), s.getNumShares(),
-									s.getSph(), s.getPriceBoughtAt());
+									s.getSph());
 							newStock.setPricePerShare(pricePerShare);
 							// update the whole stock info of the security account
 							stockSA.remove(s);

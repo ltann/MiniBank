@@ -103,8 +103,8 @@ public class SecurityAccountDB {
 						stockInfo.get(i).get("stockName"), 
 						stockPrice.get(i).get("pricePerShare"), 
 						stockNumShares.get(i), 
-						stockPriceHistory.get(i),
-						stockPrice.get(i).get("priceBoughtAt")));
+						stockPriceHistory.get(i)
+						));
 			}
 		}
 		return stock;
@@ -124,7 +124,6 @@ public class SecurityAccountDB {
 			Map<String, Double> sPrice = new HashMap<String, Double>();
 			sPrice.put("pricePerShare", s.getPricePerShare());
 //			sPrice.put("feePerTrade", s.getFeePerTrade());
-			sPrice.put("priceBoughtAt", s.getPriceBoughtAt());
 			stockPrice.add(sPrice);
 			
 			stockPriceHistory.add(s.getSph());

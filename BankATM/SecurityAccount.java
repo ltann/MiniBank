@@ -24,7 +24,7 @@ public class SecurityAccount extends Account {
             purchasable = false;
         } else {
             availableFunds = availableFunds - shareValue;
-            stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares, stock.getSph(), stock.getPricePerShare()));
+            stocks.add(new customerStock(stock.getTicker(), stock.getStockName(), stock.getPricePerShare(), numOfShares, stock.getSph()));
             //UPDATE DAILY? TRANSACTIONS
             Transactions.add("Purchased " + numOfShares + " of " + stock.getStockName() + " Share(s) at " + stock.getPricePerShare());
             profitMade -= shareValue;
