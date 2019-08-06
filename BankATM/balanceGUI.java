@@ -30,9 +30,9 @@ public class balanceGUI {
         } 
         return str;
     }
-    public balanceGUI(Account a, Customer c) {
-        GUI.balanceGUIAL(this, a, c);
-        name = new JLabel(c.getPerInfomation().getName());
+    public balanceGUI(Account a) {
+        GUI.balanceGUIAL(this, a);
+        name = new JLabel(SystemApp.currentCustomer.getPerInfomation().getName());
         number = new JLabel("" + a.getAccountNumber());
         balance = new JTextArea(curr(a));
         if(a.getType() == 1) {

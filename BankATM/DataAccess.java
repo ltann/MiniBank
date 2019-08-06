@@ -552,7 +552,6 @@ public class DataAccess {
 		MongoCollection<Document> bondsInfo = db.getCollection("bondsInfo");
 		if(dataFindBonds(bond.getBondID()) == null){
 			bondsInfo.insertOne(new Document("bondID", bond.getBondID())
-				.append("amount", bond.getAmount())
 			    .append("interest", bond.getInterest())
 			    .append("maturity", bond.getMaturity())
 			    .append("bondType", bond.getBondType())
@@ -590,7 +589,6 @@ public class DataAccess {
 		if(dataFindBonds(bondID) != null) {
 			Document updateQuery = new Document("bondID", bondID);
 			Document updateBonds = new Document("bondID", bond.getBondID())
-					.append("amount", bond.getAmount())
 					.append("interest", bond.getInterest())
 					.append("maturity", bond.getMaturity())
 					.append("bondType", bond.getBondType())

@@ -1,6 +1,5 @@
 public class BondsDB {
 	private String bondID;
-	private int amount;
 	private double interest;
 	private int maturity;
 	private String bondType;
@@ -18,14 +17,6 @@ public class BondsDB {
 
 	public void setBondID(String bondID) {
 		this.bondID = bondID;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
 	}
 
 	public double getInterest() {

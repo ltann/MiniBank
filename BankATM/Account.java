@@ -3,7 +3,7 @@ public class Account {
     protected int type; // 0: Default, 1: Checking, 2:Saving, 3: Security
     protected Currency[] c;
 
-
+    
     public Account(int type, int accountNumber) {
         this.type = type;
         this.accountNumber = accountNumber;

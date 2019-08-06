@@ -7,7 +7,7 @@ public class CustomerBondGUI {
 	JLabel amountTitle = new JLabel("Amount:");
 	JTable t;
 	JScrollPane scroll;
-	String[] columnTitle = {"ID", "Amount", "Interest", "Maturity", "Type"};
+	String[] columnTitle = {"ID", "Interest", "Maturity", "Type"};
 	JTextField amount = new JTextField();
 	JButton buy = new JButton("Buy");
     JButton ret = new JButton("Return");

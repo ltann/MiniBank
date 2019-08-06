@@ -8,8 +8,8 @@ public class SucceedInfoGUI {
     JButton exit = new JButton("Exit");
     JLabel header = new JLabel("Succeed!");
 
-    public SucceedInfoGUI(boolean b, Account a, String str, Customer c) {
-        GUI.SucceedInfoGUIAL(this, a, c, c.getPerInfomation().getName());
+    public SucceedInfoGUI(boolean b, Account a, String str) {
+        GUI.SucceedInfoGUIAL(this, a);
         if(!b) {
             header.setText("Failed!");
         }

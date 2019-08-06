@@ -11,8 +11,8 @@ public class SecurityMainGUI {
     JButton transfer = new JButton("Transfer");
     JButton exit = new JButton("Exit");
 
-    public SecurityMainGUI(Customer cus, Account a) {
-        GUI.SecurityMainGUIAL(this, cus, a);
+    public SecurityMainGUI(Account a) {
+        GUI.SecurityMainGUIAL(this, a);
         header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
         header.setBounds(360,25,300,50);
         balance.setBounds(0,150,250,80);
