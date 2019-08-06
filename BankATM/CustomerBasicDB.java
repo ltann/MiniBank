@@ -7,16 +7,22 @@ public class CustomerBasicDB {
 	private String cell;
 	private String psw;
 	private boolean colletral;
+	private int loanNum;
+	private int stockNum;
+	private int bondNum;
 	
 	//username, password, name, cell, address, collateral
 	public CustomerBasicDB(String userName, String psw, String name, String cell,
-			String addr, boolean colletral) {
+			String addr, boolean colletral, int loanNum, int stockNum, int bondNum) {
 		this.userName = userName;
 		this.name = name;
 		this.addr = addr;
 		this.cell = cell;
 		this.psw = psw;
 		this.colletral = colletral;
+		this.loanNum = loanNum;
+		this.stockNum = stockNum;
+		this.bondNum = bondNum;
 	}
 	public String getUserName() {
 		return userName;
@@ -53,6 +59,24 @@ public class CustomerBasicDB {
 	}
 	public void setColletral(boolean colletral) {
 		this.colletral = colletral;
+	}
+	public int getLoanNum() {
+		return loanNum;
+	}
+	public void setLoanNum(int loanNum) {
+		this.loanNum = loanNum;
+	}
+	public int getStockNum() {
+		return stockNum;
+	}
+	public void setStockNum(int stockNum) {
+		this.stockNum = stockNum;
+	}
+	public int getBondNum() {
+		return bondNum;
+	}
+	public void setBondNum(int bondNum) {
+		this.bondNum = bondNum;
 	}	
 	
 }
