@@ -309,8 +309,41 @@ public class SystemApp {
     public static boolean payLoan(Loan loan){
         boolean payable = true;
         Customer c = customers.get(currentCustomer);
-        if(c.hasEnoughMoney(loan.getCurrency().getBalance())){
-            bankers.get(currentBanker).
+        char currencyType;
+        if(loan.getCurrencyType() == 1){
+            currencyType = '$';
+        }
+        else if(loan.getCurrencyType() == 2){
+            currencyType = '¥';
+        }
+        else{
+            currencyType = '€';
+        }
+
+        payable = c.hasEnoughMoney(loan.getCurrency().getBalance(), loan.getCurrencyType());
+        if(!payable){
+            System.out.println("You do not have enough money in this currency of type " + currencyType);
+        }
+        else{
+            ListIterator<Account> i = c.getAcc().listIterator();
+            while(i.hasNext()){
+                for(Currency currency: i.next().getC()){
+                    if(currencyType == currency.getSymbol()){
+                        if(currency.getBalance() >= loan.getCurrency().getBalance()){
+                            currency.withdraw(loan.getCurrency().getBalance());
+                            loan.getCurrency().withdraw(loan.getCurrency().getBalance());
+                        }
+                        else{
+                            currency.withdraw(currency.getBalance());
+                            loan.getCurrency().withdraw(currency.getBalance());
+                        }
+                    }
+                }
+                if(loan.getCurrency().getBalance() == 0){
+                    c.removeLoan(loan);
+                    break;
+                }
+            }
         }
         return payable;
     }

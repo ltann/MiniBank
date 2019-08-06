@@ -112,20 +112,32 @@ public class Customer extends Person {
         return null;
     }
 
-    public boolean hasEnoughMoney(double requiredFunds){
+    public boolean hasEnoughMoney(double requiredFunds, int currencyType){
         boolean payable = true;
-        if(getTotalBalance() < requiredFunds){
+        if(getTotalBalance(currencyType) < requiredFunds){
             payable = false;
         }
         return payable;
     }
 
-    public double getTotalBalance(){//total balance across all account and currency
+    public double getTotalBalance(int currencyType){//total balance across all account of one type of currency
         ListIterator<Account> i = acc.listIterator();
         double totalFunds = 0.0;
+        char currType;
+        if(currencyType == 1){
+            currType = '$';
+        }
+        else if(currencyType == 2){
+            currType = '¥';
+        }
+        else{
+            currType = '€';
+        }
         while(i.hasNext()){
             for(Currency currency: i.next().c){
-                totalFunds += currency.getBalance();
+                if(currency.getSymbol() == currType){
+                    totalFunds += currency.getBalance();
+                }
             }
         }
         return totalFunds;
