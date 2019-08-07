@@ -19,13 +19,13 @@ public class SecurityAccountDB {
 	private ArrayList<Double> bondInterest;
 	
 	private double avaliableFunds;
-	private double valueOfSA;
+	private ArrayList<Double> valueOfSA;
 	
 	private ArrayList<String> transactions;
 	private double profitMade;
 
 	public SecurityAccountDB(String userName, String accountNumber, ArrayList<customerStock> stock,
-			ArrayList<customerBond> bond, double avaliableFunds, double valueOfSA, 
+			ArrayList<customerBond> bond, double avaliableFunds, ArrayList<Double> valueOfSA, 
 			ArrayList<String> transactions, double profitMade) {
 		this.userName = userName;
 		this.accountNumber = accountNumber;
@@ -57,7 +57,7 @@ public class SecurityAccountDB {
 			ArrayList<Map<String, Double>> bondAmount, 
 			ArrayList<Double> bondInterest, 
 			double avaliableFunds,
-			double valueOfSA, 
+			ArrayList<Double> valueOfSA, 
 			ArrayList<String> transactions, 
 			double profitMade) {
 		this.userName = userName;
@@ -191,11 +191,11 @@ public class SecurityAccountDB {
 		this.avaliableFunds = avaliableFunds;
 	}
 
-	public double getValueOfSA() {
+	public ArrayList<Double> getValueOfSA() {
 		return valueOfSA;
 	}
 
-	public void setValueOfSA(double valueOfSA) {
+	public void setValueOfSA(ArrayList<Double> valueOfSA) {
 		this.valueOfSA = valueOfSA;
 	}
 
