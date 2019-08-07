@@ -31,7 +31,7 @@ public class customerBond extends Bonds {
     }
 
     public void updateDaysMatured(){
-        daysMatured += 1;
+        daysMatured -= 1;
     }
 
     public boolean isMatured(){

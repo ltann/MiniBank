@@ -16,7 +16,7 @@ public class SystemApp {
 //    public static ArrayList<Customer> customers = new ArrayList<Customer>();
     //public static ArrayList<Customer> customers = createCustomers();
     public static ArrayList<Banker> bankers = new ArrayList<Banker>();
-    public static int accountNumber = 10;
+    public static int accountNumber = 1;
     //public static int currentCustomer;
    // public static int currentBanker;
     public static Customer currentCustomer;
@@ -158,6 +158,12 @@ public class SystemApp {
     	if(database.dataFindBankerBasic("admin") == null) {
     		BankerBasicDB bb = new BankerBasicDB("admin", "admin");
         	database.dataAddBankerBasic(bb);
+        	ArrayList<String> rep = new ArrayList<String>();
+        	rep.add(report);
+        	ArrayList<Double> pro = new ArrayList<Double>();
+        	pro.add(fee);
+        	BankDB bank = new BankDB(rep, pro, accountNumber);
+        	database.dataAddBank(bank);
     	}
     	BankDB b = database.dataFindBank();
     	accountNumber = b.getAccountNum();
@@ -228,7 +234,9 @@ public class SystemApp {
         	ArrayList<customerStock> stock = new ArrayList<customerStock>();
         	ArrayList<customerBond> bond = new ArrayList<customerBond>();
         	ArrayList<String> transaction = new ArrayList<String>();
-        	SecurityAccountDB sacc = new SecurityAccountDB(currentCustomer.getLoginName(), String.valueOf(accountNumber), stock, bond, -3.0, -3.0, transaction, 0);
+        	ArrayList<Double> valueOfSA = new ArrayList<Double>();
+        	valueOfSA.add(-3.0);
+        	SecurityAccountDB sacc = new SecurityAccountDB(currentCustomer.getLoginName(), String.valueOf(accountNumber), stock, bond, -3.0, valueOfSA, transaction, 0.0);
         	fee += 3;
         	SystemApp.updateFee();
         	database.dataAddSecurityAccount(sacc);
@@ -354,6 +362,11 @@ public class SystemApp {
                 		
             			// Deposit
                 		rec.setAvaliableFunds(rec.getAvaliableFunds() + amount);
+                		ArrayList<Double> vos = rec.getValueOfSA();
+                		double value = vos.get(vos.size()-1) + amount;
+                		vos.remove(vos.size()-1);
+                		vos.add(value);
+                		rec.setValueOfSA(vos);
                 		database.dataUpdateSecurityAccount(accountNumber, rec);
                 		
                 		// Report
@@ -369,6 +382,11 @@ public class SystemApp {
                 		
                 		// Deposit
                 		rec.setAvaliableFunds(rec.getAvaliableFunds() + amount);
+                		ArrayList<Double> vos = rec.getValueOfSA();
+                		double value = vos.get(vos.size()-1) + amount;
+                		vos.remove(vos.size()-1);
+                		vos.add(value);
+                		rec.setValueOfSA(vos);
                 		database.dataUpdateSecurityAccount(accountNumber, rec);
                 		
                 		// Report
@@ -655,16 +673,16 @@ public class SystemApp {
     }
 
     // Update Loan
-    public static void updateLoan() {
-    	List<LoanDB> loans = database.dataFindAllLoan();
-    	for(LoanDB loan: loans) {
-    		double amount = loan.getAmount();
-    		amount += (loan.getInterest() + 1) * loan.getAmount();
-    		loan.setAmount(amount);
-    		database.dataUpdate;
-    	}
-    	
-    }
+//    public static void updateLoan() {
+//    	List<LoanDB> loans = database.dataFindAllLoan();
+//    	for(LoanDB loan: loans) {
+//    		double amount = loan.getAmount();
+//    		amount += (loan.getInterest() + 1) * loan.getAmount();
+//    		loan.setAmount(amount);
+//    		database.dataUpdate;
+//    	}
+//    	
+//    }
     
     public static boolean payLoan(int index){
         boolean payable = false;
@@ -783,10 +801,26 @@ public class SystemApp {
         boolean sellable = true;
         SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
         ArrayList<customerBond> bond = sa.getBond();
+        ArrayList<Double> vos = sa.getValueOfSA();
         customerBond b = bond.get(index);
         if(b.isMatured()){
             sa.setAvaliableFunds(sa.getAvaliableFunds() + b.getAmount() + b.getInterest());
-            sa.setValueOfSA(sa.getValueOfSA() + b.getInterest());
+            int days = 0;
+            if(b.getMaturity() == 1) { // 1 month or 1 week
+            	if(b.getBondType() == "week") {
+            		days = 7;
+            	}
+            	else {
+            		days = 30;
+            	}
+            }
+            else { //3 month
+            	days = 90;
+            }
+            double value = vos.get(vos.size()-1) + (b.getInterest() * days);
+            vos.remove(vos.size()-1);
+            vos.add(value);
+            sa.setValueOfSA(vos);
             sa.setProfitMade(sa.getProfitMade() + b.getInterest());
         }else{
         	sa.setAvaliableFunds(sa.getAvaliableFunds() + b.getAmount());
@@ -825,8 +859,8 @@ public class SystemApp {
             else {
             	stockID = database.dataFindSecurityAccount(currentCustomer.getLoginName()).getCustomerStockID().get(database.dataFindSecurityAccount(currentCustomer.getLoginName()).getCustomerStockID().size()-1);
             }
-            System.out.println(numOfShare);
-            customerStock custock = new customerStock(stock.getTicker(), stock.getCompanyName(), stock.getPriceHistory().get(stock.getPriceHistory().size()-1), numOfShare, stock.getPriceHistory(), ++stockID);
+            final int BoughtAt = stock.getPriceHistory().size();
+            customerStock custock = new customerStock(stock.getTicker(), stock.getCompanyName(), stock.getPriceHistory().get(BoughtAt-1), numOfShare, stock.getPriceHistory(), ++stockID);
             cs.add(custock);
             sa.setStock(cs);
             purchasable = true;
@@ -842,6 +876,7 @@ public class SystemApp {
     public static boolean sellStock(Customer c, int index) {
         boolean sellable = true;
         SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+        ArrayList<Double> vos = sa.getValueOfSA();
         ArrayList<customerStock> stock = sa.getStock();
         customerStock s = stock.get(index);
         StocksDB st = database.dataFindStocks(s.getTicker());
@@ -850,7 +885,10 @@ public class SystemApp {
         double shareValue = st.getPriceHistory().get(st.getPriceHistory().size()-1) * s.getNumShares();
         double profits = shareValue - (s.getNumShares() * s.getPriceBoughtAt());
         sa.setAvaliableFunds(sa.getAvaliableFunds()+shareValue);
-        sa.setValueOfSA(sa.getValueOfSA() + profits);
+        double value = vos.get(vos.size()-1) + profits;
+        vos.remove(vos.size()-1);
+        vos.add(value);
+        sa.setValueOfSA(vos);
         stock.remove(s);
         //Transactions.add("Sold " + numOfShares + " of " + customerStock.getStockName() + " Share(s) at " + currentStockPrice);
         sa.setProfitMade(sa.getProfitMade() + shareValue);
@@ -860,32 +898,7 @@ public class SystemApp {
         }
         return sellable;
     }
-//   
-//
-//    //Customer's available funds in SA
-//    public static double getAvailableFunds(Customer c){
-//        return c.getSecurityAccount().getAvailableFunds();
-//    }
-//
-//    //Customer's SA value
-//    public static double getSAValue(Customer c){
-//        return c.getSecurityAccount().getValueOfSA();
-//    }
-//
-//    //Customer's transactions in SA
-//    public static ArrayList<String> getSecurityTransactions(Customer c){
-//        return c.getSecurityAccount().getTransactions();
-//    }
-//
-//    //Customer's profit made from SA.
-//    public static double getProfitMadeInSecurity(Customer c){
-//        return c.getSecurityAccount().getProfitMade();
-//    }
-//
-//    //Customer's unrealized profits/Loss from SA
-//    public static double getUnrealized(Stocks s, customerStock cst){
-//        return cst.getUnrealizedProfitOrLoss(s);
-//    }
+
 
     //Manager side functions:
 
@@ -899,31 +912,39 @@ public class SystemApp {
     	updateBankDB();
     	updateReport();
     	report = "";
-        //function provided by the database
-//        Banker banker = SystemApp.bankers.get(0);
-//        banker.updateExisitngStocks();
-//
-//        Iterator<Customer> i = customers.listIterator();//UPDATING EACH CUSTOMER'S BONDS BY A DAY.
-//        while(i.hasNext()){
-//            Customer c = i.next();
-//            ArrayList<customerBond> customersBonds = c.getSecurityAccount().getBonds();
-//            ListIterator<customerBond> j = customersBonds.listIterator();
-//            while(j.hasNext()){
-//                j.next().updateDaysMatured();
-//            }
-//        }
     	Banker banker = SystemApp.bankers.get(0);
     	banker.updateExisitngStocks();
+    	
     	List<SecurityAccountDB> acc = database.dataFindAllSecurityAccount();
-    	Iterator<SecurityAccountDB> i = acc.listIterator();//UPDATING EACH CUSTOMER'S BONDS BY A DAY.
-    	while(i.hasNext()){
-    		SecurityAccountDB c = i.next();
-    		ArrayList<customerBond> customersBonds = c.getBond();
-    		ListIterator<customerBond> j = customersBonds.listIterator();
-    		while(j.hasNext()){
-    			j.next().updateDaysMatured();
+    	for(int i = 0; i < acc.size(); i++) {
+    		SecurityAccountDB c = acc.get(i);
+    		if(c.getBond() == null) {
+    			continue;
     		}
-	    }
+    		ArrayList<customerBond> customersBonds = c.getBond();
+    		for(int j = 0; j < customersBonds.size(); j++) {
+    			System.out.println(customersBonds.get(j).getDaysMatured());
+    			customerBond cb = customersBonds.get(j);
+    			cb.setDaysMatured(customersBonds.get(j).getDaysMatured()-1);
+    			customersBonds.set(j, cb);
+    			System.out.println(customersBonds.get(j).getDaysMatured());
+    		}
+    		c.setBond(customersBonds);
+    		//Update ValueOfSA
+    		ArrayList<Double> vos = c.getValueOfSA();
+    		double value = vos.get(vos.size()-1);
+    		vos.add(value);
+    		c.setValueOfSA(vos);
+    		
+    		database.dataUpdateSecurityAccount(acc.get(i).getUserName(), acc.get(i));  		
+    	}
+    	List<LoanDB> l = database.dataFindAllLoan();
+    	for (int i = 0; i < l.size(); i++) {
+    		LoanDB ld =  l.get(i);
+    		ld.setAmount(ld.getAmount() + ld.getInterest() * ld.getAmount());
+    		database.dataUpdateLoan(l.get(i).getLoanID(), l.get(i).getUserName(), ld);
+    	}
+    	
     	// Update BankDB
     }
     
@@ -970,11 +991,12 @@ public class SystemApp {
         	for(int i = 0; i < sa.getStock().size(); i++) {
         		data[i][0] = sa.getStock().get(i).getTicker();
         		data[i][1] = sa.getStock().get(i).getStockName();
-        		data[i][2] = sa.getStock().get(i).getPriceBoughtAt();
-        		data[i][3] = sa.getStock().get(i).getPricePerShare();
+        		data[i][2] = String.format("%.2f",sa.getStock().get(i).getPriceBoughtAt());
+        		ArrayList<Double> history = database.dataFindStocks(sa.getStock().get(i).getTicker()).getPriceHistory();
+        		data[i][3] = String.format("%.2f",history.get(history.size()-1));
         		data[i][4] = sa.getStock().get(i).getNumShares();
-        		data[i][5] = String.valueOf((sa.getStock().get(i).getPricePerShare() - sa.getStock().get(i).getPriceBoughtAt()) / sa.getStock().get(i).getPriceBoughtAt() * 100) + "%";
-        		data[i][6] = String.valueOf(sa.getStock().get(i).getPricePerShare() * sa.getStock().get(i).getNumShares());
+        		data[i][5] = String.format("%.2f",(((Double.parseDouble((String)data[i][3]) - Double.parseDouble((String)data[i][2])) / Double.parseDouble((String)data[i][2]) * 100))) + "%";
+        		data[i][6] = String.format("%.2f",(Double.parseDouble((String)data[i][3]) * (int)data[i][4]));
         	}
     	}
     	
@@ -989,28 +1011,28 @@ public class SystemApp {
 	    	bonds = new Object[sa.getBond().size()][6];
 	        for(int i = 0; i < sa.getBond().size(); i++) {
 	    		bonds[i][0] = sa.getBond().get(i).getCustomerBondID();
-	    		bonds[i][1] = sa.getBond().get(i).getBondType();
-	    		bonds[i][2] = sa.getBond().get(i).getMaturity();
+	    		bonds[i][1] = sa.getBond().get(i).getMaturity();
+	    		bonds[i][2] = sa.getBond().get(i).getBondType();
 	    		bonds[i][3] = sa.getBond().get(i).getAmount();
 	    		bonds[i][4] = sa.getBond().get(i).getInterest();
 	    		bonds[i][5] = sa.getBond().get(i).getDaysMatured();
 	    	}
     	}
-    	System.out.println(bonds[0][0]);
         return bonds;
     }
 
     public static DefaultCategoryDataset getAccountValueData(Customer c) {
     	SecurityAccountDB sa = database.dataFindSecurityAccount(currentCustomer.getLoginName());
-        DefaultCategoryDataset first = new DefaultCategoryDataset();
-        //for(int i = 0; i < sa.get)
-//        first.addValue(1, "First", "2013");
-//        first.addValue(3, "First", "2014");
-//        first.addValue(2, "First", "2015");
-//        first.addValue(6, "First", "2016");
-//        first.addValue(5, "First", "2017");
-//        first.addValue(12, "First", "2018");
-        return first;
+        DefaultCategoryDataset data = new DefaultCategoryDataset();
+        ArrayList<Double> valueHistory = sa.getValueOfSA();
+        int days = valueHistory.size();
+        if(days >= 10) {
+        	days = 10;
+        }
+        for(int i = 0; i < days; i++) {
+        	data.addValue(valueHistory.get(valueHistory.size() - days + i), "Account Value", String.valueOf(valueHistory.size()- days + i));
+        }
+        return data;
     }
 
     public static ArrayList<DefaultCategoryDataset> getStockData() {
@@ -1018,8 +1040,12 @@ public class SystemApp {
         List<StocksDB> stock = database.dataFindAllStocks();
         for(int i = 0; i < stock.size(); i++) {
         	DefaultCategoryDataset s = new DefaultCategoryDataset();
-        	for(int j = 0; j < stock.get(i).getPriceHistory().size(); j++) {
-            	s.addValue(stock.get(i).getPriceHistory().get(j), stock.get(i).getCompanyName(), String.valueOf(j));
+        	int days = stock.get(i).getPriceHistory().size();
+            if(days >= 10) {
+            	days = 10;
+            }
+        	for(int j = 0; j < days; j++) {
+            	s.addValue(stock.get(i).getPriceHistory().get(stock.get(i).getPriceHistory().size() - days + j), stock.get(i).getCompanyName(), String.valueOf(stock.get(i).getPriceHistory().size() - days + j));
         	}
         	data.add(s);
         }

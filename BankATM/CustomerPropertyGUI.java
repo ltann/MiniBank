@@ -7,7 +7,7 @@ public class CustomerPropertyGUI {
 	JTable t;
 	JScrollPane scroll;
     String[] stockTitle = {"TICKER", "NAME", "BUY PRICE", "NOW PRICE", "SHARE", "PERCENTAGE", "TOTAL VALUE"};
-    String[] bondTitle = {"ID", "Type", "Maturity", "Amount", "Interest", "Days Matured"};
+    String[] bondTitle = {"ID", "Maturity", "Type", "Amount", "Interest", "Days Matured"};
     
     JButton stock = new JButton("Stocks");
     JButton bond = new JButton("Bonds");

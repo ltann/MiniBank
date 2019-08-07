@@ -125,7 +125,7 @@ public class Banker extends Person {
         	price = stockPrices.get(stockPrices.size()-1);
         }
         double lower_range =  price/2; 
-        double upper_range =  price*2;
+        double upper_range =  price*1.5;
         double newPrice = getRandomIntegerBetweenRange(lower_range, upper_range);
         int i = stockPrices.size();
         //Double priceChangeAdd = new Double(newPrice, i+1);
@@ -155,24 +155,24 @@ public class Banker extends Person {
       //1 week Bond
       String bondID = "a"; // Think more about bondID placeholder for now
       double interest = 0.01;
-      int maturity = 1;
-      String bondType = "week";
+      int maturity = 7;
+      String bondType = "Day";
       BondsDB newBond = new BondsDB(bondID, interest, maturity, bondType);
       SystemApp.database.dataAddBonds(newBond);
       
     //1 month Bond
       bondID = "b"; // Think more about bondID placeholder for now
       interest = 0.05;
-      maturity = 1;
-      bondType = "month";
+      maturity = 30;
+      bondType = "Day";
       newBond = new BondsDB(bondID, interest, maturity, bondType);
       SystemApp.database.dataAddBonds(newBond);
       
       //3 month Bond
       bondID = "c"; // Think more about bondID placeholder for now
       interest = 0.1;
-      maturity = 3;
-      bondType = "month";
+      maturity = 90;
+      bondType = "Day";
       newBond = new BondsDB(bondID, interest, maturity, bondType);
       SystemApp.database.dataAddBonds(newBond);
     }

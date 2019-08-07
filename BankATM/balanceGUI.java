@@ -22,7 +22,7 @@ public class balanceGUI {
         	str += "USD";
             str += ": ";
             str += "$";
-            str += SystemApp.database.dataFindSecurityAccount(SystemApp.currentCustomer.getLoginName()).getAvaliableFunds();
+            str += String.format("%.2f",SystemApp.database.dataFindSecurityAccount(SystemApp.currentCustomer.getLoginName()).getAvaliableFunds());
             str += "\n";
         }
         else {
@@ -31,17 +31,17 @@ public class balanceGUI {
         	str += "USD";
             str += ": ";
             str += "$";
-            str += cur.get("USD");
+            str += String.format("%.2f",cur.get("USD"));
             str += "\n";
             str += "RMB";
             str += ": ";
             str += "¥";
-            str += cur.get("RMB");
+            str += String.format("%.2f",cur.get("RMB"));
             str += "\n";
             str += "EUR";
             str += ": ";
             str += "€";
-            str += cur.get("EUR");
+            str += String.format("%.2f",cur.get("EUR"));
             str += "\n";
         }
         
