@@ -50,7 +50,8 @@ public class DataAccess {
 	 * 			  2) find specific customer information :
 	 * 				 relative field : public static ArrayList<Customer> customers --in SystemApp.java
 	 * 			  3) update specific customer information
-	 * 			  4) find all customers information
+	 * 			  4) delete specific customer information
+	 * 			  5) find all customers information
 	*/
 	
 	// 1) add customer information
@@ -119,7 +120,18 @@ public class DataAccess {
 		return false;
 	}
 
-	// 4) find all specific customer information
+	// 4) delete specific customer information
+	public static boolean dataDeleteCustomerBasic(String userName) {
+		MongoCollection<Document> customerBasicInfo = db.getCollection("customerBasicInfo");
+		if(dataFindCustomerBasic(userName) != null) {
+			Document deleteQuery = new Document("userName", userName);
+			customerBasicInfo.deleteOne(deleteQuery);
+			return true;
+		}
+		return false;
+	}
+	
+	// 5) find all specific customer information
 	public static List<CustomerBasicDB> dataFindAllCustomerBasic() {
 		MongoCollection<Document> customerBasicInfo = db.getCollection("customerBasicInfo");
 		MongoCursor<Document> cursor = customerBasicInfo.find().iterator();
@@ -155,118 +167,120 @@ public class DataAccess {
 	*/
 	
 	// 1) add account
-		public static boolean dataAddAccount(AccountDB accountDB) {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			if(dataFindAccount(accountDB.getAccountNumber()) == null){
-				AccountInfo.insertOne(new Document("userName", accountDB.getUserName())
+	public static boolean dataAddAccount(AccountDB accountDB) {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		if(dataFindAccount(accountDB.getAccountNumber()) == null){
+			AccountInfo.insertOne(new Document("userName", accountDB.getUserName())
+				.append("accountNumber", accountDB.getAccountNumber())
+			    .append("type", accountDB.getType())
+			    .append("currency", accountDB.getCurrency())
+			);
+			return true;
+		}
+		return false;
+	}
+		
+	// 2) find specific account
+	public static AccountDB dataFindAccount(int accountNumber) {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		Document findQuery = new Document("accountNumber", accountNumber);
+		MongoCursor<Document> cursor = AccountInfo.find(findQuery).iterator();
+		AccountDB account = null;
+		try {
+			if(cursor.hasNext()) {
+		        Document doc = cursor.next();
+		        account = new AccountDB((String)doc.get("userName"),
+		        		(int)doc.get("accountNumber"), 
+			        	(int)doc.get("type"), 
+			        	(Map<String, Double>)doc.get("currency")
+		        		);
+			}
+		} finally {
+			cursor.close();
+		}
+		return account;
+	}
+		
+	// 3) update specific account
+	public static boolean dataUpdateAccount(int accountNumber, AccountDB accountDB) {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		if(dataFindAccount(accountNumber) != null) {
+			Document updateQuery = new Document("accountNumber", accountNumber);
+			Document updateAccount = new Document("userName", accountDB.getUserName())
 					.append("accountNumber", accountDB.getAccountNumber())
-				    .append("type", accountDB.getType())
-				    .append("currency", accountDB.getCurrency())
-				);
-				return true;
-			}
-			return false;
+					.append("type", accountDB.getType())
+					.append("currency", accountDB.getCurrency())
+					;
+			AccountInfo.updateOne(updateQuery, new Document("$set",updateAccount));
+			return true;
 		}
-		
-		// 2) find specific account
-		public static AccountDB dataFindAccount(int accountNumber) {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			Document findQuery = new Document("accountNumber", accountNumber);
-			MongoCursor<Document> cursor = AccountInfo.find(findQuery).iterator();
-			AccountDB account = null;
-			try {
-				if(cursor.hasNext()) {
-			        Document doc = cursor.next();
-			        account = new AccountDB((String)doc.get("userName"),
-			        		(int)doc.get("accountNumber"), 
-			        		(int)doc.get("type"), 
-			        		(Map<String, Double>)doc.get("currency")
-			        		);
-			    }
-			} finally {
-				cursor.close();
-			}
-			return account;
-		}
-		
-		// 3) update specific account
-		public static boolean dataUpdateAccount(int accountNumber, AccountDB accountDB) {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			if(dataFindAccount(accountNumber) != null) {
-				Document updateQuery = new Document("accountNumber", accountNumber);
-				Document updateAccount = new Document("userName", accountDB.getUserName())
-						.append("accountNumber", accountDB.getAccountNumber())
-						.append("type", accountDB.getType())
-						.append("currency", accountDB.getCurrency())
-						;
-				AccountInfo.updateOne(updateQuery, new Document("$set",updateAccount));
-				return true;
-			}
-			return false;
-		}
+		return false;
+	}
 
-		// 4) delete specific account
-		public static boolean dataDeleteAccount(int accountNumber) {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			if(dataFindAccount(accountNumber) != null) {
-				Document deleteQuery = new Document("accountNumber", accountNumber);
-				AccountInfo.deleteOne(deleteQuery);
-				return true;
-			}
-			return false;
+	// 4) delete specific account
+	public static boolean dataDeleteAccount(int accountNumber) {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		if(dataFindAccount(accountNumber) != null) {
+			Document deleteQuery = new Document("accountNumber", accountNumber);
+			AccountInfo.deleteOne(deleteQuery);
+			return true;
 		}
+		return false;
+	}
 
-		// 5) find specific customer's account
-		public static List<AccountDB> dataFindCustomerAccount(String userName) {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			Document findQuery = new Document("userName", userName);
-			MongoCursor<Document> cursor = AccountInfo.find(findQuery).iterator();
-			List<AccountDB> allAccount = new ArrayList<AccountDB>();
-			try {
-				while(cursor.hasNext()) {
-			        Document doc = cursor.next();
-			        AccountDB aDB = dataFindAccount((int)doc.get("accountNumber"));
-			        allAccount.add(aDB);
-			    }
-			} finally {
-				cursor.close();
+	// 5) find specific customer's account
+	public static List<AccountDB> dataFindCustomerAccount(String userName) {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		Document findQuery = new Document("userName", userName);
+		MongoCursor<Document> cursor = AccountInfo.find(findQuery).iterator();
+		List<AccountDB> allAccount = new ArrayList<AccountDB>();
+		try {
+			while(cursor.hasNext()) {
+				Document doc = cursor.next();
+			    AccountDB aDB = dataFindAccount((int)doc.get("accountNumber"));
+			    allAccount.add(aDB);
 			}
-//			if(allAccount.isEmpty())
-//				return null;
-			return allAccount;
+		} finally {
+			cursor.close();
 		}
+//		if(allAccount.isEmpty())
+//			return null;
+		return allAccount;
+	}
 		
-		// 6) find all account
-		public static List<AccountDB> dataFindAllAccount() {
-			MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
-			MongoCursor<Document> cursor = AccountInfo.find().iterator();
-			List<AccountDB> allAccount = new ArrayList<AccountDB>();
-			try {
-				while(cursor.hasNext()) {
-			        Document doc = cursor.next();
-			        AccountDB aDB = dataFindAccount((int)doc.get("accountNumber"));
-			        allAccount.add(aDB);
-			    }
-			} finally {
-				cursor.close();
+	// 6) find all account
+	public static List<AccountDB> dataFindAllAccount() {
+		MongoCollection<Document> AccountInfo = db.getCollection("AccountInfo");
+		MongoCursor<Document> cursor = AccountInfo.find().iterator();
+		List<AccountDB> allAccount = new ArrayList<AccountDB>();
+		try {
+			while(cursor.hasNext()) {
+		        Document doc = cursor.next();
+			    AccountDB aDB = dataFindAccount((int)doc.get("accountNumber"));
+			    allAccount.add(aDB);
 			}
-//			if(allAccount.isEmpty())
-//				return null;
-			return allAccount;
+		} finally {
+			cursor.close();
 		}
+//		if(allAccount.isEmpty())
+//			return null;
+		return allAccount;
+	}
 	
-		/*-----------------------LoanInfo Collection-----------------------
-		 * Collection: loan :
-		 * 				 (String) userName, 
-		 * 				 (int) loanID,
-		 * 				 (double) interestRate, 
-		 * 				 (Map<String, Double>) currency
-		 * Operation: 1) add loan 
-		 * 			  2) find specific customer's loan
-		 * 			  3) update specific customer's loan
-		 * 			  4) delete specific customer's loan
-		 * 			  5) find all loans
-		*/
+		
+		
+	/*-----------------------LoanInfo Collection-----------------------
+	 * Collection: loan :
+	 * 				 (String) userName, 
+	 * 				 (int) loanID,
+	 * 				 (double) interestRate, 
+	 * 				 (Map<String, Double>) currency
+	 * Operation: 1) add loan 
+	 * 			  2) find specific customer's loan
+	 * 			  3) update specific customer's loan
+	 * 			  4) delete specific customer's loan
+	 * 			  5) find all loans
+	 */
 		
 	
 	
@@ -279,47 +293,49 @@ public class DataAccess {
 	 * 				 (HashMap<String, Bonds>) bond, 
 	 * 				 (Currency) balance
 	 * Operation: 1) add security account information
-	 * 			  2) find specific security account information
-	 * 			  3) update specific security account 
-	 * 			  4) delete specific security account
-	 * 			  5) find all security account information 
+	 * 			  2) find specific security account information (by userName)
+	 * 			  3) find specific security account information (by accountNum)
+	 * 			  4) update specific security account (by userName)
+	 * 			  5) update specific security account (by accountNum)
+	 * 			  6) delete specific security account
+	 * 			  7) find all security account information 
 	*/
 	
 	// 1) add security account information
-	public static boolean dataAddSecurityAccount(SecurityAccountDB sAccount) {
+	public static boolean dataAddSecurityAccount(SecurityAccountDB sAccountDB) {
 		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
-		if(dataFindSecurityAccount(sAccount.getUserName()) == null){
-			securityAccountInfo.insertOne(new Document("userName", sAccount.getUserName())
-				.append("accountNumber", sAccount.getAccountNumber())
-			    .append("customerStockID", sAccount.getCustomerStockID())
-			    .append("stockInfo", sAccount.getStockInfo())
-			    .append("stockPrice", sAccount.getStockPrice())
-			    .append("stockPriceHistory", sAccount.getStockPriceHistory())
-			    .append("stockNumShares", sAccount.getStockNumShares())
-			    .append("customerBondID", sAccount.getCustomerBondID())
-			    .append("bondInfo", sAccount.getBondInfo())
-			    .append("bondValue", sAccount.getBondValue())
-			    .append("bondInterest", sAccount.getBondInterest())
-			    .append("avaliableFunds", sAccount.getAvaliableFunds())
-			    .append("valueOfSA", sAccount.getValueOfSA())
-			    .append("transactions", sAccount.getTransactions())
-			    .append("profitMade", sAccount.getProfitMade())
+		if(dataFindSecurityAccount(sAccountDB.getUserName()) == null){
+			securityAccountInfo.insertOne(new Document("userName", sAccountDB.getUserName())
+				.append("accountNumber", sAccountDB.getAccountNumber())
+			    .append("customerStockID", sAccountDB.getCustomerStockID())
+			    .append("stockInfo", sAccountDB.getStockInfo())
+			    .append("stockPrice", sAccountDB.getStockPrice())
+			    .append("stockPriceHistory", sAccountDB.getStockPriceHistory())
+			    .append("stockNumShares", sAccountDB.getStockNumShares())
+			    .append("customerBondID", sAccountDB.getCustomerBondID())
+			    .append("bondInfo", sAccountDB.getBondInfo())
+			    .append("bondValue", sAccountDB.getBondValue())
+			    .append("bondInterest", sAccountDB.getBondInterest())
+			    .append("avaliableFunds", sAccountDB.getAvaliableFunds())
+			    .append("valueOfSA", sAccountDB.getValueOfSA())
+			    .append("transactions", sAccountDB.getTransactions())
+			    .append("profitMade", sAccountDB.getProfitMade())
 			);
 			return true;
 		}
 		return false;
 	}
 	
-	// 2) find specific security account information
+	// 2) find specific security account information (by userName)
 	public static SecurityAccountDB dataFindSecurityAccount(String userName) {
 		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
 		Document findQuery = new Document("userName", userName);
 		MongoCursor<Document> cursor = securityAccountInfo.find(findQuery).iterator();
-		SecurityAccountDB sAccount = null;
+		SecurityAccountDB sAccountDB = null;
 		try {
 			if(cursor.hasNext()) {
 		        Document doc = cursor.next();
-		        sAccount = new SecurityAccountDB(
+		        sAccountDB = new SecurityAccountDB(
 		        		(String)doc.get("userName"),
 		        		(String)doc.get("accountNumber"),
 		        		(ArrayList<Integer>)doc.get("customerStockID"),
@@ -343,38 +359,86 @@ public class DataAccess {
 		} finally {
 			cursor.close();
 		}
-		return sAccount;
+		return sAccountDB;
 	}
 	
-	// 3) update specific security account
-	public static boolean dataUpdateSecurityAccount(String userName, SecurityAccountDB newSecurityAccount) {
+	// 3) find specific security account information (by accountNum)
+	public static SecurityAccountDB dataFindSecurityAccount(int accountNum) {
+		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
+		Document findQuery = new Document("accountNumber", String.valueOf(accountNum));
+		MongoCursor<Document> cursor = securityAccountInfo.find(findQuery).iterator();
+		SecurityAccountDB sAccountDB = null;
+		try {
+			if(cursor.hasNext()) {
+		        Document doc = cursor.next();
+		        sAccountDB = new SecurityAccountDB(
+		        		(String)doc.get("userName"),
+		        		(String)doc.get("accountNumber"),
+		        		(ArrayList<Integer>)doc.get("customerStockID"),
+		        		(ArrayList<Map<String, String>>)doc.get("stockInfo"),
+		        		(ArrayList<Map<String, Double>>)doc.get("stockPrice"),
+		        		(ArrayList<ArrayList<Double>>)doc.get("stockPriceHistory"),
+		        		(ArrayList<Integer>)doc.get("stockNumShares"),
+		        		(ArrayList<Integer>)doc.get("customerBondID"),
+		        		(ArrayList<Map<String, String>>)doc.get("bondInfo"),
+		        		(ArrayList<Map<String, Integer>>)doc.get("bondValue"),
+		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
+		        		(ArrayList<Double>)doc.get("bondInterest"),
+		        		(double)doc.get("avaliableFunds"),
+		        		(double)doc.get("valueOfSA"),
+		        		(ArrayList<String>)doc.get("transactions"),
+		        		(double)doc.get("profitMade")
+		        		);
+
+		        
+		    }
+		} finally {
+			cursor.close();
+		}
+		return sAccountDB;
+	}
+	
+	// 4) update specific security account (by userName)
+	public static boolean dataUpdateSecurityAccount(String userName, SecurityAccountDB newSecurityAccountDB) {
 		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
 		if(dataFindSecurityAccount(userName) != null) {
 			Document updateQuery = new Document("userName", userName);
 			Document updateSecurityAccount = new Document("userName", userName)
-					.append("accountNumber", newSecurityAccount.getAccountNumber())
-				    .append("customerStockID", newSecurityAccount.getCustomerStockID())
-				    .append("stockInfo", newSecurityAccount.getStockInfo())
-				    .append("stockPrice", newSecurityAccount.getStockPrice())
-				    .append("stockPriceHistory", newSecurityAccount.getStockPriceHistory())
-				    .append("stockNumShares", newSecurityAccount.getStockNumShares())
-				    .append("customerBondID", newSecurityAccount.getCustomerBondID())
-				    .append("bondInfo", newSecurityAccount.getBondInfo())
-				    .append("bondValue", newSecurityAccount.getBondValue())
-				    .append("bondDouble", newSecurityAccount.getBondAmount())
-				    .append("bondInterest", newSecurityAccount.getBondInterest())
-				    .append("avaliableFunds", newSecurityAccount.getAvaliableFunds())
-				    .append("valueOfSA", newSecurityAccount.getValueOfSA())
-				    .append("transactions", newSecurityAccount.getTransactions())
-				    .append("profitMade", newSecurityAccount.getProfitMade())
+					.append("accountNumber", newSecurityAccountDB.getAccountNumber())
+				    .append("customerStockID", newSecurityAccountDB.getCustomerStockID())
+				    .append("stockInfo", newSecurityAccountDB.getStockInfo())
+				    .append("stockPrice", newSecurityAccountDB.getStockPrice())
+				    .append("stockPriceHistory", newSecurityAccountDB.getStockPriceHistory())
+				    .append("stockNumShares", newSecurityAccountDB.getStockNumShares())
+				    .append("customerBondID", newSecurityAccountDB.getCustomerBondID())
+				    .append("bondInfo", newSecurityAccountDB.getBondInfo())
+				    .append("bondValue", newSecurityAccountDB.getBondValue())
+				    .append("bondDouble", newSecurityAccountDB.getBondAmount())
+				    .append("bondInterest", newSecurityAccountDB.getBondInterest())
+				    .append("avaliableFunds", newSecurityAccountDB.getAvaliableFunds())
+				    .append("valueOfSA", newSecurityAccountDB.getValueOfSA())
+				    .append("transactions", newSecurityAccountDB.getTransactions())
+				    .append("profitMade", newSecurityAccountDB.getProfitMade())
 					;
 			securityAccountInfo.updateOne(updateQuery, new Document("$set",updateSecurityAccount));
 			return true;
 		}
 		return false;
 	}
+
+	// 5) update specific security account (by accountNum)
+	public static boolean dataUpdateSecurityAccount(int accountNum, SecurityAccountDB newSecurityAccountDB) {
+		SecurityAccountDB sAccountDB= dataFindSecurityAccount(accountNum);
+		if(sAccountDB != null) {
+			System.out.println("123");
+			String userName = sAccountDB.getUserName();
+			dataUpdateSecurityAccount(userName, newSecurityAccountDB);
+			return true;
+		}
+		return false;
+	}
 	
-	// 4) delete specific security account
+	// 6) delete specific security account
 	public static boolean dataDeleteSecurityAccount(String userName) {
 		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
 		if(dataFindSecurityAccount(userName) != null) {
@@ -385,7 +449,7 @@ public class DataAccess {
 		return false;
 	}
 	
-	// 5) find all security account information 
+	// 7) find all security account information 
 	public static List<SecurityAccountDB> dataFindAllSecurityAccount() {
 		MongoCollection<Document> securityAccountInfo = db.getCollection("securityAccountInfo");
 		MongoCursor<Document> cursor = securityAccountInfo.find().iterator();
@@ -393,8 +457,8 @@ public class DataAccess {
 		try {
 			while(cursor.hasNext()) {
 		        Document doc = cursor.next();
-		        SecurityAccountDB sAccount = dataFindSecurityAccount((String)doc.get("userName"));
-		        allSecurityAccount.add(sAccount);
+		        SecurityAccountDB sAccountDB = dataFindSecurityAccount((String)doc.get("userName"));
+		        allSecurityAccount.add(sAccountDB);
 		    }
 		} finally {
 			cursor.close();
@@ -612,4 +676,83 @@ public class DataAccess {
 		return allBonds;
 	}
 	
+	
+	/*-----------------------bankerInfo Collection-----------------------
+	 * Collection:   (String) bankerName,
+	 * 				 (String) psw
+	 * Operation: 1) add banker information 
+	 * 			  2) find specific banker information 
+	*/
+	
+	// 1) add customer information
+	public static boolean dataAddBankerBasic(BankerBasicDB bankerBasicDB) {
+		MongoCollection<Document> bankerBasicInfo = db.getCollection("bankerBasicInfo");
+		if(dataFindBankerBasic(bankerBasicDB.getBankerName()) == null){
+			bankerBasicInfo.insertOne(new Document("bankerName", bankerBasicDB.getBankerName())
+				.append("psw", bankerBasicDB.getPsw())
+			);
+			return true;
+		}
+		return false;
+	}
+	
+	// 2) find specific customer information
+	public static BankerBasicDB dataFindBankerBasic(String bankerName) {
+		MongoCollection<Document> bankerBasicInfo = db.getCollection("bankerBasicInfo");
+		Document findQuery = new Document("bankerName", bankerName);
+		MongoCursor<Document> cursor = bankerBasicInfo.find(findQuery).iterator();
+		BankerBasicDB bankerBasicDB = null;
+		try {
+			if(cursor.hasNext()) {
+		        Document doc = cursor.next();
+		        bankerBasicDB = new BankerBasicDB(bankerName,
+		        		(String)doc.get("psw")
+		        		);
+		    }
+		} finally {
+			cursor.close();
+		}
+		return bankerBasicDB;
+	}
+	
+	
+	
+	/*-----------------------BankInfo Collection-----------------------
+	 * Collection:   (ArrayList<String>) dailyReport,
+	 * 				 (ArrayList<Double>) dailyProfit,
+	 * 				 (int) accountNum
+	 * Operation: 1) add bank
+	 * 			  3) fund bank
+	 * 			  2) update bank info
+	*/
+	
+	// 1) add banker 
+	public static void dataAddBank(BankDB bankDB) {
+		MongoCollection<Document> bankInfo = db.getCollection("bankInfo");
+		bankInfo.insertOne(new Document("dailyReport", bankDB.getReport())
+			    .append("dailyProfit", bankDB.getProfit())
+			    .append("accountNum", bankDB.getAccountNum())
+		);
+	}
+	
+	// 2) find bank info
+	public static BankDB dataFindBank() {
+		MongoCollection<Document> bankInfo = db.getCollection("bankInfo");
+		Document bankDoc = bankInfo.find().first();
+		BankDB bankDB = new BankDB((ArrayList<String>)bankDoc.get("dailyReport"),
+		        		(ArrayList<Double>)bankDoc.get("dailyProfit"),
+		        		(int)bankDoc.get("accountNum")
+		        		);
+		return bankDB;
+	}
+	// 3) update bank info
+	public static void dataUpdateBank(BankDB bankDB) {
+		MongoCollection<Document> bankInfo = db.getCollection("bankInfo");
+		Document updateQuery = bankInfo.find().first();
+		Document updateBank = new Document("dailyReport", bankDB.getReport())
+					.append("dailyProfit", bankDB.getProfit())
+					.append("accountNum", bankDB.getAccountNum())
+					;
+		bankInfo.updateOne(updateQuery, new Document("$set",updateBank));
+	}
 }
