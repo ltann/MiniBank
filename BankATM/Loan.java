@@ -5,8 +5,8 @@ public class Loan {
     private double interest;
     private double amount;
     private int boughtAt;
-    
-    public Loan(int LoanID, int type, double interest, double amount, int BoughtAt){
+
+    public Loan(int LoanID, double interest, double amount, int type, int BoughtAt){
         this.LoanID = LoanID;
         this.type = type;
     	this.amount = amount;
