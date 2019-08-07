@@ -185,6 +185,7 @@ public class GUI {
                         	SystemApp.withdraw(wd.currencyType.getSelectedIndex(), fee, money, SystemApp.currentAccount);
                         	SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].withdraw(money+fee);
                             SystemApp.fee += 3;
+                            SystemApp.updateFee();
                             wd.j.setVisible(false);
                             wd.j.dispose();
 
@@ -228,6 +229,8 @@ public class GUI {
                 if(SystemApp.currentAccount.getType() == 1) {
                     if(SystemApp.currentAccount.getC()[0].getBalance() >= 23) {
                     	SystemApp.currentAccount.getC()[0].withdraw(23);
+                    	SystemApp.fee += 3;
+                    	SystemApp.updateFee();
                         SystemApp.withdraw(0, 3, 20, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
@@ -261,6 +264,8 @@ public class GUI {
                 if(SystemApp.currentAccount.getType() == 1) {
                     if(SystemApp.currentAccount.getC()[0].getBalance() >= 53) {
                     	SystemApp.currentAccount.getC()[0].withdraw(53);
+                    	SystemApp.fee += 3;
+                    	SystemApp.updateFee();
                         SystemApp.withdraw(0, 3, 50, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
@@ -294,6 +299,8 @@ public class GUI {
                 if(SystemApp.currentAccount.getType() == 1) {
                     if(SystemApp.currentAccount.getC()[0].getBalance() >= 103) {
                     	SystemApp.currentAccount.getC()[0].withdraw(103);
+                    	SystemApp.fee += 3;
+                    	SystemApp.updateFee();
                         SystemApp.withdraw(0, 3, 100, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
@@ -327,6 +334,8 @@ public class GUI {
                 if(SystemApp.currentAccount.getType() == 1) {
                     if(SystemApp.currentAccount.getC()[0].getBalance() >= 203) {
                     	SystemApp.currentAccount.getC()[0].withdraw(203);
+                    	SystemApp.fee += 3;
+                    	SystemApp.updateFee();
                         SystemApp.withdraw(0, 3, 200, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
@@ -359,6 +368,8 @@ public class GUI {
                 if(SystemApp.currentAccount.getType() == 1) {
                     if(SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= 503) {
                     	SystemApp.currentAccount.getC()[0].withdraw(503);
+                    	SystemApp.fee += 3;
+                    	SystemApp.updateFee();
                         SystemApp.withdraw(0, 3, 500, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();

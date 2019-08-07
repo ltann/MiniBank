@@ -136,7 +136,7 @@ public class SecurityAccountDB {
 			for(int i = 0; i < bondInfo.size(); i ++) {
 				bond.add(new customerBond(bondInfo.get(i).get("bondID"),
 						bondInfo.get(i).get("bondType"),
-						bondValue.get(i).get("maturity"), 
+						bondValue.get(i).get("maturity"),
 						bondAmount.get(i).get("amount"), 
 						bondInterest.get(i),
 						bondValue.get(i).get("daysMatured"),

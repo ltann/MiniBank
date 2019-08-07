@@ -64,6 +64,27 @@ public class SystemApp {
     	return customer;
     }
     
+    public static void updateReport() {
+    	BankDB b = database.dataFindBank();
+    	ArrayList<String> rep = b.getReport();
+    	rep.add(report);
+    	b.setReport(rep);
+    	database.dataUpdateBank(b);
+    }
+    
+    public static void updateFee() {
+    	BankDB b = database.dataFindBank();
+    	ArrayList<Double> rep = new ArrayList<Double>();
+    	rep.add(fee);
+    	b.setProfit(rep);
+    	database.dataUpdateBank(b);
+    }
+//    public static void saveReport() {
+//    	BankDB b = database.dataFindBank();
+//    	ArrayList<String> rep = b.getReport();
+//    	rep.get(rep.size()-1);
+//    }
+    
     public static void checkCurrentCustomer(String Username, String Password) {
     	CustomerBasicDB cb = database.dataFindCustomerBasic(Username);
 		Customer cus = new Customer(Username, Password, cb.getName(), cb.getCell(), cb.getAddr(), cb.isColletral());
@@ -140,8 +161,13 @@ public class SystemApp {
     	}
     	BankDB b = database.dataFindBank();
     	accountNumber = b.getAccountNum();
+    	if(b.getReport().size() != 0) {
+    		report = b.getReport().get(b.getReport().size()-1);
+    	}
+    	if(b.getProfit().size() != 0) {
+    		fee = b.getProfit().get(b.getProfit().size()-1);
+    	}
 //    	fee = b.getProfit().get(b.getProfit().size()-1);
-//    	report = b.getReport().get(b.getReport().size()-1);
 //    	if(database.dataFindBank() == null) {
 //    		ArrayList<String> rep = new ArrayList<String>();
 //    		ArrayList<Double> pro = new ArrayList<Double>();
@@ -156,7 +182,7 @@ public class SystemApp {
 //        	report = b.getReport().get(b.getReport().size()-1);
 //    	}
     	
-        // database.dataAddAccount(new AccountDB());
+        bankers.add(new Banker("admin","admin"));
     	CustomerBasicDB cus = new CustomerBasicDB("admin", "admin", "asdf", "qwe", "asdf", true, 0, 0, 0);
     	database.dataAddCustomerBasic(cus);
         
@@ -202,10 +228,12 @@ public class SystemApp {
         	ArrayList<customerStock> stock = new ArrayList<customerStock>();
         	ArrayList<customerBond> bond = new ArrayList<customerBond>();
         	ArrayList<String> transaction = new ArrayList<String>();
-        	SecurityAccountDB sacc = new SecurityAccountDB(currentCustomer.getLoginName(), String.valueOf(accountNumber++), stock, bond, -3.0, -3.0, transaction, 0);
+        	SecurityAccountDB sacc = new SecurityAccountDB(currentCustomer.getLoginName(), String.valueOf(accountNumber), stock, bond, -3.0, -3.0, transaction, 0);
+        	fee += 3;
+        	SystemApp.updateFee();
         	database.dataAddSecurityAccount(sacc);
         	BankDB b = database.dataFindBank();
-        	b.setAccountNum(accountNumber);
+        	b.setAccountNum(accountNumber++);
         	database.dataUpdateBank(b);
         	checkCurrentCustomer(c.getLoginName(),c.getPassword());
         }
@@ -216,6 +244,8 @@ public class SystemApp {
         	cur.put("EUR", 0.0);
             AccountDB account = new AccountDB(c.getLoginName(), accountNumber++, type, cur);
             database.dataAddAccount(account);
+            fee += 3;
+        	SystemApp.updateFee();
             BankDB b = database.dataFindBank();
         	b.setAccountNum(accountNumber);
         	database.dataUpdateBank(b);
@@ -282,6 +312,7 @@ public class SystemApp {
                 		cur.put(curType, cur.get(curType) - (amount+3));
                 		acc.setCurrency(cur);
                 		fee += 3;
+                		SystemApp.updateFee();
                 		database.dataUpdateAccount(sendAccountNumber, acc);
                 		
             			// Deposit
@@ -298,7 +329,6 @@ public class SystemApp {
         				// Withdraw
                 		cur.put(curType, cur.get(curType) - amount);
                 		acc.setCurrency(cur);
-                		fee += 3;
                 		database.dataUpdateAccount(sendAccountNumber, acc);
                 		
                 		// Deposit
@@ -319,6 +349,7 @@ public class SystemApp {
                 		cur.put(curType, cur.get(curType) - (amount+3));
                 		acc.setCurrency(cur);
                 		fee += 3;
+                		SystemApp.updateFee();
                 		database.dataUpdateAccount(sendAccountNumber, acc);
                 		
             			// Deposit
@@ -334,7 +365,6 @@ public class SystemApp {
         				// Withdraw
                 		cur.put(curType, cur.get(curType) - amount);
                 		acc.setCurrency(cur);
-                		fee += 3;
                 		database.dataUpdateAccount(sendAccountNumber, acc);
                 		
                 		// Deposit
@@ -412,6 +442,7 @@ public class SystemApp {
         str += receiveAccountNumber;
         str += "\r\n";
         report += str;
+//        updateReport();
         return str;
     }
 
@@ -467,6 +498,7 @@ public class SystemApp {
         info += LocalDateTime.now().toString();
         info += "\r\n";
         report += info;
+//        updateReport();
         return info;
     }
 
@@ -494,6 +526,8 @@ public class SystemApp {
 
         info += "Time Last: ";
         info += "" + month + "th";
+        report += info;
+//        updateReport();
         return info;
     }
 
@@ -837,6 +871,9 @@ public class SystemApp {
 
     //refresh stock value, update bonds maturity, increase day, update Loan
     public static void update() {
+    	updateBankDB();
+    	updateReport();
+    	report = "";
         //function provided by the database
 //        Banker banker = SystemApp.bankers.get(0);
 //        banker.updateExisitngStocks();
@@ -863,7 +900,6 @@ public class SystemApp {
     		}
 	    }
     	// Update BankDB
-    	updateBankDB();
     }
     
     public static void updateBankDB() {
@@ -940,9 +976,9 @@ public class SystemApp {
     }
 
     public static DefaultCategoryDataset getAccountValueData(Customer c) {
-//    	SecurityAccountDB sa = database.dataFindSecurityAccount(c.getLoginName());
+    	SecurityAccountDB sa = database.dataFindSecurityAccount(currentCustomer.getLoginName());
         DefaultCategoryDataset first = new DefaultCategoryDataset();
-//        for(int i = 0; i < sa.getValueOfSA())
+        //for(int i = 0; i < sa.get)
 //        first.addValue(1, "First", "2013");
 //        first.addValue(3, "First", "2014");
 //        first.addValue(2, "First", "2015");

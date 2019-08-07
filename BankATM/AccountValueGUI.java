@@ -22,7 +22,7 @@ public class AccountValueGUI {
     	valueGraph = ChartFactory.createLineChart(
                 "",
                 "Time",
-                "Price/share",
+                "Value",
                 data,
                 PlotOrientation.VERTICAL,
                 true,
