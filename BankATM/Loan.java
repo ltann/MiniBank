@@ -1,4 +1,5 @@
 public class Loan {
+
     private int LoanID;
     private int type; // 0: 3 month, 1: 2 month, 2: 1 month
     private double interest;
@@ -53,6 +54,7 @@ public class Loan {
 		this.boughtAt = boughtAt;
 	}
     
+
 
 
 

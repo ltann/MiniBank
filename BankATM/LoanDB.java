@@ -1,59 +1,18 @@
-import java.util.Map;
-import java.util.HashMap;
-
-public class LoanDB {
-	private int loanID;
-	private String type;
-	private double interestRate;
-	private Map<String, Double> currency;
-	private int broughtTime;
+public class LoanDB extends Loan {
 	
-	public LoanDB(int loanID, String type, double interestRate, Map<String, Double> currency, int broughtTime) {
-		this.loanID = loanID;
-		this.type = type;
-		this.interestRate = interestRate;
-		this.currency = currency;
-		this.broughtTime = broughtTime;
+	private String userName;
+
+	public LoanDB(int loanID, double interest, double amount, int type, int boughtAt, String userName) {
+		super(loanID, interest, amount, type, boughtAt);
+		this.userName = userName;
 	}
 
-	public int getLoanID() {
-		return loanID;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setLoanID(int loanID) {
-		this.loanID = loanID;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public double getInterestRate() {
-		return interestRate;
-	}
-
-	public void setInterestRate(double interestRate) {
-		this.interestRate = interestRate;
-	}
-
-	public Map<String, Double> getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(Map<String, Double> currency) {
-		this.currency = currency;
-	}
-
-	public int getBroughtTime() {
-		return broughtTime;
-	}
-
-	public void setBroughtTime(int broughtTime) {
-		this.broughtTime = broughtTime;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 }
