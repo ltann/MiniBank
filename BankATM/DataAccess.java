@@ -500,7 +500,7 @@ public class DataAccess {
 				    .append("customerBondID", newSecurityAccountDB.getCustomerBondID())
 				    .append("bondInfo", newSecurityAccountDB.getBondInfo())
 				    .append("bondValue", newSecurityAccountDB.getBondValue())
-				    .append("bondDouble", newSecurityAccountDB.getBondAmount())
+				    .append("bondAmount", newSecurityAccountDB.getBondAmount())
 				    .append("bondInterest", newSecurityAccountDB.getBondInterest())
 				    .append("avaliableFunds", newSecurityAccountDB.getAvaliableFunds())
 				    .append("valueOfSA", newSecurityAccountDB.getValueOfSA())
