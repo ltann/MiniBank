@@ -22,6 +22,10 @@ public class Welcome extends JFrame{
         jbCustomer.setPreferredSize(preferredSize);
         jbCustomer.setFont(new Font("Black",Font.CENTER_BASELINE,20));
         jlWelcome.setFont(new Font("Black",Font.CENTER_BASELINE,30));
+
+        JPanelWithBG background = new JPanelWithBG(0);
+        add(background);
+
         label.add(jlWelcome);
 
 
