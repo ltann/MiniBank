@@ -436,7 +436,7 @@ public class DataAccess {
 		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
 		        		(ArrayList<Double>)doc.get("bondInterest"),
 		        		(double)doc.get("avaliableFunds"),
-		        		(double)doc.get("valueOfSA"),
+		        		(ArrayList<Double>)doc.get("valueOfSA"),
 		        		(ArrayList<String>)doc.get("transactions"),
 		        		(double)doc.get("profitMade")
 		        		);
@@ -472,7 +472,7 @@ public class DataAccess {
 		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
 		        		(ArrayList<Double>)doc.get("bondInterest"),
 		        		(double)doc.get("avaliableFunds"),
-		        		(double)doc.get("valueOfSA"),
+		        		(ArrayList<Double>)doc.get("valueOfSA"),
 		        		(ArrayList<String>)doc.get("transactions"),
 		        		(double)doc.get("profitMade")
 		        		);
@@ -500,7 +500,7 @@ public class DataAccess {
 				    .append("customerBondID", newSecurityAccountDB.getCustomerBondID())
 				    .append("bondInfo", newSecurityAccountDB.getBondInfo())
 				    .append("bondValue", newSecurityAccountDB.getBondValue())
-				    .append("bondDouble", newSecurityAccountDB.getBondAmount())
+				    .append("bondAmount", newSecurityAccountDB.getBondAmount())
 				    .append("bondInterest", newSecurityAccountDB.getBondInterest())
 				    .append("avaliableFunds", newSecurityAccountDB.getAvaliableFunds())
 				    .append("valueOfSA", newSecurityAccountDB.getValueOfSA())
@@ -517,7 +517,6 @@ public class DataAccess {
 	public static boolean dataUpdateSecurityAccount(int accountNum, SecurityAccountDB newSecurityAccountDB) {
 		SecurityAccountDB sAccountDB= dataFindSecurityAccount(accountNum);
 		if(sAccountDB != null) {
-			System.out.println("123");
 			String userName = sAccountDB.getUserName();
 			dataUpdateSecurityAccount(userName, newSecurityAccountDB);
 			return true;
