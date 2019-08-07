@@ -43,6 +43,7 @@ public class LoanGUI {
         currencyCB.setBounds(600,375,200,50);
         currencyCB.setSelectedIndex(0);
         timeCB.setFont(font);
+        timeCB.setBounds(600,275,200,50);
         timeCB.setSelectedIndex(0);
         history.setBounds(650, 50, 150, 50);
         history.setFont(new Font("Black",Font.CENTER_BASELINE,20));

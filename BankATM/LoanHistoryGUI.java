@@ -5,7 +5,7 @@ public class LoanHistoryGUI {
 	JLabel header = new JLabel("Loan History");
 	JTable t;
 	JScrollPane scroll;
-	String[] columnTitle = {"ID", "Period", "Interest Rate", "Amount", "Bought Time"};
+	String[] columnTitle = {"ID", "Interest Rate", "Amount", "Type", "Bought Time"};
 	JButton pay = new JButton("Payback");
     JButton ret = new JButton("Return");
 	    
@@ -13,7 +13,9 @@ public class LoanHistoryGUI {
 		GUI.LoanHistoryGUIAL(this);
 		header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
         header.setBounds(360,25,200,50);
-        //t = new JTable(SystemApp.getLoanData(), columnTitle);
+        if(SystemApp.getUserLoan() != null) {
+        	t = new JTable(SystemApp.getUserLoan(), columnTitle);
+        }
         scroll = new JScrollPane(t);
         scroll.setBounds(100,100,690,300);
 

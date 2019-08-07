@@ -507,8 +507,8 @@ public class GUI {
                 } else if(!SystemApp.currentCustomer.isCollateral()){
                     l.amount.setText("Can't loan because you don't have collateral");
                 }  else {
-                    //SystemApp.loan(l.timeCB.getSelectedIndex(), Double.parseDouble(l.amount.getText()), l.currencyCB.getSelectedIndex()); 
-                    l.j.setVisible(false);
+                	SystemApp.loan(l.timeCB.getSelectedIndex(), Double.parseDouble(l.amount.getText()));
+					l.j.setVisible(false);
                     l.j.dispose();
                     new SucceedInfoGUI(true, SystemApp.loanReport(Double.parseDouble(l.amount.getText()), l.currencyList[l.currencyCB.getSelectedIndex()], l.timeList[l.timeCB.getSelectedIndex()]));
                     
@@ -538,7 +538,8 @@ public class GUI {
         	public void actionPerformed(ActionEvent e) {
         		int confirm = JOptionPane.showConfirmDialog(lh.j, "Are you sure to payback your loan?");
         		if (confirm == JOptionPane.YES_OPTION) {
-        			//SystemApp.paybackLoan();
+        			SystemApp.payLoan(lh.t.getSelectedRow());
+        			JOptionPane.showMessageDialog(lh.j, "Succeed!");
                     lh.j.dispose();
                     new LoanHistoryGUI();
                 }

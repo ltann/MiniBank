@@ -608,61 +608,86 @@ public class SystemApp {
         return info;
     }
     
-//    public static void loan(int index, double amount) {
-//        Customer c = currentCustomer;
-//        double interest;
-//        switch(index) {
-//        case 0:
-//        	
-//        }
-//        Loan loan = new Loan(interest, currency);
-//        loan.getCurrency().deposit(amount);
-//        c.addLoan(loan);
-//        c.getAcc().get(0).getC()[currency].deposit(amount);
-//    }
+    public static void loan(int index, double amount) {
+        AccountDB acc = database.dataFindAccount(currentAccount.getAccountNumber());
+        //Map<String, Double> cur = acc.getCurrency();
+        
+        int loanNumber = 0;
+        if(database.dataFindCustomerBasic(currentCustomer.getLoginName()).getBondNum() != 0) {
+        	loanNumber = database.dataFindCustomerBasic(currentCustomer.getLoginName()).getBondNum();
+        }
+        double interest = 0;
+        int BoughtAt = database.dataFindBank().getReport().size();
+        switch(index) {
+        case 0:
+        	interest = 0.007;
+        	break;
+        case 1:
+        	interest = 0.01;
+        	break;
+        case 2:
+        	interest = 0.02;
+        	break;
+        }
+        LoanDB l = new LoanDB(++loanNumber, interest, amount, index, BoughtAt, currentCustomer.getLoginName());
+//        cur.put("USD", cur.get("USD")+amount);
+//        acc.setCurrency(cur);
+//        database.dataUpdateAccount(currentAccount.getAccountNumber(), acc);
+        database.dataAddLoan(l, acc);
+        
+    }
     
+    public static Object[][] getUserLoan() {
+    	Object[][] data = null;
+    	List<LoanDB> loan = database.dataFindLoan(currentCustomer.getLoginName());
+    	if(loan == null) {
+    		return data;
+    	}
+    	data = new Object[loan.size()][5];
+    	for(int i = 0; i < loan.size(); i++) {
+    		data[i][0] = loan.get(i).getLoanID();
+    		data[i][1] = loan.get(i).getInterest();
+    		data[i][2] = loan.get(i).getAmount();
+    		data[i][3] = loan.get(i).getType();
+    		data[i][4] = loan.get(i).getBoughtAt();
+    	}
+    	return data;
+    }
 
-//    public static boolean payLoan(Loan loan){
-//        boolean payable = true;
-//        Customer c = customers.get(currentCustomer);
-//        char currencyType;
-//        if(loan.getCurrencyType() == 1){
-//            currencyType = '$';
-//        }
-//        else if(loan.getCurrencyType() == 2){
-//            currencyType = '¥';
+    // Update Loan
+    public static void updateLoan() {
+    	List<LoanDB> loans = database.dataFindAllLoan();
+    	for(LoanDB loan: loans) {
+    		double amount = loan.getAmount();
+    		amount += (loan.getInterest() + 1) * loan.getAmount();
+    		loan.setAmount(amount);
+    		database.dataUpdate;
+    	}
+    	
+    }
+    
+    public static boolean payLoan(int index){
+        boolean payable = false;
+        char currencyType = '$';
+        List<LoanDB> loans = database.dataFindLoan(currentCustomer.getLoginName());
+        LoanDB loan = loans.get(index);
+        AccountDB acc = database.dataFindAccount(currentAccount.getAccountNumber());
+//        Map<String, Double> cur = acc.getCurrency();
+//        if(cur.get("USD") < loan.getAmount()){
+//            System.out.println("You do not have enough money payback the loan! ");
+//            return payable;
 //        }
 //        else{
-//            currencyType = '€';
+//            double balance = cur.get("USD");
+//            balance -= loan.getAmount();
+//            cur.put("USD", balance);
+//            acc.setCurrency(cur);
+//            database.dataUpdateAccount(acc.getAccountNumber(), acc);
+            database.dataDeleteLoan(loan.getLoanID(), acc);
+            payable = true;
 //        }
-//
-//        payable = c.hasEnoughMoney(loan.getCurrency().getBalance(), loan.getCurrencyType());
-//        if(!payable){
-//            System.out.println("You do not have enough money in this currency of type " + currencyType);
-//        }
-//        else{
-//            ListIterator<Account> i = c.getAcc().listIterator();
-//            while(i.hasNext()){
-//                for(Currency currency: i.next().getC()){
-//                    if(currencyType == currency.getSymbol()){
-//                        if(currency.getBalance() >= loan.getCurrency().getBalance()){
-//                            currency.withdraw(loan.getCurrency().getBalance());
-//                            loan.getCurrency().withdraw(loan.getCurrency().getBalance());
-//                        }
-//                        else{
-//                            currency.withdraw(currency.getBalance());
-//                            loan.getCurrency().withdraw(currency.getBalance());
-//                        }
-//                    }
-//                }
-//                if(loan.getCurrency().getBalance() == 0){
-//                    c.removeLoan(loan);
-//                    break;
-//                }
-//            }
-//        }
-//        return payable;
-//    }
+        return payable;
+    }
 
     public static boolean checkBalance(Customer c) {
         double balance = 0;
