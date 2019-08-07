@@ -44,6 +44,7 @@ public class BankerMain{
         j.setLayout(null);
         j.setTitle("ATM");
         j.setSize(900,600);
+        j.setResizable(false);
         j.setVisible(true);
     }
     public static void main(String[] args) {

@@ -97,6 +97,7 @@ public class CreateUserGUI{
         constraints.gridheight=1;
         j.add(cancel,constraints);
         
+        j.setResizable(false);
         j.setVisible( true );
     }
 }

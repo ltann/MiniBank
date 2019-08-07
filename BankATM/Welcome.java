@@ -33,7 +33,7 @@ public class Welcome extends JFrame{
         add(label,BorderLayout.CENTER);
         add(button,BorderLayout.SOUTH);
        
-        
+        setResizable(false);
         setVisible( true );
     }
 }

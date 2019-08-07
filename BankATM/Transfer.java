@@ -157,6 +157,7 @@ public class Transfer {
         c.insets = new Insets(0,0,0,50);
         j.add(cancel, c);
         j.setSize(900,600);
+        j.setResizable(false);
         j.setVisible(true);
     }
 }

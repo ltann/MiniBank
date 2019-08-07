@@ -29,6 +29,7 @@ public class CreateAccountGUI {
         j.add(cancel);
         j.add(header);
         j.setLayout(null);
+        j.setResizable(false);
         j.setVisible(true);
     }
 }

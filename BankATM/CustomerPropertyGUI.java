@@ -58,6 +58,7 @@ public class CustomerPropertyGUI {
         j.add(cancel);
         j.setSize(900, 600);
         j.setLayout(null);
+        j.setResizable(false);
         j.setVisible(true);
     }
 //    public static void main(String[] args) {
