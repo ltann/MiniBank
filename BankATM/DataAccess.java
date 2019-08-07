@@ -634,38 +634,38 @@ public class DataAccess {
 			ArrayList<Double> priceHistory = stock.getPriceHistory();
 			double pricePerShare = priceHistory.get(priceHistory.size() - 1);
 			
-			List<SecurityAccountDB> allSecurityAccount = dataFindAllSecurityAccount();
-			if(allSecurityAccount != null) {
-				// for each security account
-				for(SecurityAccountDB sAccount : allSecurityAccount) {
-					// get security account info
-					String userName = sAccount.getUserName();
-//					SecurityAccountDB oldSAccount = dataFindSecurityAccount(userName);
-					
-					// get stock info of the security account
-					ArrayList<customerStock> stockSA = sAccount.getStock();
-					if(stockSA != null) {
-						for (customerStock s : stockSA) {
-							// if the security account contains the target stock (price changed)
-							if(s.getTicker().equals(ticker)) {
-								// update price per share of the target stock
-								//ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA
-								customerStock newStock = new customerStock(s.getTicker(),
-										s.getStockName(), s.getPriceBoughtAt(), s.getNumShares(),
-										s.getSph(), s.getCustomerStockID());
-								newStock.setPricePerShare(pricePerShare);
-								// update the whole stock info of the security account
-								stockSA.remove(s);
-								stockSA.add(newStock);
-								sAccount.setStock(stockSA);
-								// update the security account info to the database
-								dataUpdateSecurityAccount(userName, sAccount);
-								break;
-							}
-						}
-					}
-				}
-			}
+//			List<SecurityAccountDB> allSecurityAccount = dataFindAllSecurityAccount();
+//			if(allSecurityAccount != null) {
+//				// for each security account
+//				for(SecurityAccountDB sAccount : allSecurityAccount) {
+//					// get security account info
+//					String userName = sAccount.getUserName();
+////					SecurityAccountDB oldSAccount = dataFindSecurityAccount(userName);
+//					
+//					// get stock info of the security account
+//					ArrayList<customerStock> stockSA = sAccount.getStock();
+//					if(stockSA != null) {
+//						for (customerStock s : stockSA) {
+//							// if the security account contains the target stock (price changed)
+//							if(s.getTicker().equals(ticker)) {
+//								// update price per share of the target stock
+//								//ticker, String stockName, double pPS, int nS, ArrayList<Double> stockPriceHistory, double pBA
+//								customerStock newStock = new customerStock(s.getTicker(),
+//										s.getStockName(), s.getPriceBoughtAt(), s.getNumShares(),
+//										s.getSph(), s.getCustomerStockID());
+//								newStock.setPricePerShare(pricePerShare);
+//								// update the whole stock info of the security account
+//								stockSA.remove(s);
+//								stockSA.add(newStock);
+//								sAccount.setStock(stockSA);
+//								// update the security account info to the database
+//								dataUpdateSecurityAccount(userName, sAccount);
+//								break;
+//							}
+//						}
+//					}
+//				}
+//			}
 			return true;
 		}
 		return false;
