@@ -549,6 +549,56 @@ public class SystemApp {
         return info;
     }
 
+    public static void stockReport(String ticker, String companyName, double price, int numOfShare, double amount, int type) {
+    	String info = "";
+    	info += currentCustomer.getPerInfomation().getName();
+    	if(type == 0) { // Buy
+    		info += ": Buy\n";
+    	}
+    	else {
+    		info += ": Sell\n";
+    	}
+    	info += "Ticker: ";
+    	info += ticker;
+    	info += "\n";
+    	info += "Company Name: ";
+    	info += companyName;
+    	info += "\n";
+    	info += "Price: ";
+    	info += price;
+    	info += "\n";
+    	info += "Number Of Share: ";
+    	info += numOfShare;
+    	info += "\n";
+    	info += "Amount: ";
+    	info += amount;
+    	info += "\n";
+    	
+    	report += info;
+    }
+    
+    public static void bondReport(int maturity, String bondType, double interest, double amount, int type) {
+    	String info = "";
+    	if(type == 0) { // Buy
+    		info += ": Buy\n";
+    	}
+    	else {
+    		info += ": Sell\n";
+    	}
+    	info += currentCustomer.getPerInfomation().getName();
+    	info += ":\n";
+    	info += "Period: ";
+    	info += maturity + " " + bondType;
+    	info += "\n";
+    	info += "Interest Rate: ";
+    	info += interest + " / per day";
+    	info += "\n";
+    	info += "Amount: ";
+    	info += amount;
+    	
+    	report += info;
+    }
+    
     public static String getInfoForBanker() {
         String answer = "";
         List<CustomerBasicDB> customers = database.dataFindAllCustomerBasic();
@@ -791,6 +841,7 @@ public class SystemApp {
         	cb.add(cusBond);
         	sa.setBond(cb);
         	database.dataUpdateSecurityAccount(currentCustomer.getLoginName(), sa);
+        	bondReport(b.getMaturity(), b.getBondType(), b.getInterest(), amount, 0);
         }
         return purchasable;
     }
@@ -829,6 +880,7 @@ public class SystemApp {
         bond.remove(index);
         sa.setBond(bond);
         database.dataUpdateSecurityAccount(c.getLoginName(), sa);
+        bondReport(b.getMaturity(), b.getBondType(), b.getInterest(), b.getAmount(), 1);
         return sellable;
     }
 
@@ -864,6 +916,7 @@ public class SystemApp {
             cs.add(custock);
             sa.setStock(cs);
             purchasable = true;
+            stockReport(stock.getTicker(), stock.getCompanyName(), stock.getPriceHistory().get(BoughtAt-1), numOfShare, shareValue, 0);
         }
         if(purchasable){
            database.dataUpdateSecurityAccount(c.getLoginName(), sa);
@@ -893,6 +946,7 @@ public class SystemApp {
         //Transactions.add("Sold " + numOfShares + " of " + customerStock.getStockName() + " Share(s) at " + currentStockPrice);
         sa.setProfitMade(sa.getProfitMade() + shareValue);
         sa.setStock(stock);
+        stockReport(st.getTicker(), st.getCompanyName(), st.getPriceHistory().get(st.getPriceHistory().size()-1), s.getNumShares(), shareValue, 1);
         if(sellable){
             database.dataUpdateSecurityAccount(c.getLoginName(), sa);
         }
