@@ -1,27 +1,10 @@
-import java.net.UnknownHostException;
-import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-
 import org.bson.Document;
-import org.bson.codecs.*;
-import org.bson.codecs.configuration.*;
-//import org.bson.codecs.configuration.CodecRegistry;
-//import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.util.List;
-
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
-import static java.util.Arrays.asList;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +23,14 @@ public class DataAccess {
 	}
 	
 	/*-----------------------userInfo Collection/SystemApp.customers(part of it), SystemApp.customerAccount-----------------------
-	 * Operation: 1) add customer information :
+	 * Collection: customer (basic information)
 	 * 				 (String) userName, 
 	 * 				 (String) name, 
 	 * 				 (String) address,
 	 * 				 (String) cell,  
 	 * 				 (String) password,
 	 * 				 (boolean) collateral
+	 * Operation: 1) add customer information
 	 * 			  2) find specific customer information :
 	 * 				 relative field : public static ArrayList<Customer> customers --in SystemApp.java
 	 * 			  3) update specific customer information
@@ -152,7 +136,7 @@ public class DataAccess {
 
 
 	/*-----------------------AccountInfo Collection-----------------------
-	 * Collection: basic account (checking, saving) :
+	 * Collection: account information (checking, saving) :
 	 * 				 (String) userName, 
 	 * 				 (String) accountNumber, 
 	 * 				 (HashMap<String, Stock>) stock, 
@@ -270,18 +254,121 @@ public class DataAccess {
 		
 		
 	/*-----------------------LoanInfo Collection-----------------------
-	 * Collection: loan :
+	 * Collection: loan 
 	 * 				 (String) userName, 
 	 * 				 (int) loanID,
+	 * 				 (int) type,
 	 * 				 (double) interestRate, 
-	 * 				 (Map<String, Double>) currency
+	 * 				 (double) amount,
+	 * 				 (int) boughtAt
 	 * Operation: 1) add loan 
-	 * 			  2) find specific customer's loan
-	 * 			  3) update specific customer's loan
+	 * 			  2) find specific customer's loan (by userName)
+	 * 			  3) find specific loan (by loanID)
 	 * 			  4) delete specific customer's loan
 	 * 			  5) find all loans
 	 */
 		
+	// 1) add loan 
+	public static boolean dataAddLoan(LoanDB loanDB, AccountDB accountDB) {
+		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
+		if(dataFindLoan(loanDB.getLoanID(), accountDB.getUserName()) == null){
+			LoanInfo.insertOne(new Document("userName", loanDB.getUserName())
+				.append("loanID", loanDB.getLoanID())
+			    .append("type", loanDB.getType())
+			    .append("interestRate", loanDB.getInterest())
+			    .append("amount", loanDB.getAmount())
+			    .append("boughtAt", loanDB.getBoughtAt())
+			);
+			Map<String, Double> currency = accountDB.getCurrency();
+			double oldAmount = currency.get("USD");
+			currency.put("USD", oldAmount + loanDB.getAmount() - 3);
+			accountDB.setCurrency(currency);
+			dataUpdateAccount(accountDB.getAccountNumber(), accountDB);
+			return true;
+		}
+		return false;
+	}
+
+	// 2) find specific customer's loan (by userName)
+	public static List<LoanDB> dataFindLoan(String userName) {
+		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
+		Document findQuery = new Document("userName", userName);
+		MongoCursor<Document> cursor = LoanInfo.find(findQuery).iterator();
+		List<LoanDB> customerLoanDB = new ArrayList<LoanDB>();
+		try {
+			while(cursor.hasNext()) {
+		        Document doc = cursor.next();
+		        //LoanDB(int loanID, double interest, double amount, String type, int boughtAt, String userName) 
+		        LoanDB loanDB = new LoanDB(
+		        		(int)doc.get("loanID"),  
+			        	(double)doc.get("interestRate"),  
+			        	(double)doc.get("amount"),
+			        	(int)doc.get("type"),
+			        	(int)doc.get("boughtAt"),
+		        		(String)doc.get("userName")
+		        		);
+		        customerLoanDB.add(loanDB);
+			}
+		} finally {
+			cursor.close();
+		}
+		if(customerLoanDB.isEmpty())
+			return null;
+		return customerLoanDB;
+	}
+	
+	// 3) find specific loan (by loanID)
+	public static LoanDB dataFindLoan(int loanID, String userName) {
+		List<LoanDB> customerLoanDB = dataFindLoan(userName);
+		if(customerLoanDB !=  null) {
+			for(LoanDB loanDB : customerLoanDB) {
+				if(loanDB.getLoanID() == loanID) {
+					return loanDB;
+				}
+			}
+		}
+		return null;
+	}
+	
+	// 4) delete specific loan
+	public static boolean dataDeleteLoan(int loanID, AccountDB accountDB) {
+		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
+		LoanDB loanDB = dataFindLoan(loanID, accountDB.getUserName());
+		if(loanDB != null) {
+			Document deleteQuery = new Document("userName", accountDB.getUserName())
+					.append("loanID", loanID);
+			LoanInfo.deleteOne(deleteQuery);
+
+			Map<String, Double> currency = accountDB.getCurrency();
+			double oldAmount = currency.get("USD");
+			currency.put("USD", oldAmount - loanDB.getAmount());
+			accountDB.setCurrency(currency);
+			dataUpdateAccount(accountDB.getAccountNumber(), accountDB);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	// 5) find all loans
+	public static List<LoanDB> dataFindAllLoan() {
+		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
+		MongoCursor<Document> cursor = LoanInfo.find().iterator();
+		List<LoanDB> allLoan = new ArrayList<LoanDB>();
+		try {
+			while(cursor.hasNext()) {
+		        Document doc = cursor.next();
+			    LoanDB lDB = dataFindLoan((int)doc.get("loanID"), (String)doc.get("userName"));
+			    allLoan.add(lDB);
+			}
+		} finally {
+			cursor.close();
+		}
+//		if(allAccount.isEmpty())
+//			return null;
+		return allLoan;
+	}
+	
 	
 	
 	
@@ -471,7 +558,7 @@ public class DataAccess {
 	
 	
 	/*-----------------------Stocks Collection-----------------------
-	 * Collection: price information of all stocks :
+	 * Collection: price information of all stocks (banker view)
 	 * 				 (String) ticker, 
 	 * 				 (ArrayList<StockPriceHistory>) priceHistory
 	 * Operation: 1) add stock information 
@@ -593,7 +680,7 @@ public class DataAccess {
 	
 	
 	/*-----------------------Bonds Collection-----------------------
-	 * Collection: bonds basic information :
+	 * Collection: bonds (basic information, banker view) 
 	 * 				 (String) bondID, 
 	 * 				 (String) bondType,
 	 * 				 (int) maturity, 
@@ -678,7 +765,8 @@ public class DataAccess {
 	
 	
 	/*-----------------------bankerInfo Collection-----------------------
-	 * Collection:   (String) bankerName,
+	 * Collection: banker (basic information)
+	 * 				 (String) bankerName,
 	 * 				 (String) psw
 	 * Operation: 1) add banker information 
 	 * 			  2) find specific banker information 
@@ -718,7 +806,8 @@ public class DataAccess {
 	
 	
 	/*-----------------------BankInfo Collection-----------------------
-	 * Collection:   (ArrayList<String>) dailyReport,
+	 * Collection: bank info
+	 * 				 (ArrayList<String>) dailyReport,
 	 * 				 (ArrayList<Double>) dailyProfit,
 	 * 				 (int) accountNum
 	 * Operation: 1) add bank
