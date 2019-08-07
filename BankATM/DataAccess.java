@@ -436,7 +436,7 @@ public class DataAccess {
 		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
 		        		(ArrayList<Double>)doc.get("bondInterest"),
 		        		(double)doc.get("avaliableFunds"),
-		        		(double)doc.get("valueOfSA"),
+		        		(ArrayList<Double>)doc.get("valueOfSA"),
 		        		(ArrayList<String>)doc.get("transactions"),
 		        		(double)doc.get("profitMade")
 		        		);
@@ -472,7 +472,7 @@ public class DataAccess {
 		        		(ArrayList<Map<String, Double>>)doc.get("bondAmount"),
 		        		(ArrayList<Double>)doc.get("bondInterest"),
 		        		(double)doc.get("avaliableFunds"),
-		        		(double)doc.get("valueOfSA"),
+		        		(ArrayList<Double>)doc.get("valueOfSA"),
 		        		(ArrayList<String>)doc.get("transactions"),
 		        		(double)doc.get("profitMade")
 		        		);
@@ -517,7 +517,6 @@ public class DataAccess {
 	public static boolean dataUpdateSecurityAccount(int accountNum, SecurityAccountDB newSecurityAccountDB) {
 		SecurityAccountDB sAccountDB= dataFindSecurityAccount(accountNum);
 		if(sAccountDB != null) {
-			System.out.println("123");
 			String userName = sAccountDB.getUserName();
 			dataUpdateSecurityAccount(userName, newSecurityAccountDB);
 			return true;
