@@ -29,6 +29,7 @@ public class SucceedInfoGUI {
         j.add(exit);
         j.add(header);
         j.setLayout(null);
+        j.setResizable(false);
         j.setVisible(true);
     }
 }

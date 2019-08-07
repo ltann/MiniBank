@@ -76,6 +76,7 @@ public class CustomerStockGUI {
         j.add(ret);
         j.add(exit);
         j.setLayout(null);
+        j.setResizable(false);
         j.setSize(900,600);
         j.setVisible(true);
     }

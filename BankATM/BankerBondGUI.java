@@ -45,6 +45,7 @@ public class BankerBondGUI {
         j.add(cancel);
         j.setSize(900,600);
         j.setTitle("Trading System");
+        j.setResizable(false);
         j.setLayout(null);
         j.setVisible(true);
     }

@@ -48,6 +48,7 @@ public class CreateStockGUI {
 		
 		j.setSize(900, 600);
 		j.setLayout(null);
+		j.setResizable(false);
 		j.setVisible(true);
 	}
 	
