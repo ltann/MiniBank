@@ -330,7 +330,25 @@ public class DataAccess {
 		return null;
 	}
 	
-	// 4) delete specific loan
+	// 4) update specific loan (by loanID)
+	public static boolean dataUpdateLoan(int loanID, String userName, LoanDB loanDB) {
+		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
+		if(dataFindLoan(loanID, userName) != null) {
+			Document updateQuery = new Document("userName", userName).append("loanID", loanID);
+			Document updateLoan = new Document("loanID", loanID)
+					.append("interestRate", loanDB.getInterest())
+				    .append("amount", loanDB.getAmount())
+				    .append("type", loanDB.getType())
+				    .append("boughtAt", loanDB.getBoughtAt())
+				    .append("userName", userName)
+					;
+			LoanInfo.updateOne(updateQuery, new Document("$set",updateLoan));
+			return true;
+		}
+		return false;
+	}
+	
+	// 5) delete specific loan
 	public static boolean dataDeleteLoan(int loanID, AccountDB accountDB) {
 		MongoCollection<Document> LoanInfo = db.getCollection("LoanInfo");
 		LoanDB loanDB = dataFindLoan(loanID, accountDB.getUserName());
