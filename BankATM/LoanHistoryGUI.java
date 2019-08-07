@@ -9,11 +9,11 @@ public class LoanHistoryGUI {
 	JButton pay = new JButton("Payback");
     JButton ret = new JButton("Return");
 	    
-	public LoanHistoryGUI(Customer c, Account a) {
-		GUI.LoanHistoryGUIAL(this, c, a);
+	public LoanHistoryGUI() {
+		GUI.LoanHistoryGUIAL(this);
 		header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
         header.setBounds(360,25,200,50);
-        t = new JTable(SystemApp.getLoanData(c), columnTitle);
+        //t = new JTable(SystemApp.getLoanData(), columnTitle);
         scroll = new JScrollPane(t);
         scroll.setBounds(100,100,690,300);
 
@@ -31,10 +31,6 @@ public class LoanHistoryGUI {
         j.setLayout(null);
         j.setVisible(true);
 	}
-	public static void main(String[] args) {
-		Customer c = new Customer();
-		c.addAccount(0, 0);
-		new LoanHistoryGUI(c,c.getAcc().get(0));
-	}
+
 
 }

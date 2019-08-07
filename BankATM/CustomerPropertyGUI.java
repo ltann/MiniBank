@@ -7,16 +7,18 @@ public class CustomerPropertyGUI {
 	JTable t;
 	JScrollPane scroll;
     String[] stockTitle = {"TICKER", "NAME", "BUY PRICE", "NOW PRICE", "SHARE", "PERCENTAGE", "TOTAL VALUE"};
-    String[] bondTitle = {"PERIOD", "AMOUNT", "BUY DATE", "END DATE", "INTEREST"};
+    String[] bondTitle = {"ID", "Type", "Maturity", "Amount", "Interest", "Days Matured"};
     
     JButton stock = new JButton("Stocks");
     JButton bond = new JButton("Bonds");
     JButton value = new JButton("Account Value");
     JButton sell = new JButton("Sell");
     JButton cancel = new JButton("Cancel");
+    int index;
     
-    public CustomerPropertyGUI(int index, Customer c, Account a) {
-    	GUI.CustomerPropertyGUIAL(this, c, a);
+    public CustomerPropertyGUI(int index) {
+    	GUI.CustomerPropertyGUIAL(this);
+    	this.index = index;
     	header.setFont(new Font("Black", Font.CENTER_BASELINE, 30));
         header.setBounds(400,25,200,50);
         
@@ -28,10 +30,16 @@ public class CustomerPropertyGUI {
         value.setBounds(650,25,200,50);
         
         if(index == 0) { //Stock
-        	t = new JTable(SystemApp.getUserStock(c), stockTitle);
+        	Object[][] data = SystemApp.getUserStock(SystemApp.currentCustomer);
+        	if(data != null) {
+        		t = new JTable(data, stockTitle);
+        	}
         }
         else {
-        	t = new JTable(SystemApp.getUserBonds(c), bondTitle);
+        	Object[][] data = SystemApp.getUserBonds(SystemApp.currentCustomer);
+        	if(data != null) {
+        		t = new JTable(data, bondTitle);
+        	}
         }
         scroll = new JScrollPane(t);
         scroll.setBounds(200,100,650,300);

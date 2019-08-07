@@ -13,39 +13,39 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class GUI {
-    public static void customerMainGUIAL(CustomerMainGUI c, Account a) {
+    public static void customerMainGUIAL(CustomerMainGUI c) {
         c.balance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new balanceGUI(a);
+                new balanceGUI(SystemApp.currentAccount.getType());
             }
         });
         
         c.withdraw.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new withdrawGUI(a, SystemApp.currentCustomer);
+                new withdrawGUI();
             }
         });
         
         c.deposit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new depositGUI(a);
+                new depositGUI();
             }
         });
         
         c.transfer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new Transfer(a);
+                new Transfer(SystemApp.currentAccount.getType());
             }
         });
         
         c.loan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c.j.setVisible(false);
-                new LoanGUI(SystemApp.currentCustomer, a);
+                new LoanGUI();
             }
         });
         
@@ -56,37 +56,37 @@ public class GUI {
         });
     }
 
-    public static void SecurityMainGUIAL(SecurityMainGUI s, Account a) {
+    public static void SecurityMainGUIAL(SecurityMainGUI s) {
         s.balance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 s.j.setVisible(false);
-                new balanceGUI(a);
+                new balanceGUI(3);
             }
         });
         
          s.property.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
                  s.j.setVisible(false);
-                 new CustomerPropertyGUI(0, SystemApp.currentCustomer, a);
+                 new CustomerPropertyGUI(0);
              }
          });
         
          s.stocks.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
                  s.j.dispose();
-                 new CustomerStockGUI(0, SystemApp.currentCustomer, a);
+                 new CustomerStockGUI(0);
              }
          });
         s.bonds.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                   s.j.setVisible(false);
-                  new CustomerBondGUI(SystemApp.currentCustomer, a);
+                  new CustomerBondGUI();
               }
           });
         s.transfer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 s.j.setVisible(false);
-                new Transfer(a);
+                new Transfer(3);
             }
         });
         
@@ -99,7 +99,7 @@ public class GUI {
         });
     }
 
-    public static void depositGUIAL(depositGUI d, Account a) {
+    public static void depositGUIAL(depositGUI d) {
         d.amount.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 d.amount.setText("");
@@ -114,7 +114,7 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 double money = Double.parseDouble(d.amount.getText());
                 if(money >= 0 && money <= 50000) {
-                    a.getC()[d.currencyType.getSelectedIndex()].deposit(money);
+                	SystemApp.currentAccount.getC()[d.currencyType.getSelectedIndex()].deposit(money);
                 	String key = "";
                 	switch(d.currencyType.getSelectedIndex()) {
                 	case 0: 
@@ -127,15 +127,15 @@ public class GUI {
                 		key = "EUR";
                 		break;
                 	}
-                	AccountDB acc = SystemApp.database.dataFindAccount(a.getAccountNumber());
+                	AccountDB acc = SystemApp.database.dataFindAccount(SystemApp.currentAccount.getAccountNumber());
                 	Map<String, Double> cur = acc.getCurrency();
                 	cur.put(key,(cur.get(key)+money));
                 	acc.setCurrency(cur);
-                    SystemApp.database.dataUpdateAccount(a.getAccountNumber(), acc);
+                    SystemApp.database.dataUpdateAccount(SystemApp.currentAccount.getAccountNumber(), acc);
                     //SystemApp.checkCurrentAccount(a.getAccountNumber());
                     d.j.setVisible(false);
                     d.j.dispose();
-                    new SucceedInfoGUI(true, a, SystemApp.depositReport(a, money, d.currencyType.getSelectedIndex()));
+                    new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, money, d.currencyType.getSelectedIndex()));
                 }
                 else {
                     d.amount.setText("Please type your deposit amount! (0-50000)");
@@ -145,12 +145,12 @@ public class GUI {
         d.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 d.j.dispose();
-                new CustomerMainGUI(a);
+                new CustomerMainGUI();
             }
         });
     }
 
-    public static void withdrawGUIAL(withdrawGUI wd, Account a, Customer c) {
+    public static void withdrawGUIAL(withdrawGUI wd) {
         wd.amount.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 wd.amount.setText("");
@@ -165,7 +165,7 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 double money = Double.parseDouble(wd.amount.getText());
                 if(money >= 0 && money <= 50000) {
-                    if(a.getType() == 1) {
+                    if(SystemApp.currentAccount.getType() == 1) {
                         double fee = 0;
                         switch (wd.currencyType.getSelectedIndex()) {
                             case 0:
@@ -181,33 +181,33 @@ public class GUI {
                                 fee = 3;
                                 break;
                         }
-                        if(a.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= (money+fee)) {
-                        	SystemApp.withdraw(wd.currencyType.getSelectedIndex(), fee, money, a);
-                            a.getC()[wd.currencyType.getSelectedIndex()].withdraw(money+fee);
+                        if(SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= (money+fee)) {
+                        	SystemApp.withdraw(wd.currencyType.getSelectedIndex(), fee, money, SystemApp.currentAccount);
+                        	SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].withdraw(money+fee);
                             SystemApp.fee += 3;
                             wd.j.setVisible(false);
                             wd.j.dispose();
 
-                            new SucceedInfoGUI(true, a, SystemApp.depositReport(a, money, wd.currencyType.getSelectedIndex()));
+                            new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, money, wd.currencyType.getSelectedIndex()));
                         }
                         else {
                             wd.j.setVisible(false);
                             wd.j.dispose();
-                            new SucceedInfoGUI(false, a, SystemApp.depositReport(a, money, wd.currencyType.getSelectedIndex()));
+                            new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, money, wd.currencyType.getSelectedIndex()));
                         }
                     }
                     else{
-                        if(a.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= (money)) {
-                        	SystemApp.withdraw(wd.currencyType.getSelectedIndex(), 0, money, a);
-                            a.getC()[wd.currencyType.getSelectedIndex()].withdraw(money);
+                        if(SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= (money)) {
+                        	SystemApp.withdraw(wd.currencyType.getSelectedIndex(), 0, money, SystemApp.currentAccount);
+                        	SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].withdraw(money);
                             wd.j.setVisible(false);
                             wd.j.dispose();
-                            new SucceedInfoGUI(true, a, SystemApp.depositReport(a, money, wd.currencyType.getSelectedIndex()));
+                            new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, money, wd.currencyType.getSelectedIndex()));
                         }
                         else {
                             wd.j.setVisible(false);
                             wd.j.dispose();
-                            new SucceedInfoGUI(false, a, SystemApp.depositReport(a, money, wd.currencyType.getSelectedIndex()));
+                            new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, money, wd.currencyType.getSelectedIndex()));
                         }
                     }
                        
@@ -220,37 +220,37 @@ public class GUI {
         wd.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 wd.j.dispose();
-                new CustomerMainGUI(a);
+                new CustomerMainGUI();
             }
         });
         wd.d_20.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(a.getType() == 1) {
-                    if(a.getC()[0].getBalance() >= 23) {
-                        a.getC()[0].withdraw(23);
-                        SystemApp.withdraw(0, 3, 20, a);
+                if(SystemApp.currentAccount.getType() == 1) {
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 23) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(23);
+                        SystemApp.withdraw(0, 3, 20, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 20, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 20, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 20, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 20, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 else {
-                    if(a.getC()[0].getBalance() >= 20) {
-                        a.getC()[0].withdraw(20);
-                        SystemApp.withdraw(0, 0, 20, a);
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 20) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(20);
+                        SystemApp.withdraw(0, 0, 20, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 20, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 20, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 20, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 20, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 
@@ -258,32 +258,32 @@ public class GUI {
         });
         wd.d_50.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(a.getType() == 1) {
-                    if(a.getC()[0].getBalance() >= 53) {
-                        a.getC()[0].withdraw(53);
-                        SystemApp.withdraw(0, 3, 50, a);
+                if(SystemApp.currentAccount.getType() == 1) {
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 53) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(53);
+                        SystemApp.withdraw(0, 3, 50, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 50, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 50, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 50, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 50, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 else {
-                    if(a.getC()[0].getBalance() >= 50) {
-                        a.getC()[0].withdraw(50);
-                        SystemApp.withdraw(0, 0, 50, a);
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 50) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(50);
+                        SystemApp.withdraw(0, 0, 50, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 50, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 50, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 50, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 50, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 
@@ -291,32 +291,32 @@ public class GUI {
         });
         wd.d_100.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(a.getType() == 1) {
-                    if(a.getC()[0].getBalance() >= 103) {
-                        a.getC()[0].withdraw(103);
-                        SystemApp.withdraw(0, 3, 100, a);
+                if(SystemApp.currentAccount.getType() == 1) {
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 103) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(103);
+                        SystemApp.withdraw(0, 3, 100, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 100, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 100, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 100, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 100, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 else {
-                    if(a.getC()[0].getBalance() >= 100) {
-                        a.getC()[0].withdraw(100);
-                        SystemApp.withdraw(0, 0, 100, a);
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 100) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(100);
+                        SystemApp.withdraw(0, 0, 100, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 100, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 100, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 100, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 100, wd.currencyType.getSelectedIndex()));
                     }
                 }
                     
@@ -324,82 +324,82 @@ public class GUI {
         });
         wd.d_200.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(a.getType() == 1) {
-                    if(a.getC()[0].getBalance() >= 203) {
-                        a.getC()[0].withdraw(203);
-                        SystemApp.withdraw(0, 3, 200, a);
+                if(SystemApp.currentAccount.getType() == 1) {
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 203) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(203);
+                        SystemApp.withdraw(0, 3, 200, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 200, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 200, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 200, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 200, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 else {
-                    if(a.getC()[0].getBalance() >= 200) {
-                        a.getC()[0].withdraw(200);
-                        SystemApp.withdraw(0, 0, 200, a);
+                    if(SystemApp.currentAccount.getC()[0].getBalance() >= 200) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(200);
+                        SystemApp.withdraw(0, 0, 200, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 200, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 200, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 200, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 200, wd.currencyType.getSelectedIndex()));
                     }
                 }
             }
         });
         wd.d_500.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(a.getType() == 1) {
-                    if(a.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= 503) {
-                        a.getC()[0].withdraw(503);
-                        SystemApp.withdraw(0, 3, 500, a);
+                if(SystemApp.currentAccount.getType() == 1) {
+                    if(SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= 503) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(503);
+                        SystemApp.withdraw(0, 3, 500, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 500, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 500, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 500, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 500, wd.currencyType.getSelectedIndex()));
                     }
                 }
                 else {
-                    if(a.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= 500) {
-                        a.getC()[0].withdraw(500);
-                        SystemApp.withdraw(0, 0, 500, a);
+                    if(SystemApp.currentAccount.getC()[wd.currencyType.getSelectedIndex()].getBalance() >= 500) {
+                    	SystemApp.currentAccount.getC()[0].withdraw(500);
+                        SystemApp.withdraw(0, 0, 500, SystemApp.currentAccount);
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(true, a, SystemApp.depositReport(a, 500, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(true, SystemApp.depositReport(SystemApp.currentAccount, 500, wd.currencyType.getSelectedIndex()));
                     }
                     else{
                         wd.j.setVisible(false);
                         wd.j.dispose();
-                        new SucceedInfoGUI(false, a, SystemApp.depositReport(a, 500, wd.currencyType.getSelectedIndex()));
+                        new SucceedInfoGUI(false, SystemApp.depositReport(SystemApp.currentAccount, 500, wd.currencyType.getSelectedIndex()));
                     }
                 }
             }
         });
     }
 
-    public static void balanceGUIAL(balanceGUI b, Account a) {
+    public static void balanceGUIAL(balanceGUI b, int type) {
         b.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	b.j.setVisible(false);
                 b.j.dispose();
-            	if (a.getType() == 3) {
+            	if (type == 3) {
             		b.j.dispose();
-            		new SecurityMainGUI(a);
+            		new SecurityMainGUI();
             	}
             	else {
             		b.j.dispose();
-                    new CustomerMainGUI(a);
+                    new CustomerMainGUI();
             	}
                 
             }
@@ -411,16 +411,16 @@ public class GUI {
         });
     }
 
-    public static void TransferGUIAL(Transfer tf, Account a){
+    public static void TransferGUIAL(Transfer tf, int type){
         tf.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tf.j.setVisible(false);
                 tf.j.dispose();
-                if(a.getType() == 3) {
-                	new SecurityMainGUI(a);
+                if(type == 3) {
+                	new SecurityMainGUI();
                 }
                 else {
-                	new CustomerMainGUI(a);
+                	new CustomerMainGUI();
                 }
                
             }
@@ -439,33 +439,39 @@ public class GUI {
                     tf.tf3.setText("Please type account number!");
                 }
                 else {
-                    String report = SystemApp.transaction(a.getAccountNumber(),accountNumber, money, SystemApp.currentCustomer, tf.currencyCB.getSelectedIndex());
+                	String report = "";
+                	if(type == 3) {
+                        report = SystemApp.transaction(type, SystemApp.currentSecurity.getAccountNumber(),accountNumber, money, SystemApp.currentCustomer, tf.currencyCB.getSelectedIndex());
+                	}
+                	else {
+                        report = SystemApp.transaction(type, SystemApp.currentAccount.getAccountNumber(),accountNumber, money, SystemApp.currentCustomer, tf.currencyCB.getSelectedIndex());
+
+                	}
                     if(report != "") {
                         tf.j.setVisible(false);
                         tf.j.dispose();
-                        new SucceedInfoGUI(true, a, report);
+                        new SucceedInfoGUI(true, report);
                     }
                     else {
                         tf.j.setVisible(false);
                         tf.j.dispose();
-                        new SucceedInfoGUI(false, a, report);
+                        new SucceedInfoGUI(false, report);
                     }
                 }
             } 
         });
     }
 
-    public static void SucceedInfoGUIAL(SucceedInfoGUI si, Account a) {
+    public static void SucceedInfoGUIAL(SucceedInfoGUI si) {
         si.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	SystemApp.checkCurrentAccount(a.getAccountNumber());
                 si.j.setVisible(false);
                 si.j.dispose();
-                if(a.getType() == 3) {
-                	new SecurityMainGUI(a);
+                if(SystemApp.currentAccount.getType() == 3) {
+                	new SecurityMainGUI();
                 }
                 else {
-                    new CustomerMainGUI(a);
+                    new CustomerMainGUI();
                 }
             }
         });
@@ -477,7 +483,7 @@ public class GUI {
         });
     }
     
-    public static void LoanGUIAL(LoanGUI l, Account a, Customer cus) {
+    public static void LoanGUIAL(LoanGUI l) {
         l.confirm.addActionListener(new ActionListener(){
         
             @Override
@@ -487,13 +493,13 @@ public class GUI {
                 double money = Double.parseDouble(l.amount.getText());
                 if (l.amount.getText() == "" || money < 0 || money > 50000) {
                     l.amount.setText("Please type amount! (0-50000)");
-                } else if(!cus.isCollateral()){
+                } else if(!SystemApp.currentCustomer.isCollateral()){
                     l.amount.setText("Can't loan because you don't have collateral");
                 }  else {
                     //SystemApp.loan(l.timeCB.getSelectedIndex(), Double.parseDouble(l.amount.getText()), l.currencyCB.getSelectedIndex()); 
                     l.j.setVisible(false);
                     l.j.dispose();
-                    new SucceedInfoGUI(true, a, SystemApp.loanReport(Double.parseDouble(l.amount.getText()), l.currencyList[l.currencyCB.getSelectedIndex()], l.timeList[l.timeCB.getSelectedIndex()]));
+                    new SucceedInfoGUI(true, SystemApp.loanReport(Double.parseDouble(l.amount.getText()), l.currencyList[l.currencyCB.getSelectedIndex()], l.timeList[l.timeCB.getSelectedIndex()]));
                     
                 }
             }
@@ -504,26 +510,26 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 l.j.dispose();
-                new CustomerMainGUI(a);
+                new CustomerMainGUI();
             }
         });
         
         l.history.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		l.j.dispose();
-        		new LoanHistoryGUI(cus, a);
+        		new LoanHistoryGUI();
         	}
         });
     }
 
-    public static void LoanHistoryGUIAL(LoanHistoryGUI lh, Customer c, Account a) {
+    public static void LoanHistoryGUIAL(LoanHistoryGUI lh) {
     	lh.pay.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		int confirm = JOptionPane.showConfirmDialog(lh.j, "Are you sure to payback your loan?");
         		if (confirm == JOptionPane.YES_OPTION) {
         			//SystemApp.paybackLoan();
                     lh.j.dispose();
-                    new LoanHistoryGUI(c, a);
+                    new LoanHistoryGUI();
                 }
         	}
         });
@@ -531,7 +537,7 @@ public class GUI {
     	lh.ret.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		lh.j.dispose();
-        		new LoanGUI(c, a);
+        		new LoanGUI();
         	}
         });
     }
@@ -763,43 +769,52 @@ public class GUI {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-//            int key=0;
-//            String name = s.searchName.getText();
-//            String str = "";
-//            for (int i = 0; i <= SystemApp.customers.size() - 1; i++) {
-//                if (name.equals(SystemApp.customers.get(i).getPerInfomation().getName())) {
-//                    str += "Name : ";
-//                    str += SystemApp.customers.get(i).getPerInfomation().getName();
-//                    str += "   Cellphone : ";
-//                    str += SystemApp.customers.get(i).getPerInfomation().getCell();
-//                    str += "   Address : ";
-//                    str += SystemApp.customers.get(i).getPerInfomation().getAddress();
-//                    str += "\nAccount :\n";
-//                    for (int j = 0; j <= SystemApp.customers.get(i).getAccountNumber() - 1; j++) {
-//                        str += SystemApp.customers.get(i).getAcc().get(j).getAccountInfo();
+            int key=0;
+            String name = s.searchName.getText();
+            String str = "";
+            ArrayList<Customer> customers = SystemApp.createCustomers();
+            for (int i = 0; i <= customers.size() - 1; i++) {
+                if (name.equals(customers.get(i).getPerInfomation().getName())) {
+                    str += "Name : ";
+                    str += customers.get(i).getPerInfomation().getName();
+                    str += "   Cellphone : ";
+                    str += customers.get(i).getPerInfomation().getCell();
+                    str += "   Address : ";
+                    str += customers.get(i).getPerInfomation().getAddress();
+                    str += "\nAccount :\n";
+                    for (int j = 0; j <= customers.get(i).getAccountNumber() - 1; j++) {
+                        str += customers.get(i).getAcc().get(j).getAccountInfo();
+                    }
+                    SecurityAccountDB sa = SystemApp.database.dataFindSecurityAccount(customers.get(i).getLoginName());
+                    if(sa != null) {
+                    	str += sa.getAccountNumber();
+                        str += " Security\n";
+                        str += "USD: ";
+                        str += "$";
+                        str += sa.getAvaliableFunds();
+                    }
+                    str += "\nLoan :\n";
+//                    for (int k = 0; k <= customers.get(i).getLoanNumber() - 1; k++) {
+//                        str += customers.get(i).getLn().get(k).getInterest();
+//                        str += " ";
+//                        str += customers.get(i).getLn().get(k).getCurrency().getName();
+//                        str += " ";
+//                        str += customers.get(i).getLn().get(k).getCurrency().getSymbol();
+//                        str += customers.get(i).getLn().get(k).getCurrency().getBalance();
+//                        str += " ";
 //                    }
-//                    str += "\nLoan :\n";
-//                    for (int k = 0; k <= SystemApp.customers.get(i).getLoanNumber() - 1; k++) {
-//                        str += SystemApp.customers.get(i).getLn().get(k).getInterest();
-//                        str += " ";
-//                        str += SystemApp.customers.get(i).getLn().get(k).getCurrency().getName();
-//                        str += " ";
-//                        str += SystemApp.customers.get(i).getLn().get(k).getCurrency().getSymbol();
-//                        str += SystemApp.customers.get(i).getLn().get(k).getCurrency().getBalance();
-//                        str += " ";
-//                    }
-//                    str += "\n";
-//                    key=1;
-//                    break;
-//                }
-//            }
-//            if(key==1){
-//                s.j.dispose();
-//                new ReportGUI(str);
-//            }
-//            else{
-//                s.title.setText("There is no such customer");
-//            }
+                    str += "\n";
+                    key=1;
+                    break;
+                }
+            }
+            if(key==1){
+                s.j.dispose();
+                new ReportGUI(str);
+            }
+            else{
+                s.title.setText("There is no such customer");
+            }
         }
     });
     s.cancel.addActionListener(new ActionListener() {
@@ -851,21 +866,21 @@ public class GUI {
             }else{
                 String[] split = val.split(": ");
                 int accountNum = Integer.parseInt(split[1]);
-                for(int i = 0; i < c.getAcc().size(); i++){
-                    if(c.getAcc().get(i).getAccountNumber() == accountNum){
-                        cmain.j.dispose();
-                        if(c.getAcc().get(i).getType() == 3) {
-                        	SystemApp.currentAccount = c.getAcc().get(i);
-                            new SecurityMainGUI(SystemApp.currentAccount);
-                            break;
-                        }
-                        else {
-                        	SystemApp.currentAccount = c.getAcc().get(i);
-                            new CustomerMainGUI(SystemApp.currentAccount);
+                if(c.getSacc() != null && c.getSacc().getAccountNumber() == accountNum) {
+                	SystemApp.currentSecurity = c.getSacc();
+                	cmain.j.dispose();
+                    new SecurityMainGUI();
+                }
+                else {
+                	for(int i = 0; i < c.getAcc().size(); i++){
+                        if(c.getAcc().get(i).getAccountNumber() == accountNum){
+                            cmain.j.dispose();
+                            SystemApp.currentAccount = c.getAcc().get(i);
+                            new CustomerMainGUI();
                             break;
                         }
                     }
-                }
+                } 
             }
         }
     });
@@ -937,17 +952,27 @@ public class GUI {
         });
     }
 
-    public static void CustomerStockGUIAL(CustomerStockGUI cs, Customer c, Account a) {
+    public static void CustomerStockGUIAL(CustomerStockGUI cs) {
     	cs.view.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			cs.j.dispose();
-    			new CustomerStockGUI(cs.stockName.getSelectedIndex(), c, a);
+    			new CustomerStockGUI(cs.stockName.getSelectedIndex());
     		}
     	});
     	cs.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cs.j.dispose();
-                new SecurityMainGUI(a);
+                new SecurityMainGUI();
+            }
+        });
+    	cs.buy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(SystemApp.purchaseStock(SystemApp.currentCustomer, cs.stockName.getSelectedIndex(), Integer.parseInt(cs.amount.getText()))) {
+                	JOptionPane.showMessageDialog(cs.j, "Succeed!");
+                }
+                else {
+                	JOptionPane.showMessageDialog(cs.j, "Failed!");
+                }
             }
         });
     	cs.exit.addActionListener(new ActionListener(){
@@ -958,11 +983,11 @@ public class GUI {
         });
     }
     
-    public static void CustomerBondGUIAL(CustomerBondGUI cb, Customer c, Account a) {
+    public static void CustomerBondGUIAL(CustomerBondGUI cb) {
     	cb.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cb.j.dispose();
-                new SecurityMainGUI(a);
+                new SecurityMainGUI();
             }
         });
     	cb.exit.addActionListener(new ActionListener(){
@@ -971,47 +996,78 @@ public class GUI {
                 new exit(cb.j);
             }
         });
+    	cb.buy.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(SystemApp.purchaseBond(SystemApp.currentCustomer, cb.t.getSelectedRow(), Double.parseDouble(cb.amount.getText()))) {
+        			JOptionPane.showMessageDialog(cb.j, "Succeed!");
+                }
+                else {
+        			JOptionPane.showMessageDialog(cb.j, "Failed!");
+                }
+                cb.j.dispose();
+                new CustomerBondGUI();
+            }
+        });
     }
     
-    public static void CustomerPropertyGUIAL(CustomerPropertyGUI cp, Customer c, Account a) {
+    public static void CustomerPropertyGUIAL(CustomerPropertyGUI cp) {
     	cp.value.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			cp.j.dispose();
-    			new AccountValueGUI(c, a);
+    			System.out.println(SystemApp.currentSecurity.getValueOfSA());
+    			new AccountValueGUI();
     		}
     	});
     	cp.cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cp.j.setVisible(false);
                 cp.j.dispose();
-                new SecurityMainGUI(a);
+                new SecurityMainGUI();
             }
         });
     	cp.stock.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	cp.j.dispose();
-            	new CustomerPropertyGUI(0, c, a);
+            	new CustomerPropertyGUI(0);
             }
         });
     	cp.bond.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	cp.j.dispose();
-            	new CustomerPropertyGUI(1, c, a);
+            	new CustomerPropertyGUI(1);
             }
         });
     	cp.sell.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	//---------------------------------------------------------
+            	if(cp.index == 0) { // Sell stocks
+            		if(SystemApp.sellStock(SystemApp.currentCustomer, cp.t.getSelectedRow())) {
+            			JOptionPane.showMessageDialog(cp.j, "Succeed!");
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(cp.j, "Failed!");
+            		}
+            	}
+            	else { // Sell Bonds
+            		if(SystemApp.sellBond(SystemApp.currentCustomer, cp.t.getSelectedRow())) {
+            			JOptionPane.showMessageDialog(cp.j, "Succeed!");
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(cp.j, "Failed!");
+            		}
+            	}
+            	cp.j.dispose();
+            	new CustomerPropertyGUI(0);
             }
         });
     }
     
-    public static void AccountValueGUIAL(AccountValueGUI avg, Customer c, Account a) {
+    public static void AccountValueGUIAL(AccountValueGUI avg) {
     	avg.ret.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	avg.j.setVisible(false);
                 avg.j.dispose();
-            	new CustomerPropertyGUI(0, c, a);
+            	new CustomerPropertyGUI(0);
             }
         });
         avg.exit.addActionListener(new ActionListener() {

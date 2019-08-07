@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 
 public class balanceGUI {
@@ -15,33 +16,55 @@ public class balanceGUI {
     JTextArea balance;
     JButton ret = new JButton("Return");
     JButton exit = new JButton("Exit");
-    private String curr(Account a) {
+    private String curr(int type) {
         String str = "";
-        for (int i = 0; i < a.getC().length; i++) {
-            // if(a.getC()[i].getBalance() == 0) {
-            //     continue;
-            // }
-            str += a.getC()[i].getName();
+        if(type == 3) {
+        	str += "USD";
             str += ": ";
-            str += a.getC()[i].getSymbol();
-            str += a.getC()[i].getBalance();
-            System.out.println(a.getC()[i].getBalance());
+            str += "$";
+            str += SystemApp.database.dataFindSecurityAccount(SystemApp.currentCustomer.getLoginName()).getAvaliableFunds();
             str += "\n";
-        } 
+        }
+        else {
+        	AccountDB a = SystemApp.database.dataFindAccount(SystemApp.currentAccount.getAccountNumber());
+        	Map<String, Double> cur = a.getCurrency();
+        	str += "USD";
+            str += ": ";
+            str += "$";
+            str += cur.get("USD");
+            str += "\n";
+            str += "RMB";
+            str += ": ";
+            str += "¥";
+            str += cur.get("RMB");
+            str += "\n";
+            str += "EUR";
+            str += ": ";
+            str += "€";
+            str += cur.get("EUR");
+            str += "\n";
+        }
+        
         return str;
     }
-    public balanceGUI(Account a) {
-        GUI.balanceGUIAL(this, a);
-        name = new JLabel(SystemApp.currentCustomer.getPerInfomation().getName());
-        number = new JLabel("" + a.getAccountNumber());
-        balance = new JTextArea(curr(a));
-        if(a.getType() == 1) {
+    public balanceGUI(int t) {
+        GUI.balanceGUIAL(this, t);
+        if(t == 3) {
+        	name = new JLabel(SystemApp.currentCustomer.getPerInfomation().getName());
+            number = new JLabel("" + SystemApp.currentSecurity.getAccountNumber());
+        }
+        else {
+        	name = new JLabel(SystemApp.currentCustomer.getPerInfomation().getName());
+            number = new JLabel("" + SystemApp.currentAccount.getAccountNumber());
+        }
+        balance = new JTextArea(curr(t));
+        if(t == 1) {
             type = new JLabel("Checking");
         }
-        else if(a.getType() == 2){
+        else if(t == 2){
             type = new JLabel("Saving");
         }
-        else if(a.getType() == 3) {
+        else if(t == 3) {
             type = new JLabel("Security");
         }
         else {

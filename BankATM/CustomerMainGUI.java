@@ -10,8 +10,8 @@ public class CustomerMainGUI {
     JButton transfer = new JButton("Transfer");
     JButton loan = new JButton("Loan");
     JButton exit = new JButton("Exit");
-    public CustomerMainGUI(Account a) {
-        GUI.customerMainGUIAL(this,a);
+    public CustomerMainGUI() {
+        GUI.customerMainGUIAL(this);
         header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
         header.setBounds(360,25,300,50);
         balance.setBounds(0,150,250,80);

@@ -8,20 +8,21 @@ public class LoanGUI {
     Dimension dimension = new Dimension(100,80);
     JLabel welcome = new JLabel("Welcome, " + "name");
     JLabel header = new JLabel("Loan");
-    JLabel l1 = new JLabel("1.   0.7% / month    > 12 month");
-    JLabel l2 = new JLabel("2.   1% / month    6 - 12 month");
-    JLabel l3 = new JLabel("3.   2% / month    1 - 5 month");
+    JLabel l1 = new JLabel("1.   0.7% / day    3 month");
+    JLabel l2 = new JLabel("2.   1% / day    2 month");
+    JLabel l3 = new JLabel("3.   2% / day   1 month");
     JLabel amountTitle = new JLabel("Amount:");
-    String[] currencyList = { "$", "¥", "€" };
-    String[] timeList = {"1 mon","2 mon","3 mon","4 mon","5 mon","6 mon","7 mon","8 mon","9 mon","10 mon","11 mon","12 mon"};
+    //String[] currencyList = { "$", "¥", "€" };
+    String[] currencyList = { "$"};
+    String[] timeList = {"3 mon","2 mon","1 mon"};
     JComboBox currencyCB = new JComboBox(currencyList);
     JComboBox timeCB = new JComboBox(timeList);
     JTextField amount = new JTextField();
     JButton history = new JButton("History");
     JButton confirm = new JButton("Confirm");
     JButton cancel = new JButton("Cancel");
-    public LoanGUI(Customer customer, Account a){
-        GUI.LoanGUIAL(this, a, customer);
+    public LoanGUI(){
+        GUI.LoanGUIAL(this);
         j.setLayout(null);
         
         welcome.setFont(font);
@@ -66,11 +67,5 @@ public class LoanGUI {
         j.setSize(900,600);
         j.setVisible(true);
     }
-    public static void main(String[] args) {
-    	String str = "Eric";
-        Customer c = new Customer(str, "123456", str, "1111111111", "abc", true);
-        SystemApp.addUser(str, "123456", str, "1111111111", "abc", 1, true);
-        SystemApp.addAccount(3, c);
-    	new LoanGUI(c, c.getAcc().get(0));
-    }
+
 }

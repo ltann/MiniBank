@@ -18,11 +18,11 @@ public class Transfer {
     JTextField tf3 = new JTextField();
     JButton confirm = new JButton("Confirm");
     JButton cancel = new JButton("Cancel");
-    String[] currencyList = { "$", "妤�", "閳э拷" };
+    String[] currencyList = { "$", "¥", "€" };
     JComboBox currencyCB = new JComboBox(currencyList);
 
-    public Transfer(Account a){
-        GUI.TransferGUIAL(this, a);
+    public Transfer(int type){
+        GUI.TransferGUIAL(this, type);
         j.setLayout(new GridBagLayout());
         label0 = new JLabel("Welcome, " + SystemApp.currentCustomer.getPerInfomation().getName());
         label0.setFont(font);

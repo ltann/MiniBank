@@ -13,8 +13,8 @@ public class CustomerBondGUI {
     JButton ret = new JButton("Return");
     JButton exit = new JButton("Exit");
     
-	public CustomerBondGUI(Customer c, Account a) {
-		GUI.CustomerBondGUIAL(this, c, a);
+	public CustomerBondGUI() {
+		GUI.CustomerBondGUIAL(this);
 		header.setFont(new Font("Black", Font.CENTER_BASELINE,30));
         header.setBounds(400,25,200,50);
         t = new JTable(SystemApp.getBondsData(), columnTitle);

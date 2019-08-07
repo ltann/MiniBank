@@ -25,10 +25,10 @@ public class CustomerStockGUI {
     ArrayList<DefaultCategoryDataset> data;
     String[] nameList;
 
-    public CustomerStockGUI(int index, Customer c, Account a) {
+    public CustomerStockGUI(int index) {
         this.data = SystemApp.getStockData();
         this.nameList = SystemApp.getStockNameList();
-    	GUI.CustomerStockGUIAL(this, c, a);
+    	GUI.CustomerStockGUIAL(this);
         stockGraph = ChartFactory.createLineChart(
             "K-Line Graph",
             "Time",
@@ -52,7 +52,7 @@ public class CustomerStockGUI {
         	listModel.addElement(nameList[i]);
         }
         stockName.setModel(listModel);
-        stockName.setSelectedIndex(0);
+        stockName.setSelectedIndex(index);
         stockName.setFont(new Font("Black", Font.CENTER_BASELINE,20));
         stockName.setBounds(0, 75, 300, 375);
         stockName.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

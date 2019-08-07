@@ -1,63 +1,59 @@
 public class Loan {
+    private int LoanID;
+    private int type; // 0: 3 month, 1: 2 month, 2: 1 month
     private double interest;
-    private Currency currency;
-    private int currencyType;
-    private String type;
+    private double amount;
     private int boughtAt;
-    private int dayBought;
-
-    public Loan(double interest, int currencyType, String type, int priceBoughtAt, int dayBought){
-        this.interest = interest;
-        this.type = type;
-        this.boughtAt = priceBoughtAt;
-        this.dayBought = dayBought;
-        this.currencyType = currencyType;
-        switch (currencyType){
-            case 0:
-                this.currency = new Currency("USD",'$');
-            case 1:
-                this.currency = new Currency("RMB", '¥');
-            case 2:
-                this.currency = new Currency("EUR", '€');
-        }
-    }
     
-    public Loan(double interest, int index){
-        this.interest = interest;
-        this.currencyType = index;
-        switch (index){
-            case 0:
-                this.currency = new Currency("USD",'$');
-            case 1:
-                this.currency = new Currency("RMB", '¥');
-            case 2:
-                this.currency = new Currency("EUR", '€');
-        }
-
+    public Loan(int LoanID, int type, double interest, double amount, int BoughtAt){
+        this.LoanID = LoanID;
+        this.type = type;
+    	this.amount = amount;
+    	this.interest = interest;
+        this.boughtAt = BoughtAt;
     }
 
+	public int getLoanID() {
+		return LoanID;
+	}
 
-    public double getInterest() {
-        return interest;
-    }
+	public void setLoanID(int loanID) {
+		LoanID = loanID;
+	}
 
-    public Currency getCurrency() {
-        return currency;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public String getLoanType() {
-        return type;
-    }
+	public void setType(int type) {
+		this.type = type;
+	}
 
-    public int getBoughtAt() {
-        return boughtAt;
-    }
+	public double getInterest() {
+		return interest;
+	}
 
-    public int getDayBought() {
-        return dayBought;
-    }
+	public void setInterest(double interest) {
+		this.interest = interest;
+	}
 
-    public int getCurrencyType() {
-        return currencyType;
-    }
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public int getBoughtAt() {
+		return boughtAt;
+	}
+
+	public void setBoughtAt(int boughtAt) {
+		this.boughtAt = boughtAt;
+	}
+    
+
+
+
 }

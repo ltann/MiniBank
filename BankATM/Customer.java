@@ -3,6 +3,7 @@ import java.util.ListIterator;
 
 public class Customer extends Person {
     private ArrayList<Account> acc;
+    private SecurityAccount sacc;
     private ArrayList<Loan> ln;
     private PersonInfo perInfomation;
     private boolean collateral;
@@ -16,6 +17,7 @@ public class Customer extends Person {
         super(username,password,AccessRight.CUSTOMER);
         perInfomation=new PersonInfo(name,cell,address);
         acc=new ArrayList<Account>();
+        sacc = null;
         ln=new ArrayList<Loan>();
         this.collateral = collateral;
     }
@@ -100,19 +102,25 @@ public class Customer extends Person {
 		this.perInfomation = perInfomation;
 	}
 
-	public SecurityAccount getSecurityAccount(){
-        ListIterator<Account> i = acc.listIterator();
-        while(i.hasNext()){
-            Account acc = i.next();
-            if(acc.getType() == 3){
-                return (SecurityAccount) acc;
-            }
-        }
-        System.out.println("There is no Security Account");
-        return null;
-    }
+//	public SecurityAccount getSecurityAccount(){
+//        //ListIterator<Account> i = acc.listIterator();
+//        while(i.hasNext()){
+//            Account acc = i.next();
+//            if(acc.getType() == 3){
+//                return (SecurityAccount) acc;
+//            }
+//        }
+//        System.out.println("There is no Security Account");
+//        return null;
+//    }
 
-    public boolean hasEnoughMoney(double requiredFunds, int currencyType){
+    public SecurityAccount getSacc() {
+		return sacc;
+	}
+	public void setSacc(SecurityAccount sacc) {
+		this.sacc = sacc;
+	}
+	public boolean hasEnoughMoney(double requiredFunds, int currencyType){
         boolean payable = true;
         if(getTotalBalance(currencyType) < requiredFunds){
             payable = false;

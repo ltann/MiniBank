@@ -78,7 +78,7 @@ public class Banker extends Person {
       //Amazon 7
         ArrayList<Double> AMZNPriceHistoryList =  new ArrayList<Double> ();
         Double AMZNPrice = 1824.29;
-        DISPriceHistoryList.add(AMZNPrice);
+        AMZNPriceHistoryList.add(AMZNPrice);
         StocksDB AMZNStock = new StocksDB("AMZN", "Amazon", AMZNPriceHistoryList);
         SystemApp.database.dataAddStocks(AMZNStock);
         
@@ -117,10 +117,13 @@ public class Banker extends Person {
       List<StocksDB> dbStocks =  SystemApp.database.dataFindAllStocks();
       Iterator iter = dbStocks.iterator();
       Random r = new Random();
+      double price = 0.0;
       while(iter.hasNext()) {
         StocksDB s = (StocksDB) iter.next();
         ArrayList<Double> stockPrices = s.getPriceHistory();
-        double price = stockPrices.get(stockPrices.size()-1);
+        if(stockPrices.size() != 0) {
+        	price = stockPrices.get(stockPrices.size()-1);
+        }
         double lower_range =  price/2; 
         double upper_range =  price*2;
         double newPrice = getRandomIntegerBetweenRange(lower_range, upper_range);

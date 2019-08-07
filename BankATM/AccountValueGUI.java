@@ -16,9 +16,9 @@ public class AccountValueGUI {
     JButton exit = new JButton("Exit");
     DefaultCategoryDataset data;
     
-    public AccountValueGUI(Customer c, Account a) {
-    	this.data = SystemApp.getAccountValueData(c);
-    	GUI.AccountValueGUIAL(this, c, a);
+    public AccountValueGUI() {
+    	this.data = SystemApp.getAccountValueData(SystemApp.currentCustomer);
+    	GUI.AccountValueGUIAL(this);
     	valueGraph = ChartFactory.createLineChart(
                 "",
                 "Time",
