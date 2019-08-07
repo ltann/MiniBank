@@ -48,12 +48,18 @@ public class SecurityAccountDB {
 	public SecurityAccountDB(String userName, String accountNumber, 
 			ArrayList<Integer> customerStockID, 
 			ArrayList<Map<String, String>> stockInfo,
-			ArrayList<Map<String, Double>> stockPrice, ArrayList<ArrayList<Double>> stockPriceHistory,
+			ArrayList<Map<String, Double>> stockPrice, 
+			ArrayList<ArrayList<Double>> stockPriceHistory,
 			ArrayList<Integer> stockNumShares, 
 			ArrayList<Integer> customerBondID, 
 			ArrayList<Map<String, String>> bondInfo,
-			ArrayList<Map<String, Integer>> bondValue, ArrayList<Map<String, Double>> bondAmount, ArrayList<Double> bondInterest, double avaliableFunds,
-			double valueOfSA, ArrayList<String> transactions, double profitMade) {
+			ArrayList<Map<String, Integer>> bondValue, 
+			ArrayList<Map<String, Double>> bondAmount, 
+			ArrayList<Double> bondInterest, 
+			double avaliableFunds,
+			double valueOfSA, 
+			ArrayList<String> transactions, 
+			double profitMade) {
 		this.userName = userName;
 		this.accountNumber = accountNumber;
 		this.customerStockID = customerStockID;
@@ -131,7 +137,9 @@ public class SecurityAccountDB {
 
 	public ArrayList<customerBond> getBond() {
 		ArrayList<customerBond> bond = null;
+		System.out.println("bondInfo size: " + bondInfo.size());
 		if(!bondInfo.isEmpty()) {
+			System.out.println("get bond");
 			bond = new ArrayList<customerBond>();
 			for(int i = 0; i < bondInfo.size(); i ++) {
 				bond.add(new customerBond(bondInfo.get(i).get("bondID"),
@@ -142,7 +150,11 @@ public class SecurityAccountDB {
 						bondValue.get(i).get("daysMatured"),
 						customerBondID.get(i))
 						);
+
+				System.out.println("bond add ");
 			}
+
+			System.out.println("bond size: " + bond.size());
 		}	
 		return bond;
 	}
@@ -157,7 +169,6 @@ public class SecurityAccountDB {
 			Map<String, String> bInfo = new HashMap<String, String>();
 			bInfo.put("bondID", b.getBondID());
 			bInfo.put("bondType", b.getBondType());
-			bInfo.put("maturity", String.valueOf(b.getMaturity()));
 			customerBondID.add(b.getCustomerBondID());
 			bondInfo.add(bInfo);
 			Map<String, Integer> bValue = new HashMap<String, Integer>();
@@ -165,6 +176,7 @@ public class SecurityAccountDB {
 //			bValue.put("customerBondID", b.getCustomerBondID());
 			bDouble.put("amount", b.getAmount());
 			bValue.put("daysMatured", b.getDaysMatured());
+			bValue.put("maturity", b.getMaturity());
 			bondValue.add(bValue);
 			bondAmount.add(bDouble);
 			bondInterest.add(b.getInterest());
