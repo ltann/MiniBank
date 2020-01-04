@@ -12,13 +12,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class SystemApp {
     public static ArrayList<ArrayList<String>> bankerAccount = new ArrayList<ArrayList<String>>();
-//    public static ArrayList<ArrayList<String>> customerAccount = new ArrayList<ArrayList<String>>();
-//    public static ArrayList<Customer> customers = new ArrayList<Customer>();
-    //public static ArrayList<Customer> customers = createCustomers();
     public static ArrayList<Banker> bankers = new ArrayList<Banker>();
     public static int accountNumber = 1;
-    //public static int currentCustomer;
-   // public static int currentBanker;
     public static Customer currentCustomer;
     public static Account currentAccount;
     public static SecurityAccount currentSecurity;
@@ -79,11 +74,6 @@ public class SystemApp {
     	b.setProfit(rep);
     	database.dataUpdateBank(b);
     }
-//    public static void saveReport() {
-//    	BankDB b = database.dataFindBank();
-//    	ArrayList<String> rep = b.getReport();
-//    	rep.get(rep.size()-1);
-//    }
     
     public static void checkCurrentCustomer(String Username, String Password) {
     	CustomerBasicDB cb = database.dataFindCustomerBasic(Username);
@@ -173,20 +163,6 @@ public class SystemApp {
     	if(b.getProfit().size() != 0) {
     		fee = b.getProfit().get(b.getProfit().size()-1);
     	}
-//    	fee = b.getProfit().get(b.getProfit().size()-1);
-//    	if(database.dataFindBank() == null) {
-//    		ArrayList<String> rep = new ArrayList<String>();
-//    		ArrayList<Double> pro = new ArrayList<Double>();
-//    		rep.add("");
-//    		pro.add(0.0);
-//    		BankDB b = new BankDB(rep, pro, accountNumber);
-//    	}
-//    	else {
-//    		BankDB b = database.dataFindBank();
-//        	fee = b.getProfit().get(b.getProfit().size()-1);
-//        	accountNumber = b.getAccountNum();
-//        	report = b.getReport().get(b.getReport().size()-1);
-//    	}
     	
         bankers.add(new Banker("admin","admin"));
     	CustomerBasicDB cus = new CustomerBasicDB("admin", "admin", "asdf", "qwe", "asdf", true, 0, 0, 0);
@@ -198,14 +174,6 @@ public class SystemApp {
         if (type == 0) {
             return false;
         } else {
-//            if (customerAccount.size() == 0) {
-//                ArrayList<String> newUser = new ArrayList<String>();
-//                newUser.add(username);
-//                newUser.add(password);
-//                customerAccount.add(newUser);
-//                customers.add(new Customer(username, password, name, cell, address, collateral));
-//                return true;
-//            }
         	if(database.dataFindCustomerBasic(username) != null) {
         		return false;
         	}
@@ -214,18 +182,6 @@ public class SystemApp {
             	database.dataAddCustomerBasic(cus);
             	return true;
         	}
-//            for (int i = 0; i < customerAccount.size(); i++) {
-//                if (username == customerAccount.get(i).get(0)) {
-//                    return false;
-//                } else {
-//                    ArrayList<String> newUser = new ArrayList<String>();
-//                    newUser.add(username);
-//                    newUser.add(password);
-//                    customerAccount.add(newUser);
-//                    customers.add(new Customer(username, password, name, cell, address, collateral));
-//                    return true;
-//                }
-//            }
         }
     }
 
@@ -460,24 +416,8 @@ public class SystemApp {
         str += receiveAccountNumber;
         str += "\r\n";
         report += str;
-//        updateReport();
         return str;
     }
-
-
-//    public static int[] checkAccountNumber(int accountNumber) {
-//        int[] a;
-//        for (int i = 0; i < customers.size(); i++) {
-//            for (int j = 0; j < customers.get(i).getAcc().size(); j++) {
-//                if (customers.get(i).getAcc().get(j).getAccountNumber() == accountNumber) {
-//                    a = new int[]{i, j};
-//                    return a;
-//                }
-//            }
-//        }
-//        a = new int[]{-1};
-//        return a;
-//    }
 
     public static String depositReport(Account a, double deposit, int currency) {
         String info = "";
@@ -516,7 +456,6 @@ public class SystemApp {
         info += LocalDateTime.now().toString();
         info += "\r\n";
         report += info;
-//        updateReport();
         return info;
     }
 
@@ -545,7 +484,6 @@ public class SystemApp {
         info += "Time Last: ";
         info += "" + month + "th";
         report += info;
-//        updateReport();
         return info;
     }
 
@@ -624,17 +562,6 @@ public class SystemApp {
             }
             
             answer += "\nLoan :\n\n";
-            
-//            for (int k = 0; k <= customers.get(i).getLoanNumber() - 1; k++) {
-//                answer += customers.get(i).getLn().get(k).getInterest();
-//                answer += " ";
-//                answer += customers.get(i).getLn().get(k).getCurrency().getName();
-//                answer += " ";
-//                answer += customers.get(i).getLn().get(k).getCurrency().getSymbol();
-//                answer += customers.get(i).getLn().get(k).getCurrency().getBalance();
-//                answer += " ";
-//            }
-//            answer += "\n";
         }
         return answer;
     }
@@ -698,9 +625,6 @@ public class SystemApp {
         	break;
         }
         LoanDB l = new LoanDB(++loanNumber, interest, amount, index, BoughtAt, currentCustomer.getLoginName());
-//        cur.put("USD", cur.get("USD")+amount);
-//        acc.setCurrency(cur);
-//        database.dataUpdateAccount(currentAccount.getAccountNumber(), acc);
         database.dataAddLoan(l, acc);
         
     }
@@ -721,18 +645,6 @@ public class SystemApp {
     	}
     	return data;
     }
-
-    // Update Loan
-//    public static void updateLoan() {
-//    	List<LoanDB> loans = database.dataFindAllLoan();
-//    	for(LoanDB loan: loans) {
-//    		double amount = loan.getAmount();
-//    		amount += (loan.getInterest() + 1) * loan.getAmount();
-//    		loan.setAmount(amount);
-//    		database.dataUpdate;
-//    	}
-//    	
-//    }
     
     public static boolean payLoan(int index){
         boolean payable = false;
@@ -740,20 +652,8 @@ public class SystemApp {
         List<LoanDB> loans = database.dataFindLoan(currentCustomer.getLoginName());
         LoanDB loan = loans.get(index);
         AccountDB acc = database.dataFindAccount(currentAccount.getAccountNumber());
-//        Map<String, Double> cur = acc.getCurrency();
-//        if(cur.get("USD") < loan.getAmount()){
-//            System.out.println("You do not have enough money payback the loan! ");
-//            return payable;
-//        }
-//        else{
-//            double balance = cur.get("USD");
-//            balance -= loan.getAmount();
-//            cur.put("USD", balance);
-//            acc.setCurrency(cur);
-//            database.dataUpdateAccount(acc.getAccountNumber(), acc);
             database.dataDeleteLoan(loan.getLoanID(), acc);
             payable = true;
-//        }
         return payable;
     }
 
@@ -1160,10 +1060,6 @@ public class SystemApp {
         	stocks[i][2] = s.get(i).getPriceHistory().get(s.get(i).getPriceHistory().size()-1);
     		
     	}
-//        Object[][] stocks = {
-//                new String[]{"1 month", "100", "2019-8-1", "2019-9-1", "15%"},
-//                new String[]{"3 month", "10000", "2019-8-3", "2019-11-3", "30%"}
-//        };
         return stocks;
     }
 
